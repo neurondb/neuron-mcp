@@ -1,0 +1,32 @@
+# Run from repo root: golangci-lint run ./...
+# Or: make lint
+run:
+  modules-download-mode: readonly
+  go: '1.23'
+
+linters:
+  enable:
+    - govet
+    - errcheck
+    - staticcheck
+    - ineffassign
+    - goimports
+    - unconvert
+    - gosimple
+
+linters-settings:
+  govet:
+    enable-all: true
+    disable:
+      - fieldalignment
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+  goimports:
+    local-prefixes: github.com/neurondb/NeuronMCP
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - errcheck
