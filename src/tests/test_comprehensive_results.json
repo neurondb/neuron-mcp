@@ -1,0 +1,1000 @@
+{
+  "metadata": {
+    "start_time": "2025-12-26T16:24:35.500000",
+    "end_time": "2025-12-26T16:24:41.540114",
+    "total_tests": 91,
+    "passed": 3,
+    "failed": 84,
+    "skipped": 4,
+    "configuration_needed": 0
+  },
+  "protocol_tests": {
+    "tools_list": {
+      "status": "passed",
+      "count": 74
+    },
+    "resources_list": {
+      "status": "passed",
+      "count": 7
+    },
+    "prompts_list": {
+      "status": "skipped",
+      "error": "method not found: prompts/list (code: -32601)"
+    },
+    "tools_search": {
+      "status": "skipped",
+      "error": "method not found: tools/search (code: -32601)"
+    },
+    "prompts_get": {
+      "status": "connection_error",
+      "error": "Connection broken: [Errno 32] Broken pipe"
+    },
+    "sampling_createMessage": {
+      "status": "connection_error",
+      "error": "Connection broken: [Errno 32] Broken pipe"
+    },
+    "progress_get": {
+      "status": "connection_error",
+      "error": "Connection broken: [Errno 32] Broken pipe"
+    },
+    "tools_call_batch": {
+      "status": "connection_error",
+      "error": "Connection broken: [Errno 32] Broken pipe"
+    }
+  },
+  "tools": {
+    "postgresql_version": {
+      "status": "failed",
+      "category": "PostgreSQL",
+      "arguments": {},
+      "error": "Error: PostgreSQL version query execution failed: database connection not available: cannot execute single-row query '\n\t\tSELECT \n\t\t\tversion() AS version,\n\t\t\tcurrent_setting('server_version') AS server_version,\n\t\t\tcurrent_setting('server_version_num')::bigint AS server_version_num,\n\t\t\tcurrent_setting('server_version_num')::bigint / 10000 AS major_version,\n\t\t\t(current_setting('server_version_num')::bigint / 100) % 100 AS minor_version,\n\t\t\tcurrent_setting('server_version_num')::bigint % 100 AS patch_version\n\t' with 0 parameters (database connection pool is not initialized)",
+      "elapsed": 0.0006384849548339844
+    },
+    "postgresql_stats": {
+      "status": "passed",
+      "category": "PostgreSQL",
+      "arguments": {},
+      "elapsed": 0.00020933151245117188
+    },
+    "postgresql_databases": {
+      "status": "failed",
+      "category": "PostgreSQL",
+      "arguments": {},
+      "error": "Error: PostgreSQL database list query execution failed: database connection not available: cannot execute query '\n\t\t\tSELECT \n\t\t\t\td.datname AS name,\n\t\t\t\tpg_database_size(d.datname) AS size_bytes,\n\t\t\t\tpg_size_pretty(pg_database_size(d.datname)) AS size_pretty,\n\t\t\t\tCOALESCE(s.numbackends, 0) AS connections,\n\t\t\t\td.datcollate AS collation,\n\t\t\t\td.datctype AS ctype\n\t\t\tFROM pg_database d\n\t\t\tLEFT JOIN pg_stat_database s ON d.oid = s.datid\n\t\t\tWHERE d.datname NOT IN ('template0', 'template1', 'postgres')\n\t\t\tORDER BY pg_database_size(d.datname) DESC\n\t\t' with 0 parameters (database connection pool is not initialized)",
+      "elapsed": 0.0005865097045898438
+    },
+    "postgresql_connections": {
+      "status": "failed",
+      "category": "PostgreSQL",
+      "arguments": {},
+      "error": "Error: PostgreSQL connections query failed: error=database connection not available: cannot execute query '\n\t\tSELECT \n\t\t\tpid,\n\t\t\tusename,\n\t\t\tapplication_name,\n\t\t\tclient_addr,\n\t\t\tclient_port,\n\t\t\tstate,\n\t\t\tquery_start,\n\t\t\tstate_change,\n\t\t\twait_event_type,\n\t\t\twait_event,\n\t\t\tquery\n\t\tFROM pg_stat_activity\n\t\tWHERE datname = current_database()\n\t\tORDER BY query_start DESC\n\t' with 0 parameters (database connection pool is not initialized)",
+      "elapsed": 0.00046896934509277344
+    },
+    "postgresql_locks": {
+      "status": "failed",
+      "category": "PostgreSQL",
+      "arguments": {},
+      "error": "Error: PostgreSQL locks query failed: error=database connection not available: cannot execute query '\n\t\tSELECT \n\t\t\tlocktype,\n\t\t\tdatabase,\n\t\t\trelation,\n\t\t\tpage,\n\t\t\ttuple,\n\t\t\tvirtualxid,\n\t\t\ttransactionid,\n\t\t\tclassid,\n\t\t\tobjid,\n\t\t\tobjsubid,\n\t\t\tvirtualtransaction,\n\t\t\tpid,\n\t\t\tmode,\n\t\t\tgranted\n\t\tFROM pg_locks\n\t\tWHERE database = (SELECT oid FROM pg_database WHERE datname = current_database())\n\t\tORDER BY pid, locktype\n\t' with 0 parameters (database connection pool is not initialized)",
+      "elapsed": 0.0005004405975341797
+    },
+    "postgresql_replication": {
+      "status": "failed",
+      "category": "PostgreSQL",
+      "arguments": {},
+      "error": "Error: PostgreSQL replication query failed: error=database connection not available: cannot execute query '\n\t\tSELECT \n\t\t\tpid,\n\t\t\tusename,\n\t\t\tapplication_name,\n\t\t\tclient_addr,\n\t\t\tstate,\n\t\t\tsent_lsn,\n\t\t\twrite_lsn,\n\t\t\tflush_lsn,\n\t\t\treplay_lsn,\n\t\t\tsync_priority,\n\t\t\tsync_state\n\t\tFROM pg_stat_replication\n\t' with 0 parameters (database connection pool is not initialized)",
+      "elapsed": 0.0003955364227294922
+    },
+    "postgresql_settings": {
+      "status": "failed",
+      "category": "PostgreSQL",
+      "arguments": {},
+      "error": "Error: PostgreSQL settings query failed: error=database connection not available: cannot execute query '\n\t\t\tSELECT \n\t\t\t\tname,\n\t\t\t\tsetting,\n\t\t\t\tunit,\n\t\t\t\tcategory,\n\t\t\t\tshort_desc,\n\t\t\t\tcontext,\n\t\t\t\tvartype,\n\t\t\t\tsource,\n\t\t\t\tmin_val,\n\t\t\t\tmax_val,\n\t\t\t\tenumvals\n\t\t\tFROM pg_settings\n\t\t\tORDER BY category, name\n\t\t' with 0 parameters (database connection pool is not initialized)",
+      "elapsed": 0.0004246234893798828
+    },
+    "postgresql_extensions": {
+      "status": "failed",
+      "category": "PostgreSQL",
+      "arguments": {},
+      "error": "Error: PostgreSQL extensions query failed: error=database connection not available: cannot execute query '\n\t\tSELECT \n\t\t\textname,\n\t\t\textversion,\n\t\t\tnspname AS schema,\n\t\t\textrelocatable,\n\t\t\textconfig\n\t\tFROM pg_extension e\n\t\tJOIN pg_namespace n ON e.extnamespace = n.oid\n\t\tORDER BY extname\n\t' with 0 parameters (database connection pool is not initialized)",
+      "elapsed": 0.00036978721618652344
+    },
+    "vector_search": {
+      "status": "failed",
+      "category": "Vector Search",
+      "arguments": {
+        "table": "test_vectors",
+        "vector_column": "embedding",
+        "query_vector": [
+          0.1,
+          0.2,
+          0.3
+        ],
+        "limit": 5
+      },
+      "error": "Error: Vector search execution failed: table='test_vectors', vector_column='embedding', distance_metric='l2', limit=5, query_vector_dimension=3, additional_columns_count=0, error=database connection not available: cannot execute vector search on table 'test_vectors', column 'embedding' (database connection pool is not initialized)",
+      "elapsed": 0.0003483295440673828
+    },
+    "vector_search_l2": {
+      "status": "failed",
+      "category": "Vector Search",
+      "arguments": {
+        "table": "test_vectors",
+        "vector_column": "embedding",
+        "query_vector": [
+          0.1,
+          0.2,
+          0.3
+        ],
+        "limit": 5
+      },
+      "error": "Error: L2 vector search execution failed: table='test_vectors', vector_column='embedding', limit=5, query_vector_dimension=3, error=database connection not available: cannot execute vector search on table 'test_vectors', column 'embedding' (database connection pool is not initialized)",
+      "elapsed": 0.0003185272216796875
+    },
+    "vector_search_cosine": {
+      "status": "failed",
+      "category": "Vector Search",
+      "arguments": {
+        "table": "test_vectors",
+        "vector_column": "embedding",
+        "query_vector": [
+          0.1,
+          0.2,
+          0.3
+        ],
+        "limit": 5
+      },
+      "error": "Error: Cosine vector search execution failed: table='test_vectors', vector_column='embedding', limit=5, query_vector_dimension=3, error=database connection not available: cannot execute vector search on table 'test_vectors', column 'embedding' (database connection pool is not initialized)",
+      "elapsed": 0.0003070831298828125
+    },
+    "vector_search_inner_product": {
+      "status": "failed",
+      "category": "Vector Search",
+      "arguments": {
+        "table": "test_vectors",
+        "vector_column": "embedding",
+        "query_vector": [
+          0.1,
+          0.2,
+          0.3
+        ],
+        "limit": 5
+      },
+      "error": "Error: Inner product vector search execution failed: table='test_vectors', vector_column='embedding', limit=5, query_vector_dimension=3, error=database connection not available: cannot execute vector search on table 'test_vectors', column 'embedding' (database connection pool is not initialized)",
+      "elapsed": 0.0003159046173095703
+    },
+    "vector_similarity": {
+      "status": "failed",
+      "category": "Vector Operations",
+      "arguments": {
+        "vector1": [
+          0.1,
+          0.2,
+          0.3
+        ],
+        "vector2": [
+          0.4,
+          0.5,
+          0.6
+        ],
+        "metric": "cosine"
+      },
+      "error": "Error: Vector similarity computation execution failed: vector1_dimension=3, vector2_dimension=3, distance_metric='cosine', query='SELECT $1::vector <=> $2::vector AS similarity', error=database connection not available: cannot execute single-row query 'SELECT $1::vector <=> $2::vector AS similarity' with 2 parameters (database connection pool is not initialized)",
+      "elapsed": 0.00038743019104003906
+    },
+    "vector_arithmetic": {
+      "status": "failed",
+      "category": "Vector Operations",
+      "arguments": {
+        "vector1": [
+          0.1,
+          0.2,
+          0.3
+        ],
+        "vector2": [
+          0.4,
+          0.5,
+          0.6
+        ],
+        "operation": "add"
+      },
+      "error": "Error: Vector arithmetic operation failed: operation='add', error=database connection not available: cannot execute single-row query 'SELECT (($1::vector + $2::vector)::text) AS result' with 2 parameters (database connection pool is not initialized)",
+      "elapsed": 0.0008776187896728516
+    },
+    "vector_distance": {
+      "status": "failed",
+      "category": "Vector Operations",
+      "arguments": {
+        "vector1": [
+          0.1,
+          0.2,
+          0.3
+        ],
+        "vector2": [
+          0.4,
+          0.5,
+          0.6
+        ],
+        "metric": "l2"
+      },
+      "error": "Error: Vector distance computation failed: metric='l2', error=database connection not available: cannot execute single-row query 'SELECT vector_l2_distance($1::vector, $2::vector) AS distance' with 2 parameters (database connection pool is not initialized)",
+      "elapsed": 0.00030493736267089844
+    },
+    "vector_similarity_unified": {
+      "status": "failed",
+      "category": "Vector Operations",
+      "arguments": {
+        "vector1": [
+          0.1,
+          0.2,
+          0.3
+        ],
+        "vector2": [
+          0.4,
+          0.5,
+          0.6
+        ],
+        "metric": "cosine"
+      },
+      "error": "Error: Vector similarity computation failed: metric='cosine', error=database connection not available: cannot execute single-row query 'SELECT neurondb.similarity($1::vector, $2::vector, $3::text) AS similarity' with 3 parameters (database connection pool is not initialized)",
+      "elapsed": 0.0002951622009277344
+    },
+    "generate_embedding": {
+      "status": "failed",
+      "category": "Embeddings",
+      "arguments": {
+        "text": "test text",
+        "model": "default"
+      },
+      "error": "Error: Embedding generation failed: text_length=9, model='default', error=database connection not available: cannot execute single-row query 'SELECT neurondb.embed($1, $2, $3)::text AS embedding' with 3 parameters (database connection pool is not initialized)",
+      "elapsed": 0.00033020973205566406
+    },
+    "batch_embedding": {
+      "status": "failed",
+      "category": "Embeddings",
+      "arguments": {
+        "texts": [
+          "text1",
+          "text2"
+        ],
+        "model": "default"
+      },
+      "error": "Error: Batch embedding generation failed: texts_count=2, model='default', error=database connection not available: cannot execute single-row query 'SELECT json_agg(embedding::text) AS embeddings FROM unnest(neurondb.embed_batch($1, $2::text[])) AS embedding' with 2 parameters (database connection pool is not initialized)",
+      "elapsed": 0.00032973289489746094
+    },
+    "embed_image": {
+      "status": "failed",
+      "category": "Embeddings",
+      "arguments": {
+        "image_url": "https://example.com/image.jpg"
+      },
+      "error": "Error: Invalid parameters for embed_image tool: [Missing required parameter: image_data]",
+      "elapsed": 0.0001583099365234375
+    },
+    "embed_multimodal": {
+      "status": "failed",
+      "category": "Embeddings",
+      "arguments": {
+        "text": "test",
+        "image_url": "https://example.com/image.jpg"
+      },
+      "error": "Error: Invalid parameters for embed_multimodal tool: [Missing required parameter: image_data]",
+      "elapsed": 0.00016069412231445312
+    },
+    "embed_cached": {
+      "status": "failed",
+      "category": "Embeddings",
+      "arguments": {
+        "text": "test",
+        "model": "default"
+      },
+      "error": "Error: Cached embedding generation failed: model='default', error=database connection not available: cannot execute single-row query 'SELECT embed_cached($1::text, $2::text)::text AS embedding' with 2 parameters (database connection pool is not initialized)",
+      "elapsed": 0.00027060508728027344
+    },
+    "configure_embedding_model": {
+      "status": "failed",
+      "category": "Embeddings",
+      "arguments": {
+        "model_name": "test_model",
+        "config_json": "{}"
+      },
+      "error": "Error: Embedding model configuration failed: model_name='test_model', error=database connection not available: cannot execute single-row query 'SELECT configure_embedding_model($1::text, $2::text) AS success' with 2 parameters (database connection pool is not initialized)",
+      "elapsed": 0.00028967857360839844
+    },
+    "get_embedding_model_config": {
+      "status": "failed",
+      "category": "Embeddings",
+      "arguments": {
+        "model_name": "test_model"
+      },
+      "error": "Error: Get embedding model config failed: model_name='test_model', error=database connection not available: cannot execute single-row query 'SELECT get_embedding_model_config($1::text) AS config' with 1 parameters (database connection pool is not initialized)",
+      "elapsed": 0.000274658203125
+    },
+    "list_embedding_model_configs": {
+      "status": "failed",
+      "category": "Embeddings",
+      "arguments": {},
+      "error": "Error: List embedding model configs failed: error=database connection not available: cannot execute query 'SELECT * FROM list_embedding_model_configs()' with 0 parameters (database connection pool is not initialized)",
+      "elapsed": 0.00026416778564453125
+    },
+    "delete_embedding_model_config": {
+      "status": "failed",
+      "category": "Embeddings",
+      "arguments": {
+        "model_name": "test_model"
+      },
+      "error": "Error: Delete embedding model config failed: model_name='test_model', error=database connection not available: cannot execute single-row query 'SELECT delete_embedding_model_config($1::text) AS success' with 1 parameters (database connection pool is not initialized)",
+      "elapsed": 0.0007648468017578125
+    },
+    "create_hnsw_index": {
+      "status": "connection_error",
+      "category": "Indexing",
+      "arguments": {
+        "table": "test_table",
+        "vector_column": "embedding",
+        "index_name": "test_idx"
+      },
+      "error": "Connection broken: Unexpected EOF while reading response",
+      "exception_type": "OSError",
+      "elapsed": 0.0032815933227539062
+    },
+    "create_ivf_index": {
+      "status": "connection_error",
+      "category": "Indexing",
+      "arguments": {
+        "table": "test_table",
+        "vector_column": "embedding",
+        "index_name": "test_idx"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 3.814697265625e-05
+    },
+    "create_vector_index": {
+      "status": "connection_error",
+      "category": "Indexing",
+      "arguments": {
+        "table": "test_table",
+        "vector_column": "embedding",
+        "index_type": "hnsw"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 1.2874603271484375e-05
+    },
+    "index_status": {
+      "status": "connection_error",
+      "category": "Indexing",
+      "arguments": {
+        "index_name": "test_idx"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 8.58306884765625e-06
+    },
+    "drop_index": {
+      "status": "connection_error",
+      "category": "Indexing",
+      "arguments": {
+        "index_name": "test_idx"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 6.9141387939453125e-06
+    },
+    "tune_hnsw_index": {
+      "status": "connection_error",
+      "category": "Indexing",
+      "arguments": {
+        "index_name": "test_idx"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.4836273193359375e-06
+    },
+    "tune_ivf_index": {
+      "status": "connection_error",
+      "category": "Indexing",
+      "arguments": {
+        "index_name": "test_idx"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.4836273193359375e-06
+    },
+    "train_model": {
+      "status": "connection_error",
+      "category": "ML Operations",
+      "arguments": {
+        "algorithm": "linear_regression",
+        "table": "test_table",
+        "feature_col": "features",
+        "label_col": "label"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 6.198883056640625e-06
+    },
+    "predict": {
+      "status": "connection_error",
+      "category": "ML Operations",
+      "arguments": {
+        "model_id": 1,
+        "features": [
+          0.1,
+          0.2,
+          0.3
+        ]
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 8.58306884765625e-06
+    },
+    "predict_batch": {
+      "status": "connection_error",
+      "category": "ML Operations",
+      "arguments": {
+        "model_id": 1,
+        "features_array": [
+          [
+            0.1,
+            0.2,
+            0.3
+          ]
+        ]
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 6.67572021484375e-06
+    },
+    "evaluate_model": {
+      "status": "connection_error",
+      "category": "ML Operations",
+      "arguments": {
+        "model_id": 1,
+        "table": "test_table",
+        "feature_col": "features",
+        "label_col": "label"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.4836273193359375e-06
+    },
+    "list_models": {
+      "status": "connection_error",
+      "category": "ML Operations",
+      "arguments": {},
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 4.76837158203125e-06
+    },
+    "get_model_info": {
+      "status": "connection_error",
+      "category": "ML Operations",
+      "arguments": {
+        "model_id": 1
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 6.4373016357421875e-06
+    },
+    "delete_model": {
+      "status": "connection_error",
+      "category": "ML Operations",
+      "arguments": {
+        "model_id": 1
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 1.5735626220703125e-05
+    },
+    "export_model": {
+      "status": "connection_error",
+      "category": "ML Operations",
+      "arguments": {
+        "model_id": 1
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.245208740234375e-06
+    },
+    "cluster_data": {
+      "status": "connection_error",
+      "category": "Analytics",
+      "arguments": {
+        "table": "test_table",
+        "vector_column": "embedding",
+        "k": 3
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.4836273193359375e-06
+    },
+    "detect_outliers": {
+      "status": "connection_error",
+      "category": "Analytics",
+      "arguments": {
+        "table": "test_table",
+        "vector_column": "embedding"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.0067901611328125e-06
+    },
+    "reduce_dimensionality": {
+      "status": "connection_error",
+      "category": "Analytics",
+      "arguments": {
+        "table": "test_table",
+        "vector_column": "embedding",
+        "target_dim": 2
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.4836273193359375e-06
+    },
+    "analyze_data": {
+      "status": "connection_error",
+      "category": "Analytics",
+      "arguments": {
+        "table": "test_table"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.0067901611328125e-06
+    },
+    "quality_metrics": {
+      "status": "connection_error",
+      "category": "Analytics",
+      "arguments": {
+        "table": "test_table",
+        "vector_column": "embedding"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.245208740234375e-06
+    },
+    "drift_detection": {
+      "status": "skipped",
+      "category": "Analytics",
+      "reason": "not in tool list"
+    },
+    "topic_discovery": {
+      "status": "connection_error",
+      "category": "Analytics",
+      "arguments": {
+        "table": "test_table",
+        "text_column": "text"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.7220458984375e-06
+    },
+    "process_document": {
+      "status": "connection_error",
+      "category": "RAG",
+      "arguments": {
+        "document": "test document",
+        "chunk_size": 100
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.4836273193359375e-06
+    },
+    "retrieve_context": {
+      "status": "connection_error",
+      "category": "RAG",
+      "arguments": {
+        "query": "test query",
+        "table": "test_table",
+        "limit": 5
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 6.198883056640625e-06
+    },
+    "generate_response": {
+      "status": "connection_error",
+      "category": "RAG",
+      "arguments": {
+        "query": "test query",
+        "context": "test context"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.4836273193359375e-06
+    },
+    "chunk_document": {
+      "status": "connection_error",
+      "category": "RAG",
+      "arguments": {
+        "document": "test document",
+        "chunk_size": 100
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 6.67572021484375e-06
+    },
+    "hybrid_search": {
+      "status": "connection_error",
+      "category": "Hybrid Search",
+      "arguments": {
+        "query": "test",
+        "table": "test_table",
+        "vector_column": "embedding",
+        "limit": 5
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 6.4373016357421875e-06
+    },
+    "text_search": {
+      "status": "connection_error",
+      "category": "Hybrid Search",
+      "arguments": {
+        "query": "test",
+        "table": "test_table",
+        "limit": 5
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 7.3909759521484375e-06
+    },
+    "reciprocal_rank_fusion": {
+      "status": "connection_error",
+      "category": "Hybrid Search",
+      "arguments": {
+        "results": [
+          [
+            {
+              "id": 1
+            }
+          ],
+          [
+            {
+              "id": 2
+            }
+          ]
+        ]
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 6.9141387939453125e-06
+    },
+    "semantic_keyword_search": {
+      "status": "connection_error",
+      "category": "Hybrid Search",
+      "arguments": {
+        "query": "test",
+        "table": "test_table",
+        "vector_column": "embedding"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.7220458984375e-06
+    },
+    "multi_vector_search": {
+      "status": "connection_error",
+      "category": "Hybrid Search",
+      "arguments": {
+        "table": "test_table",
+        "queries": [
+          [
+            0.1,
+            0.2,
+            0.3
+          ]
+        ],
+        "limit": 5
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 6.198883056640625e-06
+    },
+    "faceted_vector_search": {
+      "status": "connection_error",
+      "category": "Hybrid Search",
+      "arguments": {
+        "table": "test_table",
+        "vector_column": "embedding",
+        "query_vector": [
+          0.1,
+          0.2,
+          0.3
+        ]
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.7220458984375e-06
+    },
+    "temporal_vector_search": {
+      "status": "connection_error",
+      "category": "Hybrid Search",
+      "arguments": {
+        "table": "test_table",
+        "vector_column": "embedding",
+        "query_vector": [
+          0.1,
+          0.2,
+          0.3
+        ]
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 6.198883056640625e-06
+    },
+    "diverse_vector_search": {
+      "status": "connection_error",
+      "category": "Hybrid Search",
+      "arguments": {
+        "table": "test_table",
+        "vector_column": "embedding",
+        "query_vector": [
+          0.1,
+          0.2,
+          0.3
+        ]
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.7220458984375e-06
+    },
+    "rerank_cross_encoder": {
+      "status": "connection_error",
+      "category": "Reranking",
+      "arguments": {
+        "query": "test",
+        "documents": [
+          "doc1",
+          "doc2"
+        ]
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 6.4373016357421875e-06
+    },
+    "rerank_llm": {
+      "status": "connection_error",
+      "category": "Reranking",
+      "arguments": {
+        "query": "test",
+        "documents": [
+          "doc1",
+          "doc2"
+        ]
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.4836273193359375e-06
+    },
+    "rerank_cohere": {
+      "status": "connection_error",
+      "category": "Reranking",
+      "arguments": {
+        "query": "test",
+        "documents": [
+          "doc1",
+          "doc2"
+        ]
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.0067901611328125e-06
+    },
+    "rerank_colbert": {
+      "status": "connection_error",
+      "category": "Reranking",
+      "arguments": {
+        "query": "test",
+        "documents": [
+          "doc1",
+          "doc2"
+        ]
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.245208740234375e-06
+    },
+    "rerank_ltr": {
+      "status": "connection_error",
+      "category": "Reranking",
+      "arguments": {
+        "query": "test",
+        "documents": [
+          "doc1",
+          "doc2"
+        ]
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.245208740234375e-06
+    },
+    "rerank_ensemble": {
+      "status": "connection_error",
+      "category": "Reranking",
+      "arguments": {
+        "query": "test",
+        "documents": [
+          "doc1",
+          "doc2"
+        ]
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.245208740234375e-06
+    },
+    "vector_quantize": {
+      "status": "connection_error",
+      "category": "Quantization",
+      "arguments": {
+        "operation": "to_int8",
+        "vector": [
+          0.1,
+          0.2,
+          0.3
+        ]
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.4836273193359375e-06
+    },
+    "quantization_analyze": {
+      "status": "connection_error",
+      "category": "Quantization",
+      "arguments": {
+        "operation": "analyze_int8",
+        "vector": [
+          0.1,
+          0.2,
+          0.3
+        ]
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 6.198883056640625e-06
+    },
+    "timeseries_analysis": {
+      "status": "connection_error",
+      "category": "Advanced",
+      "arguments": {
+        "operation": "arima",
+        "table": "test_table",
+        "value_column": "value",
+        "time_column": "time"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.7220458984375e-06
+    },
+    "automl": {
+      "status": "connection_error",
+      "category": "Advanced",
+      "arguments": {
+        "table": "test_table",
+        "feature_col": "features",
+        "label_col": "label"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.7220458984375e-06
+    },
+    "onnx_model": {
+      "status": "connection_error",
+      "category": "Advanced",
+      "arguments": {
+        "operation": "info"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.0067901611328125e-06
+    },
+    "vector_graph": {
+      "status": "connection_error",
+      "category": "Advanced",
+      "arguments": {
+        "operation": "pagerank",
+        "table": "test_table",
+        "vector_column": "embedding"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 6.4373016357421875e-06
+    },
+    "vecmap_operations": {
+      "status": "connection_error",
+      "category": "Advanced",
+      "arguments": {
+        "operation": "distance",
+        "vector1": [
+          0.1,
+          0.2
+        ],
+        "vector2": [
+          0.3,
+          0.4
+        ]
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 6.198883056640625e-06
+    },
+    "load_dataset": {
+      "status": "connection_error",
+      "category": "Dataset",
+      "arguments": {
+        "source_type": "huggingface",
+        "source_path": "squad",
+        "limit": 10
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.7220458984375e-06
+    },
+    "worker_management": {
+      "status": "connection_error",
+      "category": "Workers & GPU",
+      "arguments": {
+        "operation": "status"
+      },
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.4836273193359375e-06
+    },
+    "gpu_info": {
+      "status": "skipped",
+      "category": "Workers & GPU",
+      "reason": "not in tool list"
+    },
+    "detect_drift": {
+      "status": "connection_error",
+      "category": "additional",
+      "arguments": {},
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 7.3909759521484375e-06
+    }
+  },
+  "resources": {
+    "neurondb://schema": {
+      "status": "connection_error",
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 6.67572021484375e-06
+    },
+    "neurondb://models": {
+      "status": "connection_error",
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.7220458984375e-06
+    },
+    "neurondb://indexes": {
+      "status": "connection_error",
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.245208740234375e-06
+    },
+    "neurondb://config": {
+      "status": "connection_error",
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.245208740234375e-06
+    },
+    "neurondb://workers": {
+      "status": "connection_error",
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.0067901611328125e-06
+    },
+    "neurondb://vector_stats": {
+      "status": "connection_error",
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.0067901611328125e-06
+    },
+    "neurondb://index_health": {
+      "status": "connection_error",
+      "error": "Connection broken: [Errno 32] Broken pipe",
+      "exception_type": "BrokenPipeError",
+      "elapsed": 5.0067901611328125e-06
+    }
+  }
+}

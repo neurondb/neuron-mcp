@@ -1,0 +1,45 @@
+# neuron-mcp - Go + TypeScript/Node
+# -----------------------------------------------------------------------------
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Go
+neurondb-mcp
+bin/
+src/cmd/*/neurondb-mcp
+src/bin/
+*.exe
+*.test
+*.out
+vendor/
+
+# Node.js / TypeScript
+node_modules/
+**/node_modules/
+dist/
+build/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+**/__pycache__/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Logs and env
+*.log
+.env
+.env.local
+config.yaml
+mcp-config.json
+!mcp-config.json.example

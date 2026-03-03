@@ -1,0 +1,67 @@
+{
+  "metadata": {
+    "start_time": "2025-12-21T12:04:31.654651",
+    "end_time": "2025-12-21T12:04:45.974269",
+    "total_tests": 6,
+    "passed_tests": 1,
+    "failed_tests": 4
+  },
+  "test_cases": [
+    {
+      "name": "API Key Verification",
+      "status": "skipped",
+      "details": {
+        "reason": "psycopg2 not available"
+      }
+    },
+    {
+      "name": "Basic Dataset Loading",
+      "status": "failed",
+      "details": {},
+      "error": "Error: Failed to load dataset from huggingface 'sentence-transformers/embedding-training-data': exit status 1. Output: {\"status\": \"error\", \"error\": \"Failed to connect to database: connection to server at \\\"localhost\\\" (127.0.0.1), port 5433 failed: fe_sendauth: no password supplied\\n\", \"error_type\": \"Exception\"}\n"
+    },
+    {
+      "name": "Auto-Embedding",
+      "status": "failed",
+      "details": {},
+      "error": "Error: Failed to load dataset from huggingface 'squad': exit status 1. Output: {\"status\": \"error\", \"error\": \"Failed to connect to database: connection to server at \\\"localhost\\\" (127.0.0.1), port 5433 failed: fe_sendauth: no password supplied\\n\", \"error_type\": \"Exception\"}\n"
+    },
+    {
+      "name": "Index Creation",
+      "status": "failed",
+      "details": {},
+      "error": "Error: Failed to load dataset from huggingface 'imdb': exit status 1. Output: {\"status\": \"error\", \"error\": \"Failed to connect to database: connection to server at \\\"localhost\\\" (127.0.0.1), port 5433 failed: fe_sendauth: no password supplied\\n\", \"error_type\": \"Exception\"}\n"
+    },
+    {
+      "name": "Custom Configuration",
+      "status": "failed",
+      "details": {},
+      "error": "Error: Failed to load dataset from huggingface 'sentence-transformers/embedding-training-data': exit status 1. Output: {\"status\": \"error\", \"error\": \"Failed to connect to database: connection to server at \\\"localhost\\\" (127.0.0.1), port 5433 failed: fe_sendauth: no password supplied\\n\", \"error_type\": \"Exception\"}\n"
+    },
+    {
+      "name": "Error Handling",
+      "status": "passed",
+      "details": {
+        "errors_tested": [
+          {
+            "test": "invalid_dataset",
+            "status": "passed",
+            "error_received": "Error: Failed to load dataset from huggingface 'invalid/dataset/that/does/not/exist': exit status 1. Output: {\"status\": \"error\", \"error\": \"Failed to connect to database: connection to server at \\\"loca"
+          },
+          {
+            "test": "missing_parameter",
+            "status": "passed",
+            "error_received": "Error: Invalid parameters for load_dataset tool: [Missing required parameter: source_path]"
+          },
+          {
+            "test": "invalid_source_type",
+            "status": "passed",
+            "error_received": "Error: Invalid parameters for load_dataset tool: [Invalid type for source_type: must be one of: [huggingface url github s3 local]]"
+          }
+        ],
+        "passed": 3,
+        "total": 3
+      }
+    }
+  ]
+}
