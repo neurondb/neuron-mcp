@@ -178,7 +178,7 @@ The official documentation provides:
 
 </details>
 
-> 📊 **See [COMPARISON.md](COMPARISON.md) for a detailed comparison with other MCP servers**
+> 📊 For a detailed comparison with other MCP servers, see [docs/tool-resource-catalog.md](docs/tool-resource-catalog.md) and the [MCP protocol spec](https://modelcontextprotocol.io/).
 
 ## Architecture
 
@@ -344,7 +344,7 @@ NeuronMCP requires a comprehensive database schema for managing LLM models, API 
 **Quick Setup:**
 
 ```bash
-cd NeuronMCP
+cd neuron-mcp
 ./scripts/neuronmcp-setup.sh
 ```
 
@@ -511,7 +511,7 @@ NeuronMCP provides comprehensive tools covering all NeuronDB capabilities:
 | **PostgreSQL (100+ tools)** | Complete PostgreSQL control: **DDL** (CREATE/ALTER/DROP for databases, schemas, tables, indexes, views, functions, triggers, sequences, types, domains, materialized views, partitions, foreign tables), **DML** (INSERT, UPDATE, DELETE, TRUNCATE, COPY), **DCL** (GRANT/REVOKE), **User/Role Management** (CREATE/ALTER/DROP USER/ROLE), **Backup/Recovery** (pg_dump/pg_restore), **Security** (SQL validation, permission checking, audit), plus all administration, monitoring, and statistics tools |
 
 **Comprehensive Documentation:**
-- **[TOOLS_REFERENCE.md](TOOLS_REFERENCE.md)** - Complete reference for all 600+ tools with parameters, examples, and error codes
+- **[Tool & Resource Catalog](docs/tool-resource-catalog.md)** - Complete reference for tools and resources
 - **[POSTGRESQL_TOOLS.md](POSTGRESQL_TOOLS.md)** - Detailed documentation for all PostgreSQL tools (100+ tools covering DDL, DML, DCL, administration, backup, security)
 
 For a comprehensive catalog of all tools and resources, see [docs/tool-resource-catalog.md](docs/tool-resource-catalog.md).
@@ -763,7 +763,7 @@ NeuronMCP requires:
 - Database user with appropriate permissions
 - Access to NeuronDB vector search, ML, and embedding functions
 
-See [NeuronDB documentation](../NeuronDB/README.md) for installation instructions.
+See [NeuronDB documentation](../neurondb/README.md) for installation instructions.
 
 ## Troubleshooting
 

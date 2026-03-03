@@ -39,6 +39,9 @@ __pycache__/
 # Logs and env
 *.log
 .env
+src/tests/test_output.log
+src/tests/*_results.json
+src/tests/*_report.json
 .env.local
 config.yaml
 mcp-config.json
