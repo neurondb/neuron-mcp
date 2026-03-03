@@ -115,13 +115,13 @@ func (t *VectorDimensionReductionTool) Execute(ctx context.Context, params map[s
 	if err != nil {
 		/* Fallback: provide instructions */
 		return Success(map[string]interface{}{
-			"table":            table,
-			"vector_column":    vectorColumn,
-			"method":           method,
+			"table":             table,
+			"vector_column":     vectorColumn,
+			"method":            method,
 			"target_dimensions": int(targetDims),
-			"output_column":    outputColumn,
-			"note":             fmt.Sprintf("Dimensionality reduction using %s requires NeuronDB ML functions. Use neurondb.reduce_dimensionality() or external tools.", method),
-			"sql_example":      fmt.Sprintf("SELECT neurondb.reduce_dimensionality(%s, '%s', %d) FROM %s", vectorColumn, method, int(targetDims), table),
+			"output_column":     outputColumn,
+			"note":              fmt.Sprintf("Dimensionality reduction using %s requires NeuronDB ML functions. Use neurondb.reduce_dimensionality() or external tools.", method),
+			"sql_example":       fmt.Sprintf("SELECT neurondb.reduce_dimensionality(%s, '%s', %d) FROM %s", vectorColumn, method, int(targetDims), table),
 		}, map[string]interface{}{
 			"tool": "vector_dimension_reduction",
 		}), nil
@@ -561,8 +561,8 @@ func (t *VectorCacheManagementTool) Execute(ctx context.Context, params map[stri
 	case "configure":
 		maxSizeMB, _ := params["max_size_mb"].(float64)
 		return Success(map[string]interface{}{
-			"operation":  operation,
-			"cache_type": cacheType,
+			"operation":   operation,
+			"cache_type":  cacheType,
 			"max_size_mb": maxSizeMB,
 			"instructions": []string{
 				fmt.Sprintf("Configure cache size: ALTER SYSTEM SET shared_buffers = '%dMB';", int(maxSizeMB)),
@@ -576,9 +576,3 @@ func (t *VectorCacheManagementTool) Execute(ctx context.Context, params map[stri
 		return Error(fmt.Sprintf("Invalid operation: %s", operation), "INVALID_PARAMETER", nil), nil
 	}
 }
-
-
-
-
-
-

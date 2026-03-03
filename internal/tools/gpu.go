@@ -85,8 +85,3 @@ func (t *GPUMonitoringTool) Execute(ctx context.Context, params map[string]inter
 
 	return Success(result, nil), nil
 }
-
-
-
-
-

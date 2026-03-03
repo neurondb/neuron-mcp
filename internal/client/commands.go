@@ -27,7 +27,7 @@ func ParseCommand(commandStr string) (string, map[string]interface{}, error) {
 		return "", nil, fmt.Errorf("empty command")
 	}
 
-  /* Check if command has arguments */
+	/* Check if command has arguments */
 	parts := strings.SplitN(commandStr, ":", 2)
 	toolName := strings.TrimSpace(parts[0])
 
@@ -53,8 +53,8 @@ func parseArguments(argsStr string) (map[string]interface{}, error) {
 		return args, nil
 	}
 
-  /* Simple parser for key=value pairs */
-  /* Handles: strings, numbers, booleans, arrays, objects */
+	/* Simple parser for key=value pairs */
+	/* Handles: strings, numbers, booleans, arrays, objects */
 	var currentKey string
 	var currentValue strings.Builder
 	inString := false
@@ -120,7 +120,7 @@ func parseArguments(argsStr string) (map[string]interface{}, error) {
 		}
 	}
 
-  /* Add last argument */
+	/* Add last argument */
 	addArg()
 
 	return args, nil
@@ -130,12 +130,12 @@ func parseArguments(argsStr string) (map[string]interface{}, error) {
 func parseValue(valueStr string) interface{} {
 	valueStr = strings.TrimSpace(valueStr)
 
-  /* None/null */
+	/* None/null */
 	if valueStr == "null" || valueStr == "none" || valueStr == "None" {
 		return nil
 	}
 
-  /* Boolean */
+	/* Boolean */
 	if valueStr == "true" || valueStr == "True" {
 		return true
 	}
@@ -143,13 +143,13 @@ func parseValue(valueStr string) interface{} {
 		return false
 	}
 
-  /* Try JSON parsing (for arrays, objects, numbers) */
+	/* Try JSON parsing (for arrays, objects, numbers) */
 	var jsonValue interface{}
 	if err := json.Unmarshal([]byte(valueStr), &jsonValue); err == nil {
 		return jsonValue
 	}
 
-  /* Try number parsing */
+	/* Try number parsing */
 	if strings.Contains(valueStr, ".") {
 		if f, err := parseFloat(valueStr); err == nil {
 			return f
@@ -160,7 +160,7 @@ func parseValue(valueStr string) interface{} {
 		}
 	}
 
-  /* Remove quotes if present */
+	/* Remove quotes if present */
 	if len(valueStr) >= 2 {
 		if (valueStr[0] == '"' && valueStr[len(valueStr)-1] == '"') ||
 			(valueStr[0] == '\'' && valueStr[len(valueStr)-1] == '\'') {
@@ -168,7 +168,7 @@ func parseValue(valueStr string) interface{} {
 		}
 	}
 
-  /* Return as string */
+	/* Return as string */
 	return valueStr
 }
 
@@ -183,12 +183,3 @@ func parseFloat(s string) (float64, error) {
 	_, err := fmt.Sscanf(s, "%f", &result)
 	return result, err
 }
-
-
-
-
-
-
-
-
-

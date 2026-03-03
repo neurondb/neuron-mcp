@@ -112,6 +112,3 @@ func (r *VectorIndexesResource) GetContent(ctx context.Context) (interface{}, er
 
 	return result, nil
 }
-
-
-

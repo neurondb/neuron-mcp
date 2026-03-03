@@ -20,7 +20,7 @@ import "context"
 
 /* FieldDescription describes a result set column (thin copy of pgconn.FieldDescription) */
 type FieldDescription struct {
-	Name       string
+	Name        string
 	DataTypeOID uint32
 }
 

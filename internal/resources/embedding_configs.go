@@ -86,7 +86,7 @@ func (r *EmbeddingConfigsResource) GetContent(ctx context.Context) (interface{},
 			"model_name":         config["model_name"],
 			"provider":           config["provider"],
 			"dimensions":         config["dimensions"],
-			"status":            config["status"],
+			"status":             config["status"],
 			"api_key_configured": config["api_key_configured"],
 			"created_at":         config["created_at"],
 			"updated_at":         config["updated_at"],
@@ -100,4 +100,3 @@ func (r *EmbeddingConfigsResource) GetContent(ctx context.Context) (interface{},
 
 	return result, nil
 }
-

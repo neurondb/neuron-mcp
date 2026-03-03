@@ -107,7 +107,10 @@ func matchesFilter(uri, filter string) bool {
 	/* Simple wildcard matching */
 	if strings.Contains(filter, "*") {
 		pattern := strings.ReplaceAll(filter, "*", ".*")
-		matched, _ := regexp.MatchString("^"+pattern+"$", uri)
+		matched, err := regexp.MatchString("^"+pattern+"$", uri)
+		if err != nil {
+			return false
+		}
 		return matched
 	}
 

@@ -26,15 +26,15 @@ import (
 
 /* PromptRequest represents a request for user input */
 type PromptRequest struct {
-	ID          string                 `json:"id"`
-	Message     string                 `json:"message"`
-	Type        string                 `json:"type"` /* text, confirm, choice, number */
-	Options     []string               `json:"options,omitempty"` /* For choice type */
-	Default     interface{}            `json:"default,omitempty"`
-	Required    bool                   `json:"required"`
-	Metadata    map[string]interface{} `json:"metadata,omitempty"`
-	CreatedAt   time.Time              `json:"createdAt"`
-	ExpiresAt   *time.Time             `json:"expiresAt,omitempty"`
+	ID        string                 `json:"id"`
+	Message   string                 `json:"message"`
+	Type      string                 `json:"type"`              /* text, confirm, choice, number */
+	Options   []string               `json:"options,omitempty"` /* For choice type */
+	Default   interface{}            `json:"default,omitempty"`
+	Required  bool                   `json:"required"`
+	Metadata  map[string]interface{} `json:"metadata,omitempty"`
+	CreatedAt time.Time              `json:"createdAt"`
+	ExpiresAt *time.Time             `json:"expiresAt,omitempty"`
 }
 
 /* PromptResponse represents a user response to a prompt */

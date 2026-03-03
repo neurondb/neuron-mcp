@@ -107,7 +107,7 @@ func (t *EmbedImageTool) Execute(ctx context.Context, params map[string]interfac
 		}), nil
 	}
 
-  /* Decode base64 image data */
+	/* Decode base64 image data */
 	imageBytes, err := base64.StdEncoding.DecodeString(imageData)
 	if err != nil {
 		return Error(fmt.Sprintf("Invalid base64 image data: %v", err), "VALIDATION_ERROR", map[string]interface{}{
@@ -213,7 +213,7 @@ func (t *EmbedMultimodalTool) Execute(ctx context.Context, params map[string]int
 		}), nil
 	}
 
-  /* Decode base64 image data */
+	/* Decode base64 image data */
 	imageBytes, err := base64.StdEncoding.DecodeString(imageData)
 	if err != nil {
 		return Error(fmt.Sprintf("Invalid base64 image data: %v", err), "VALIDATION_ERROR", map[string]interface{}{
@@ -574,12 +574,3 @@ func (t *DeleteEmbeddingModelConfigTool) Execute(ctx context.Context, params map
 		"model_name": modelName,
 	}), nil
 }
-
-
-
-
-
-
-
-
-

@@ -127,7 +127,7 @@ func (t *TimeSeriesTool) Execute(ctx context.Context, params map[string]interfac
 		t.logger.Error("Time series analysis failed", err, params)
 		return Error(fmt.Sprintf("Time series analysis failed: operation='%s', error=%v", operation, err), "EXECUTION_ERROR", map[string]interface{}{
 			"operation": operation,
-			"error":    err.Error(),
+			"error":     err.Error(),
 		}), nil
 	}
 
@@ -139,12 +139,3 @@ func (t *TimeSeriesTool) Execute(ctx context.Context, params map[string]interfac
 		"count":     len(results),
 	}), nil
 }
-
-
-
-
-
-
-
-
-

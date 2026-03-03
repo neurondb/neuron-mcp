@@ -121,6 +121,3 @@ func (m *ResponseValidationMiddleware) Execute(ctx context.Context, params map[s
 func (m *ResponseValidationMiddleware) Name() string {
 	return "response_validation"
 }
-
-
-

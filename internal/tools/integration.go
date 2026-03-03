@@ -27,8 +27,8 @@ import (
 /* SDKGeneratorTool generates SDKs for different languages */
 type SDKGeneratorTool struct {
 	*BaseTool
-	db          *database.Database
-	logger      *logging.Logger
+	db           *database.Database
+	logger       *logging.Logger
 	sdkGenerator *sdk.SDKGenerator
 	toolRegistry *ToolRegistry
 }
@@ -59,8 +59,8 @@ func NewSDKGeneratorTool(db *database.Database, logger *logging.Logger, toolRegi
 			"Auto-generate SDKs for Python, TypeScript, Go, Java",
 			inputSchema,
 		),
-		db:          db,
-		logger:      logger,
+		db:           db,
+		logger:       logger,
 		sdkGenerator: sdk.NewSDKGenerator(),
 		toolRegistry: toolRegistry,
 	}
@@ -86,7 +86,7 @@ func (t *SDKGeneratorTool) Execute(ctx context.Context, params map[string]interf
 		sdkDefinitions[i] = sdk.ToolDefinition{
 			Name:        def.Name,
 			Description: def.Description,
-			InputSchema:  def.InputSchema,
+			InputSchema: def.InputSchema,
 		}
 	}
 
@@ -101,4 +101,3 @@ func (t *SDKGeneratorTool) Execute(ctx context.Context, params map[string]interf
 		"code":          code,
 	}, nil), nil
 }
-

@@ -35,7 +35,7 @@ type IdempotencyStore interface {
 
 /* IdempotencyResult represents a cached idempotency result */
 type IdempotencyResult struct {
-	Response *middleware.MCPResponse
+	Response  *middleware.MCPResponse
 	ExpiresAt time.Time
 }
 
@@ -188,4 +188,3 @@ func (m *IdempotencyMiddleware) normalizeKey(method, key string) string {
 	hash := sha256.Sum256([]byte(combined))
 	return hex.EncodeToString(hash[:])
 }
-

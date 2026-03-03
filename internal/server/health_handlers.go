@@ -23,7 +23,7 @@ import (
 
 /* setupHealthHandlers sets up health check MCP handlers */
 func (s *Server) setupHealthHandlers() {
-  /* Health check handler */
+	/* Health check handler */
 	s.mcpServer.SetHandler("health/check", s.handleHealthCheck)
 }
 
@@ -38,7 +38,7 @@ func (s *Server) handleHealthCheck(ctx context.Context, params json.RawMessage) 
 	if s.health == nil {
 		return nil, fmt.Errorf("health checker is not initialized")
 	}
-	
+
 	mcpReq := &middleware.MCPRequest{
 		Method:   "health/check",
 		Params:   make(map[string]interface{}),
@@ -64,15 +64,3 @@ func (s *Server) handleHealthCheck(ctx context.Context, params json.RawMessage) 
 		}, nil
 	})
 }
-
-
-
-
-
-
-
-
-
-
-
-

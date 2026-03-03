@@ -127,4 +127,3 @@ func (m *LoggingMiddleware) Execute(ctx context.Context, req *middleware.MCPRequ
 
 	return resp, nil
 }
-

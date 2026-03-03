@@ -25,9 +25,9 @@ import (
 )
 
 const (
-	DefaultQueryTimeout    = 60 * time.Second
-	EmbeddingQueryTimeout  = 120 * time.Second
-	VectorSearchTimeout    = 30 * time.Second
+	DefaultQueryTimeout   = 60 * time.Second
+	EmbeddingQueryTimeout = 120 * time.Second
+	VectorSearchTimeout   = 30 * time.Second
 )
 
 /* QueryExecutor executes database queries for tools */
@@ -50,23 +50,23 @@ func (e *QueryExecutor) ExecuteVectorSearchWithMinkowski(ctx context.Context, ta
 	if e.db == nil {
 		return nil, fmt.Errorf("query executor database instance is nil: cannot execute vector search on table '%s', column '%s'", table, vectorColumn)
 	}
-	
+
 	if !e.db.IsConnected() {
 		return nil, fmt.Errorf("database connection not available: cannot execute vector search on table '%s', column '%s' (database connection pool is not initialized)", table, vectorColumn)
 	}
-	
+
 	if table == "" {
 		return nil, fmt.Errorf("table name is required for vector search: table parameter is empty")
 	}
-	
+
 	if vectorColumn == "" {
 		return nil, fmt.Errorf("vector column name is required for vector search: vector_column parameter is empty for table '%s'", table)
 	}
-	
+
 	if len(queryVector) == 0 {
 		return nil, fmt.Errorf("query vector cannot be empty: vector search on table '%s', column '%s' requires a non-empty query vector", table, vectorColumn)
 	}
-	
+
 	vec := make([]float32, 0, len(queryVector))
 	for i, v := range queryVector {
 		if f, ok := v.(float64); ok {
@@ -148,25 +148,25 @@ func (e *QueryExecutor) ExecuteQuery(ctx context.Context, query string, params [
 	if e.db == nil {
 		return nil, fmt.Errorf("query executor database instance is nil: cannot execute query '%s' with %d parameters", query, len(params))
 	}
-	
+
 	if !e.db.IsConnected() {
 		return nil, fmt.Errorf("database connection not available: cannot execute query '%s' with %d parameters (database connection pool is not initialized)", query, len(params))
 	}
-	
+
 	if query == "" {
 		return nil, fmt.Errorf("query string is empty: cannot execute empty query")
 	}
-	
+
 	queryCtx, cancel := context.WithTimeout(ctx, DefaultQueryTimeout)
 	defer cancel()
-	
+
 	/* Check if context is already cancelled before executing query */
 	select {
 	case <-ctx.Done():
 		return nil, fmt.Errorf("query cancelled: query='%s', parameter_count=%d, error=%w", query, len(params), ctx.Err())
 	default:
 	}
-	
+
 	rows, err := e.db.Query(queryCtx, query, params...)
 	if err != nil {
 		if queryCtx.Err() != nil {
@@ -205,25 +205,25 @@ func (e *QueryExecutor) ExecuteQueryOneWithTimeout(ctx context.Context, query st
 	if e.db == nil {
 		return nil, fmt.Errorf("query executor database instance is nil: cannot execute single-row query '%s' with %d parameters", query, len(params))
 	}
-	
+
 	if !e.db.IsConnected() {
 		return nil, fmt.Errorf("database connection not available: cannot execute single-row query '%s' with %d parameters (database connection pool is not initialized)", query, len(params))
 	}
-	
+
 	if query == "" {
 		return nil, fmt.Errorf("query string is empty: cannot execute empty query for single row result")
 	}
-	
+
 	queryCtx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
-	
+
 	/* Check if context is already cancelled before executing query */
 	select {
 	case <-ctx.Done():
 		return nil, fmt.Errorf("query cancelled: query='%s', parameter_count=%d, error=%w", query, len(params), ctx.Err())
 	default:
 	}
-	
+
 	rows, err := e.db.Query(queryCtx, query, params...)
 	if err != nil {
 		/* Check if error is due to context cancellation/timeout */
@@ -288,22 +288,22 @@ func (e *QueryExecutor) Exec(ctx context.Context, query string, params []interfa
 	if e.db == nil {
 		return fmt.Errorf("query executor database instance is nil: cannot execute DDL query '%s' with %d parameters", query, len(params))
 	}
-	
+
 	if !e.db.IsConnected() {
 		return fmt.Errorf("database connection not available: cannot execute DDL query '%s' with %d parameters (database connection pool is not initialized)", query, len(params))
 	}
-	
+
 	if query == "" {
 		return fmt.Errorf("query string is empty: cannot execute empty DDL query")
 	}
-	
+
 	/* Check if context is already cancelled before executing */
 	select {
 	case <-ctx.Done():
 		return fmt.Errorf("query cancelled: query='%s', parameter_count=%d, error=%w", query, len(params), ctx.Err())
 	default:
 	}
-	
+
 	_, err := e.db.Exec(ctx, query, params...)
 	if err != nil {
 		/* Check if context was cancelled */
@@ -314,4 +314,3 @@ func (e *QueryExecutor) Exec(ctx context.Context, query string, params []interfa
 	}
 	return nil
 }
-

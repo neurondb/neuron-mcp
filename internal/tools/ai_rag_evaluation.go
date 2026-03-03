@@ -147,13 +147,13 @@ func (t *AIRAGEvaluationTool) evaluateRetrieval(ctx context.Context, params map[
 	ndcg := t.calculateNDCG(groundTruth, retrievedDocs, int(k))
 
 	return Success(map[string]interface{}{
-		"query":     query,
+		"query": query,
 		"metrics": map[string]interface{}{
 			"precision_at_k": precision,
-			"recall":          recall,
-			"f1_score":         f1,
-			"mrr":             mrr,
-			"ndcg_at_k":       ndcg,
+			"recall":         recall,
+			"f1_score":       f1,
+			"mrr":            mrr,
+			"ndcg_at_k":      ndcg,
 		},
 		"k": int(k),
 	}, nil), nil
@@ -175,7 +175,7 @@ func (t *AIRAGEvaluationTool) evaluateAnswer(ctx context.Context, params map[str
 	semanticSimilarity := t.calculateSemanticSimilarity(answer, referenceAnswer)
 
 	return Success(map[string]interface{}{
-		"answer":            answer,
+		"answer":           answer,
 		"reference_answer": referenceAnswer,
 		"metrics": map[string]interface{}{
 			"exact_match":         exactMatch,
@@ -203,7 +203,7 @@ func (t *AIRAGEvaluationTool) fullEvaluation(ctx context.Context, params map[str
 
 	return Success(map[string]interface{}{
 		"retrieval_metrics": retrievalMetrics,
-		"answer_metrics":     answerMetrics,
+		"answer_metrics":    answerMetrics,
 		"overall_score":     overallScore,
 		"evaluation_time":   time.Now(),
 	}, nil), nil
@@ -839,4 +839,3 @@ func (t *AIEmbeddingDriftDetectionTool) calculateSeverity(driftScore, threshold 
 	}
 	return "low"
 }
-

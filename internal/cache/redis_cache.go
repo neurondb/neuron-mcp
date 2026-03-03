@@ -133,7 +133,7 @@ func (m *MultiLevelCache) Get(ctx context.Context, key string) (interface{}, boo
 	if m.l2 != nil {
 		if value, found := m.l2.Get(ctx, key); found {
 			/* Promote to L1 */
-			m.l1.Set(ctx, key, value, 5*time.Minute)
+			_ = m.l1.Set(ctx, key, value, 5*time.Minute)
 			return value, true
 		}
 	}
@@ -158,7 +158,7 @@ func (m *MultiLevelCache) Set(ctx context.Context, key string, value interface{}
 
 /* Delete removes from both levels */
 func (m *MultiLevelCache) Delete(ctx context.Context, key string) error {
-	m.l1.Delete(ctx, key)
+	_ = m.l1.Delete(ctx, key)
 	if m.l2 != nil {
 		return m.l2.Delete(ctx, key)
 	}
@@ -167,7 +167,7 @@ func (m *MultiLevelCache) Delete(ctx context.Context, key string) error {
 
 /* Clear clears both levels */
 func (m *MultiLevelCache) Clear(ctx context.Context) error {
-	m.l1.Clear(ctx)
+	_ = m.l1.Clear(ctx)
 	if m.l2 != nil {
 		return m.l2.Clear(ctx)
 	}

@@ -21,10 +21,10 @@ import (
 
 /* RequestPromptRequest represents a prompts/request request */
 type RequestPromptRequest struct {
-	Message string                 `json:"message"`
-	Type    string                 `json:"type,omitempty"` /* text, confirm, choice, number */
-	Options []string               `json:"options,omitempty"`
-	Default interface{}            `json:"default,omitempty"`
+	Message  string                 `json:"message"`
+	Type     string                 `json:"type,omitempty"` /* text, confirm, choice, number */
+	Options  []string               `json:"options,omitempty"`
+	Default  interface{}            `json:"default,omitempty"`
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 }
 

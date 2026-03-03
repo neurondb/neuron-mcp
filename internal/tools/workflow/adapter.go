@@ -32,8 +32,8 @@ type ToolInterface interface {
 /* ToolResult represents a tool execution result */
 type ToolResult struct {
 	Success bool
-	Data     interface{}
-	Error    *ToolError
+	Data    interface{}
+	Error   *ToolError
 }
 
 /* ToolError represents a tool error */

@@ -25,18 +25,18 @@ import (
 
 /* IdempotencyCacheEntry represents a cached idempotency result */
 type IdempotencyCacheEntry struct {
-	Result    *mcp.ToolResult
-	Timestamp time.Time
-	ExpiresAt time.Time
+	Result     *mcp.ToolResult
+	Timestamp  time.Time
+	ExpiresAt  time.Time
 	LastAccess time.Time /* For LRU eviction */
 }
 
 /* IdempotencyCache provides caching for idempotency keys */
 type IdempotencyCache struct {
-	entries map[string]*IdempotencyCacheEntry
-	mu      sync.RWMutex
-	ttl     time.Duration
-	maxSize int /* Maximum number of entries (0 = unlimited) */
+	entries         map[string]*IdempotencyCacheEntry
+	mu              sync.RWMutex
+	ttl             time.Duration
+	maxSize         int /* Maximum number of entries (0 = unlimited) */
 	cleanupInterval time.Duration
 	stopCleanup     chan struct{}
 	closeOnce       sync.Once /* Ensure Close() is only called once */
@@ -51,15 +51,15 @@ func NewIdempotencyCache(ttl time.Duration) *IdempotencyCache {
 func NewIdempotencyCacheWithSize(ttl time.Duration, maxSize int) *IdempotencyCache {
 	cache := &IdempotencyCache{
 		entries:         make(map[string]*IdempotencyCacheEntry),
-		ttl:              ttl,
+		ttl:             ttl,
 		maxSize:         maxSize,
 		cleanupInterval: time.Minute * 5, /* Clean up expired entries every 5 minutes */
 		stopCleanup:     make(chan struct{}),
 	}
-	
+
 	/* Start background cleanup goroutine */
 	go cache.cleanup()
-	
+
 	return cache
 }
 
@@ -68,25 +68,25 @@ func (c *IdempotencyCache) Get(key string) (*mcp.ToolResult, bool) {
 	if key == "" {
 		return nil, false
 	}
-	
+
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	entry, exists := c.entries[key]
 	if !exists {
 		return nil, false
 	}
-	
+
 	/* Check if entry has expired */
 	if time.Now().After(entry.ExpiresAt) {
 		/* Entry expired, remove it */
 		delete(c.entries, key)
 		return nil, false
 	}
-	
+
 	/* Update last access time for LRU */
 	entry.LastAccess = time.Now()
-	
+
 	return entry.Result, true
 }
 
@@ -95,17 +95,17 @@ func (c *IdempotencyCache) Set(key string, result *mcp.ToolResult) {
 	if key == "" {
 		return
 	}
-	
+
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	/* If cache is at max size and key doesn't exist, evict LRU entry */
 	if c.maxSize > 0 && len(c.entries) >= c.maxSize {
 		if _, exists := c.entries[key]; !exists {
 			c.evictLRU()
 		}
 	}
-	
+
 	now := time.Now()
 	c.entries[key] = &IdempotencyCacheEntry{
 		Result:     result,
@@ -120,11 +120,11 @@ func (c *IdempotencyCache) evictLRU() {
 	if len(c.entries) == 0 {
 		return
 	}
-	
+
 	var oldestKey string
 	var oldestTime time.Time
 	first := true
-	
+
 	for key, entry := range c.entries {
 		if first || entry.LastAccess.Before(oldestTime) {
 			oldestKey = key
@@ -132,7 +132,7 @@ func (c *IdempotencyCache) evictLRU() {
 			first = false
 		}
 	}
-	
+
 	if oldestKey != "" {
 		delete(c.entries, oldestKey)
 	}
@@ -143,10 +143,10 @@ func (c *IdempotencyCache) Delete(key string) {
 	if key == "" {
 		return
 	}
-	
+
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	delete(c.entries, key)
 }
 
@@ -154,7 +154,7 @@ func (c *IdempotencyCache) Delete(key string) {
 func (c *IdempotencyCache) Clear() {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	c.entries = make(map[string]*IdempotencyCacheEntry)
 }
 
@@ -162,7 +162,7 @@ func (c *IdempotencyCache) Clear() {
 func (c *IdempotencyCache) cleanup() {
 	ticker := time.NewTicker(c.cleanupInterval)
 	defer ticker.Stop()
-	
+
 	for {
 		select {
 		case <-ticker.C:
@@ -177,7 +177,7 @@ func (c *IdempotencyCache) cleanup() {
 func (c *IdempotencyCache) cleanupExpired() {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	now := time.Now()
 	for key, entry := range c.entries {
 		if now.After(entry.ExpiresAt) {
@@ -206,7 +206,6 @@ func (c *IdempotencyCache) Close() {
 func (c *IdempotencyCache) Size() int {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	
+
 	return len(c.entries)
 }
-

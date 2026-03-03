@@ -70,9 +70,9 @@ func (t *SSETransport) WriteMessage(resp *JSONRPCResponse) error {
 /* WriteProgress writes a progress update */
 func (t *SSETransport) WriteProgress(progressID string, progress float64, message string) error {
 	data := map[string]interface{}{
-		"id":       progressID,
-		"progress": progress,
-		"message":  message,
+		"id":        progressID,
+		"progress":  progress,
+		"message":   message,
 		"timestamp": time.Now().Unix(),
 	}
 	return t.WriteEvent("progress", data)
@@ -90,7 +90,6 @@ func (t *SSETransport) WriteError(err error) error {
 /* Close closes the SSE connection */
 func (t *SSETransport) Close() error {
 	/* Send close event */
-	t.WriteEvent("close", map[string]interface{}{"message": "connection closed"})
+	_ = t.WriteEvent("close", map[string]interface{}{"message": "connection closed"})
 	return nil
 }
-

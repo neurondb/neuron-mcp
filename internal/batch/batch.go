@@ -26,13 +26,13 @@ import (
 
 const (
 	DefaultBatchTimeout = 300 * time.Second /* 5 minutes default timeout for batch operations */
-	DefaultMaxBatchSize = 100                /* Default maximum batch size */
+	DefaultMaxBatchSize = 100               /* Default maximum batch size */
 )
 
 /* BatchRequest represents a batch tool call request */
 type BatchRequest struct {
-	Tools      []ToolCall            `json:"tools"`
-	Transaction bool                 `json:"transaction,omitempty"`
+	Tools       []ToolCall `json:"tools"`
+	Transaction bool       `json:"transaction,omitempty"`
 }
 
 /* ToolCall represents a single tool call in a batch */
@@ -43,17 +43,17 @@ type ToolCall struct {
 
 /* BatchResult represents a batch operation result */
 type BatchResult struct {
-	Results []ToolResult            `json:"results"`
-	Success bool                    `json:"success"`
-	Error   string                  `json:"error,omitempty"`
+	Results []ToolResult `json:"results"`
+	Success bool         `json:"success"`
+	Error   string       `json:"error,omitempty"`
 }
 
 /* ToolResult represents a single tool result */
 type ToolResult struct {
-	Tool    string                 `json:"tool"`
-	Success bool                   `json:"success"`
-	Data    interface{}            `json:"data,omitempty"`
-	Error   string                 `json:"error,omitempty"`
+	Tool    string      `json:"tool"`
+	Success bool        `json:"success"`
+	Data    interface{} `json:"data,omitempty"`
+	Error   string      `json:"error,omitempty"`
 }
 
 /* Processor processes batch operations */
@@ -148,7 +148,7 @@ func (p *Processor) ProcessBatch(ctx context.Context, req BatchRequest) (*BatchR
 		if err != nil {
 			return nil, fmt.Errorf("batch processing: failed to start transaction: tool_count=%d, error=%w", len(req.Tools), err)
 		}
-		
+
 		/* Track if we need to rollback */
 		shouldRollback := false
 		defer func() {
@@ -198,7 +198,7 @@ func (p *Processor) ProcessBatch(ctx context.Context, req BatchRequest) (*BatchR
 
 			result := p.executeTool(batchCtx, toolCall, i, len(req.Tools))
 			results = append(results, result)
-			
+
 			/* If any tool fails and transaction is enabled, stop and rollback */
 			if !result.Success {
 				shouldRollback = true
@@ -219,7 +219,7 @@ func (p *Processor) ProcessBatch(ctx context.Context, req BatchRequest) (*BatchR
 			if rollbackErr := tx.Rollback(batchCtx); rollbackErr != nil {
 				if p.logger != nil {
 					p.logger.Warn("Failed to rollback transaction after commit failure", map[string]interface{}{
-						"commit_error": err.Error(),
+						"commit_error":   err.Error(),
 						"rollback_error": rollbackErr.Error(),
 					})
 				}
@@ -350,4 +350,3 @@ func (p *Processor) executeTool(ctx context.Context, toolCall ToolCall, index in
 		Data:    result.Data,
 	}
 }
-

@@ -140,5 +140,3 @@ func (r *DefaultTenantResolver) IsProjectMember(userID, projectID string) (bool,
 	}
 	return false, nil
 }
-
-

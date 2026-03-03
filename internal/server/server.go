@@ -126,7 +126,7 @@ func NewServerWithConfig(configPath string) (*Server, error) {
 	/* Configure resource subscriptions if enabled */
 	if subConfig := serverSettings.GetResourceSubscriptions(); subConfig != nil && subConfig.GetEnabled() {
 		capabilitiesManager.SetEnableSubscriptions(true)
-		capabilitiesManager.SetFeatureFlag("resource_subscriptions", true)
+		_ = capabilitiesManager.SetFeatureFlag("resource_subscriptions", true)
 	}
 
 	resourcesManager := resources.NewManager(db)

@@ -21,6 +21,7 @@ import (
 
 /* Valid tool name pattern: alphanumeric, underscore, hyphen, max 100 chars */
 var toolNamePattern = regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
+
 const maxToolNameLength = 100
 
 /* annotationsForToolName returns MCP hints based on tool name patterns */
@@ -100,11 +101,11 @@ type ToolDefinition struct {
 
 /* ToolRegistry manages tool registration and execution */
 type ToolRegistry struct {
-	tools      map[string]Tool
+	tools       map[string]Tool
 	definitions map[string]ToolDefinition
-	mu         sync.RWMutex
-	db         *database.Database
-	logger     *logging.Logger
+	mu          sync.RWMutex
+	db          *database.Database
+	logger      *logging.Logger
 }
 
 /* NewToolRegistry creates a new tool registry */
@@ -153,12 +154,12 @@ func (r *ToolRegistry) Register(tool Tool) {
 			existingVersion := existingTool.Version()
 			newVersion := tool.Version()
 			r.logger.Warn(fmt.Sprintf("Duplicate tool name detected: %s (overwriting existing tool)", toolName), map[string]interface{}{
-				"tool_name":           toolName,
+				"tool_name":            toolName,
 				"existing_description": existingTool.Description(),
-				"existing_version":    existingVersion,
-				"new_description":     tool.Description(),
-				"new_version":         newVersion,
-				"overwriting":         true,
+				"existing_version":     existingVersion,
+				"new_description":      tool.Description(),
+				"new_version":          newVersion,
+				"overwriting":          true,
 			})
 		}
 	}
@@ -202,7 +203,7 @@ func (r *ToolRegistry) Register(tool Tool) {
 		Version:      tool.Version(),
 		Deprecated:   tool.Deprecated(),
 		Deprecation:  tool.Deprecation(),
-		Annotations:   tool.Annotations(),
+		Annotations:  tool.Annotations(),
 	}
 
 	r.tools[toolName] = tool
@@ -231,7 +232,7 @@ func validateSchema(schema map[string]interface{}, schemaType string) error {
 	if schema == nil {
 		return fmt.Errorf("%s schema cannot be nil", schemaType)
 	}
-	
+
 	/* Check if type field exists and is valid */
 	if typeVal, exists := schema["type"]; exists {
 		if typeStr, ok := typeVal.(string); ok {
@@ -250,7 +251,7 @@ func validateSchema(schema map[string]interface{}, schemaType string) error {
 			return fmt.Errorf("schema type must be a string, got: %T", typeVal)
 		}
 	}
-	
+
 	/* Validate properties if it exists */
 	if properties, exists := schema["properties"]; exists {
 		if propertiesMap, ok := properties.(map[string]interface{}); !ok {
@@ -266,7 +267,7 @@ func validateSchema(schema map[string]interface{}, schemaType string) error {
 			}
 		}
 	}
-	
+
 	return nil
 }
 
@@ -416,7 +417,6 @@ func (r *ToolRegistry) Search(query string, category string) []ToolDefinition {
 
 /* containsIgnoreCase checks if a string contains another (case-insensitive) */
 func containsIgnoreCase(s, substr string) bool {
-	return len(s) >= len(substr) && (s == substr || 
+	return len(s) >= len(substr) && (s == substr ||
 		strings.Contains(strings.ToLower(s), strings.ToLower(substr)))
 }
-

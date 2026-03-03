@@ -32,15 +32,15 @@ type Workflow struct {
 
 /* Step represents a workflow step */
 type Step struct {
-	ID          string                 `json:"id"`
-	Name        string                 `json:"name"`
-	Tool        string                 `json:"tool"`
-	Arguments   map[string]interface{} `json:"arguments,omitempty"`
-	Condition   *string                `json:"condition,omitempty"` /* JavaScript expression */
-	OnError     string                 `json:"onError,omitempty"` /* continue, stop, retry */
-	Retries    int                    `json:"retries,omitempty"`
-	Timeout    *time.Duration         `json:"timeout,omitempty"`
-	DependsOn  []string               `json:"dependsOn,omitempty"` /* Step IDs this step depends on */
+	ID        string                 `json:"id"`
+	Name      string                 `json:"name"`
+	Tool      string                 `json:"tool"`
+	Arguments map[string]interface{} `json:"arguments,omitempty"`
+	Condition *string                `json:"condition,omitempty"` /* JavaScript expression */
+	OnError   string                 `json:"onError,omitempty"`   /* continue, stop, retry */
+	Retries   int                    `json:"retries,omitempty"`
+	Timeout   *time.Duration         `json:"timeout,omitempty"`
+	DependsOn []string               `json:"dependsOn,omitempty"` /* Step IDs this step depends on */
 }
 
 /* ExecutionState represents workflow execution state */

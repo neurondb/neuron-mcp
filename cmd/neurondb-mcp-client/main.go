@@ -53,7 +53,7 @@ func main() {
 
 	flag.Parse()
 
-  /* Validate arguments */
+	/* Validate arguments */
 	if *configPath == "" {
 		fmt.Fprintf(os.Stderr, "Error: Configuration file path (-c/--config) is required\n")
 		flag.Usage()
@@ -72,17 +72,17 @@ func main() {
 		os.Exit(1)
 	}
 
-  /* Load configuration */
+	/* Load configuration */
 	config, err := client.LoadConfig(*configPath, *serverName)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: Failed to load configuration from file '%s': %v\n", *configPath, err)
 		os.Exit(1)
 	}
 
-  /* Initialize output manager */
+	/* Initialize output manager */
 	outputMgr := client.NewOutputManager(*output)
 
-  /* Create and connect client */
+	/* Create and connect client */
 	mcpClient, err := client.NewMCPClient(config, *verbose)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: Failed to create MCP client: %v\n", err)
@@ -95,9 +95,9 @@ func main() {
 	}
 	defer mcpClient.Disconnect()
 
-  /* Execute commands */
+	/* Execute commands */
 	if *execute != "" {
-   /* Single command execution */
+		/* Single command execution */
 		result, err := mcpClient.ExecuteCommand(*execute)
 		if err != nil {
 			result = map[string]interface{}{
@@ -107,13 +107,15 @@ func main() {
 		outputMgr.AddResult(*execute, result)
 		if *verbose {
 			fmt.Printf("Command executed: %s\n", *execute)
-			resultJSON, _ := json.MarshalIndent(result, "", "  ")
-			fmt.Printf("Result: %s\n", string(resultJSON))
+			resultJSON, err := json.MarshalIndent(result, "", "  ")
+			if err == nil {
+				fmt.Printf("Result: %s\n", string(resultJSON))
+			}
 		} else {
 			fmt.Printf("Command executed: %s\n", *execute)
 		}
 	} else if *file != "" {
-   /* Batch command execution */
+		/* Batch command execution */
 		commands, err := readCommandsFile(*file)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error: Failed to read command file '%s': %v\n", *file, err)
@@ -133,13 +135,15 @@ func main() {
 			}
 			outputMgr.AddResult(command, result)
 			if *verbose {
-				resultJSON, _ := json.MarshalIndent(result, "", "  ")
-				fmt.Printf("  Result: %s\n", string(resultJSON))
+				resultJSON, err := json.MarshalIndent(result, "", "  ")
+				if err == nil {
+					fmt.Printf("  Result: %s\n", string(resultJSON))
+				}
 			}
 		}
 	}
 
-  /* Save output */
+	/* Save output */
 	outputFile, err := outputMgr.Save()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: Failed to save command execution results to output file: %v\n", err)
@@ -158,7 +162,7 @@ func readCommandsFile(filePath string) ([]string, error) {
 	lines := splitLines(string(data))
 	for _, line := range lines {
 		line = trimSpace(line)
-   /* Skip empty lines and comments */
+		/* Skip empty lines and comments */
 		if line == "" || line[0] == '#' {
 			continue
 		}
@@ -200,4 +204,3 @@ func trimSpace(s string) string {
 	}
 	return s[start:end]
 }
-

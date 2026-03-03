@@ -169,9 +169,9 @@ func (t *TextSearchTool) Execute(ctx context.Context, params map[string]interfac
 	if limit < 1 || limit > 10000 {
 		return Error(fmt.Sprintf("limit must be between 1 and 10000 for neurondb_text_search tool: table='%s', received limit=%d", table, limit), "VALIDATION_ERROR", map[string]interface{}{
 			"parameter": "limit",
-			"table":      table,
-			"limit":      limit,
-			"params":     params,
+			"table":     table,
+			"limit":     limit,
+			"params":    params,
 		}), nil
 	}
 
@@ -194,12 +194,12 @@ func (t *TextSearchTool) Execute(ctx context.Context, params map[string]interfac
 		t.logger.Error("Text search failed", err, params)
 		return Error(fmt.Sprintf("Text search execution failed: table='%s', query_text_length=%d, text_column='%s', query_type='%s', limit=%d, error=%v",
 			table, len(queryText), textColumn, queryType, limit, err), "SEARCH_ERROR", map[string]interface{}{
-			"table":          table,
+			"table":             table,
 			"query_text_length": len(queryText),
-			"text_column":    textColumn,
-			"query_type":     queryType,
-			"limit":          limit,
-			"error":          err.Error(),
+			"text_column":       textColumn,
+			"query_type":        queryType,
+			"limit":             limit,
+			"error":             err.Error(),
 		}), nil
 	}
 
@@ -210,6 +210,3 @@ func (t *TextSearchTool) Execute(ctx context.Context, params map[string]interfac
 		"count":      len(result),
 	}), nil
 }
-
-
-

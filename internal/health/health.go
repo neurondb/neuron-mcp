@@ -29,43 +29,43 @@ const (
 
 /* HealthStatus represents health status */
 type HealthStatus struct {
-	Status      string                 `json:"status"`
-	Database    DatabaseHealth         `json:"database"`
-	Tools       ToolsHealth            `json:"tools"`
-	Resources   ResourcesHealth        `json:"resources"`
-	Pool        PoolHealth             `json:"pool,omitempty"`
-	Timestamp   time.Time              `json:"timestamp"`
+	Status    string          `json:"status"`
+	Database  DatabaseHealth  `json:"database"`
+	Tools     ToolsHealth     `json:"tools"`
+	Resources ResourcesHealth `json:"resources"`
+	Pool      PoolHealth      `json:"pool,omitempty"`
+	Timestamp time.Time       `json:"timestamp"`
 }
 
 /* DatabaseHealth represents database health */
 type DatabaseHealth struct {
-	Status    string        `json:"status"`
-	Latency   time.Duration `json:"latency,omitempty"`
-	Error     string        `json:"error,omitempty"`
+	Status  string        `json:"status"`
+	Latency time.Duration `json:"latency,omitempty"`
+	Error   string        `json:"error,omitempty"`
 }
 
 /* ToolsHealth represents tools health */
 type ToolsHealth struct {
-	Status      string `json:"status"`
-	TotalCount  int    `json:"totalCount"`
-	AvailableCount int `json:"availableCount"`
+	Status         string `json:"status"`
+	TotalCount     int    `json:"totalCount"`
+	AvailableCount int    `json:"availableCount"`
 }
 
 /* ResourcesHealth represents resources health */
 type ResourcesHealth struct {
-	Status      string `json:"status"`
-	TotalCount  int    `json:"totalCount"`
-	AvailableCount int `json:"availableCount"`
+	Status         string `json:"status"`
+	TotalCount     int    `json:"totalCount"`
+	AvailableCount int    `json:"availableCount"`
 }
 
 /* PoolHealth represents connection pool health */
 type PoolHealth struct {
-	Status          string `json:"status"`
-	TotalConnections int   `json:"totalConnections"`
-	IdleConnections  int   `json:"idleConnections"`
-	ActiveConnections int `json:"activeConnections"`
-	MaxConnections   int   `json:"maxConnections"`
-	Utilization     float64 `json:"utilization"`
+	Status            string  `json:"status"`
+	TotalConnections  int     `json:"totalConnections"`
+	IdleConnections   int     `json:"idleConnections"`
+	ActiveConnections int     `json:"activeConnections"`
+	MaxConnections    int     `json:"maxConnections"`
+	Utilization       float64 `json:"utilization"`
 }
 
 /* Checker performs health checks */
@@ -147,7 +147,7 @@ func (c *Checker) checkDatabase(ctx context.Context) DatabaseHealth {
 	}
 
 	start := time.Now()
-	
+
 	var result int
 	err := c.db.QueryRow(ctx, "SELECT 1").Scan(&result)
 	latency := time.Since(start)
@@ -169,16 +169,16 @@ func (c *Checker) checkDatabase(ctx context.Context) DatabaseHealth {
 func (c *Checker) checkTools(ctx context.Context) ToolsHealth {
 	if c == nil {
 		return ToolsHealth{
-			Status:        "unknown",
-			TotalCount:    0,
+			Status:         "unknown",
+			TotalCount:     0,
 			AvailableCount: 0,
 		}
 	}
 
 	if c.toolRegistry == nil {
 		return ToolsHealth{
-			Status:        "unknown",
-			TotalCount:    0,
+			Status:         "unknown",
+			TotalCount:     0,
 			AvailableCount: 0,
 		}
 	}
@@ -186,19 +186,19 @@ func (c *Checker) checkTools(ctx context.Context) ToolsHealth {
 	/* Get actual tool count from registry */
 	definitions := c.toolRegistry.GetAllDefinitions()
 	totalCount := len(definitions)
-	
+
 	/* For now, assume all registered tools are available */
 	/* In a full implementation, we could test each tool's availability */
 	availableCount := totalCount
 	status := "healthy"
-	
+
 	if totalCount == 0 {
 		status = "degraded"
 	}
 
 	return ToolsHealth{
-		Status:        status,
-		TotalCount:    totalCount,
+		Status:         status,
+		TotalCount:     totalCount,
 		AvailableCount: availableCount,
 	}
 }
@@ -207,16 +207,16 @@ func (c *Checker) checkTools(ctx context.Context) ToolsHealth {
 func (c *Checker) checkResources(ctx context.Context) ResourcesHealth {
 	if c == nil {
 		return ResourcesHealth{
-			Status:        "unknown",
-			TotalCount:    0,
+			Status:         "unknown",
+			TotalCount:     0,
 			AvailableCount: 0,
 		}
 	}
 
 	if c.resources == nil {
 		return ResourcesHealth{
-			Status:        "unknown",
-			TotalCount:    0,
+			Status:         "unknown",
+			TotalCount:     0,
 			AvailableCount: 0,
 		}
 	}
@@ -224,19 +224,19 @@ func (c *Checker) checkResources(ctx context.Context) ResourcesHealth {
 	/* Get actual resource count from manager */
 	definitions := c.resources.ListResources()
 	totalCount := len(definitions)
-	
+
 	/* For now, assume all registered resources are available */
 	/* In a full implementation, we could test each resource's availability */
 	availableCount := totalCount
 	status := "healthy"
-	
+
 	if totalCount == 0 {
 		status = "degraded"
 	}
 
 	return ResourcesHealth{
-		Status:        status,
-		TotalCount:    totalCount,
+		Status:         status,
+		TotalCount:     totalCount,
 		AvailableCount: availableCount,
 	}
 }
@@ -273,12 +273,11 @@ func (c *Checker) checkPool(ctx context.Context) PoolHealth {
 	}
 
 	return PoolHealth{
-		Status:           status,
-		TotalConnections: totalConns,
-		IdleConnections:  idleConns,
+		Status:            status,
+		TotalConnections:  totalConns,
+		IdleConnections:   idleConns,
 		ActiveConnections: activeConns,
-		MaxConnections:   totalConns,
-		Utilization:      utilization,
+		MaxConnections:    totalConns,
+		Utilization:       utilization,
 	}
 }
-

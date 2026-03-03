@@ -498,10 +498,10 @@ func (t *MLModelExplainabilityTool) Execute(ctx context.Context, params map[stri
 
 	/* Generate explainability based on method */
 	explanation := map[string]interface{}{
-		"model_id":    int(modelID),
-		"method":      method,
-		"model_info":  modelInfo,
-		"note":        "Full explainability requires external libraries (SHAP, LIME). This provides model metadata and feature information.",
+		"model_id":   int(modelID),
+		"method":     method,
+		"model_info": modelInfo,
+		"note":       "Full explainability requires external libraries (SHAP, LIME). This provides model metadata and feature information.",
 	}
 
 	switch method {
@@ -633,8 +633,8 @@ func (t *MLModelMonitoringTool) Execute(ctx context.Context, params map[string]i
 	}
 
 	return Success(map[string]interface{}{
-		"monitoring_data": results,
-		"count":           len(results),
+		"monitoring_data":  results,
+		"count":            len(results),
 		"time_range_hours": timeRangeHours,
 	}, map[string]interface{}{
 		"tool": "ml_model_monitoring",
@@ -763,12 +763,11 @@ func (t *MLModelRollbackTool) Execute(ctx context.Context, params map[string]int
 	})
 
 	return Success(map[string]interface{}{
-		"model_id":      int(modelID),
-		"current_model": currentModel,
-		"target_version": targetVersion,
+		"model_id":        int(modelID),
+		"current_model":   currentModel,
+		"target_version":  targetVersion,
 		"rollback_result": result,
 	}, map[string]interface{}{
 		"tool": "ml_model_rollback",
 	}), nil
 }
-

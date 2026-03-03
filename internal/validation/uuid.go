@@ -32,17 +32,17 @@ func ValidateUUID(s string) error {
 	if s == "" {
 		return fmt.Errorf("UUID cannot be empty")
 	}
-	
+
 	s = strings.ToLower(strings.TrimSpace(s))
 	if !uuidRegex.MatchString(s) {
 		return fmt.Errorf("invalid UUID format: %s (expected format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)", s)
 	}
-	
+
 	_, err := uuid.Parse(s)
 	if err != nil {
 		return fmt.Errorf("invalid UUID: %w", err)
 	}
-	
+
 	return nil
 }
 
@@ -61,6 +61,3 @@ func ParseUUID(s string) (uuid.UUID, error) {
 	}
 	return uuid.Parse(s)
 }
-
-
-

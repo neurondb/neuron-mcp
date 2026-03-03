@@ -27,10 +27,10 @@ import (
 
 /* TracingMiddleware provides distributed tracing */
 type TracingMiddleware struct {
-	tracer        *observability.Tracer
-	dbTiming      *observability.DBTimingTracker
-	logger        *logging.Logger
-	enabled       bool
+	tracer   *observability.Tracer
+	dbTiming *observability.DBTimingTracker
+	logger   *logging.Logger
+	enabled  bool
 }
 
 /* NewTracingMiddleware creates a new tracing middleware */
@@ -114,14 +114,11 @@ func (m *TracingMiddleware) Execute(ctx context.Context, req *middleware.MCPRequ
 	/* Log if enabled */
 	if m.logger != nil {
 		m.logger.Debug("Trace completed", map[string]interface{}{
-			"span_name": spanName,
+			"span_name":   spanName,
 			"duration_ms": duration.Milliseconds(),
-			"success": err == nil && (resp == nil || !resp.IsError),
+			"success":     err == nil && (resp == nil || !resp.IsError),
 		})
 	}
 
 	return resp, err
 }
-
-
-

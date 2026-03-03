@@ -22,15 +22,3 @@ import (
 func (c *Checker) HandleHealthCheck(ctx context.Context, params json.RawMessage) (interface{}, error) {
 	return c.Check(ctx), nil
 }
-
-
-
-
-
-
-
-
-
-
-
-

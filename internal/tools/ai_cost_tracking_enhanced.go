@@ -132,9 +132,9 @@ func (t *EnhancedAICostTrackingTool) Execute(ctx context.Context, params map[str
 
 	operation = strings.ToLower(strings.TrimSpace(operation))
 	validOperations := map[string]bool{
-		"track":            true,
-		"get_stats":        true,
-		"get_report":       true,
+		"track":              true,
+		"get_stats":          true,
+		"get_report":         true,
 		"delete_old_records": true,
 	}
 	if !validOperations[operation] {
@@ -170,7 +170,7 @@ func (t *EnhancedAICostTrackingTool) Execute(ctx context.Context, params map[str
 		t.logger.Error("Cost tracking operation failed", err, map[string]interface{}{
 			"operation_id": operationID,
 			"operation":    operation,
-			"duration_ms": time.Since(startTime).Milliseconds(),
+			"duration_ms":  time.Since(startTime).Milliseconds(),
 		})
 		return Error(fmt.Sprintf("Operation '%s' failed: %v", operation, err), "OPERATION_ERROR", map[string]interface{}{
 			"operation": operation,
@@ -235,8 +235,8 @@ func (t *EnhancedAICostTrackingTool) trackUsageEnhanced(ctx context.Context, par
 	model = strings.TrimSpace(model)
 	if len(model) > 200 {
 		return Error("model name exceeds maximum length of 200 characters", "INVALID_PARAMS", map[string]interface{}{
-			"field":     "model",
-			"length":    len(model),
+			"field":      "model",
+			"length":     len(model),
 			"max_length": 200,
 		}), nil
 	}
@@ -399,7 +399,7 @@ func (t *EnhancedAICostTrackingTool) trackUsageEnhanced(ctx context.Context, par
 		"record_id":    insertedID,
 		"model":        model,
 		"tokens_used":  tokensUsed,
-		"cost_usd":    cost,
+		"cost_usd":     cost,
 		"timestamp":    insertedTimestamp,
 		"operation_id": operationID,
 	}, nil), nil
@@ -581,10 +581,10 @@ func (t *EnhancedAICostTrackingTool) getStatsEnhanced(ctx context.Context, param
 	}
 
 	return Success(map[string]interface{}{
-		"stats":        stats,
-		"total_models": len(stats),
+		"stats":          stats,
+		"total_models":   len(stats),
 		"total_cost_usd": totalCost,
-		"total_tokens": totalTokens,
+		"total_tokens":   totalTokens,
 		"period": map[string]interface{}{
 			"start": startDate,
 			"end":   endDate,
@@ -817,16 +817,16 @@ func (t *EnhancedAICostTrackingTool) deleteOldRecords(ctx context.Context, param
 
 	/* Get count of deleted records (would need to use Exec and RowsAffected in real implementation) */
 	t.logger.Info("Old cost tracking records deleted", map[string]interface{}{
-		"operation_id":  operationID,
+		"operation_id":   operationID,
 		"retention_days": retentionDays,
 		"cutoff_date":    cutoffDate,
 	})
 
 	return Success(map[string]interface{}{
-		"deleted":       true,
+		"deleted":        true,
 		"retention_days": retentionDays,
-		"cutoff_date":   cutoffDate,
-		"message":       "Old records deleted successfully",
+		"cutoff_date":    cutoffDate,
+		"message":        "Old records deleted successfully",
 	}, nil), nil
 }
 
@@ -866,4 +866,3 @@ func parseDate(dateStr string) (time.Time, error) {
 
 	return time.Time{}, fmt.Errorf("unable to parse date: %s", dateStr)
 }
-

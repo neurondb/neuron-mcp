@@ -24,19 +24,19 @@ import (
 
 /* AuditEntry represents a single audit log entry */
 type AuditEntry struct {
-	RequestID    string                 `json:"request_id"`
-	Timestamp    time.Time              `json:"timestamp"`
-	Method       string                 `json:"method"`
-	ToolName     string                 `json:"tool_name,omitempty"`
-	UserID       string                 `json:"user_id,omitempty"`
-	OrgID        string                 `json:"org_id,omitempty"`
-	ProjectID    string                 `json:"project_id,omitempty"`
-	IPAddress    string                 `json:"ip_address,omitempty"`
-	Scopes       []string               `json:"scopes,omitempty"`
-	Status       string                 `json:"status"` // "success", "error", "denied"
-	Error        string                 `json:"error,omitempty"`
-	Duration     time.Duration          `json:"duration_ms"`
-	Metadata     map[string]interface{} `json:"metadata,omitempty"`
+	RequestID string                 `json:"request_id"`
+	Timestamp time.Time              `json:"timestamp"`
+	Method    string                 `json:"method"`
+	ToolName  string                 `json:"tool_name,omitempty"`
+	UserID    string                 `json:"user_id,omitempty"`
+	OrgID     string                 `json:"org_id,omitempty"`
+	ProjectID string                 `json:"project_id,omitempty"`
+	IPAddress string                 `json:"ip_address,omitempty"`
+	Scopes    []string               `json:"scopes,omitempty"`
+	Status    string                 `json:"status"` // "success", "error", "denied"
+	Error     string                 `json:"error,omitempty"`
+	Duration  time.Duration          `json:"duration_ms"`
+	Metadata  map[string]interface{} `json:"metadata,omitempty"`
 }
 
 /* Logger provides audit logging capabilities */
@@ -58,10 +58,10 @@ func (l *Logger) LogRequest(entry AuditEntry) {
 	}
 
 	fields := map[string]interface{}{
-		"request_id": entry.RequestID,
-		"timestamp":  entry.Timestamp,
-		"method":     entry.Method,
-		"status":     entry.Status,
+		"request_id":  entry.RequestID,
+		"timestamp":   entry.Timestamp,
+		"method":      entry.Method,
+		"status":      entry.Status,
 		"duration_ms": entry.Duration.Milliseconds(),
 	}
 
@@ -147,15 +147,3 @@ func NewRequestContext(ctx context.Context) *RequestContext {
 func (r *RequestContext) Duration() time.Duration {
 	return time.Since(r.StartTime)
 }
-
-
-
-
-
-
-
-
-
-
-
-

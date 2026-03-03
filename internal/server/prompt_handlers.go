@@ -23,10 +23,10 @@ import (
 
 /* setupPromptHandlers sets up prompt-related MCP handlers */
 func (s *Server) setupPromptHandlers() {
-  /* List prompts handler */
+	/* List prompts handler */
 	s.mcpServer.SetHandler("prompts/list", s.handleListPrompts)
 
-  /* Get prompt handler */
+	/* Get prompt handler */
 	s.mcpServer.SetHandler("prompts/get", s.handleGetPrompt)
 }
 
@@ -41,7 +41,7 @@ func (s *Server) handleListPrompts(ctx context.Context, params json.RawMessage) 
 	if s.prompts == nil {
 		return nil, fmt.Errorf("prompts manager is not initialized")
 	}
-	
+
 	mcpReq := &middleware.MCPRequest{
 		Method:   "prompts/list",
 		Params:   make(map[string]interface{}),
@@ -79,7 +79,7 @@ func (s *Server) handleGetPrompt(ctx context.Context, params json.RawMessage) (i
 	if s.prompts == nil {
 		return nil, fmt.Errorf("prompts manager is not initialized")
 	}
-	
+
 	mcpReq := &middleware.MCPRequest{
 		Method:   "prompts/get",
 		Params:   make(map[string]interface{}),
@@ -105,4 +105,3 @@ func (s *Server) handleGetPrompt(ctx context.Context, params json.RawMessage) (i
 		}, nil
 	})
 }
-

@@ -53,14 +53,14 @@ func (m *CorrelationMiddleware) Execute(ctx context.Context, req *middleware.MCP
 	/* Generate or get request ID */
 	ctx, reqID := observability.GetOrCreateRequestID(ctx)
 	requestIDStr := reqID.String()
-	
+
 	/* Add to request metadata if available */
 	if req.Metadata == nil {
 		req.Metadata = make(map[string]interface{})
 	}
 	req.Metadata["request_id"] = requestIDStr
 	req.Metadata["correlationId"] = requestIDStr /* Keep for backward compatibility */
-	
+
 	/* Log request with request ID */
 	if m.logger != nil {
 		m.logger.Debug("Request received", map[string]interface{}{
@@ -68,10 +68,10 @@ func (m *CorrelationMiddleware) Execute(ctx context.Context, req *middleware.MCP
 			"method":     req.Method,
 		})
 	}
-	
+
 	/* Execute next middleware */
 	resp, err := next(ctx, req)
-	
+
 	/* Add request ID to response metadata */
 	if resp != nil {
 		if resp.Metadata == nil {
@@ -80,7 +80,6 @@ func (m *CorrelationMiddleware) Execute(ctx context.Context, req *middleware.MCP
 		resp.Metadata["request_id"] = requestIDStr
 		resp.Metadata["correlationId"] = requestIDStr /* Keep for backward compatibility */
 	}
-	
+
 	return resp, err
 }
-

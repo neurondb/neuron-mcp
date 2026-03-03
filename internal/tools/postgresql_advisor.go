@@ -114,10 +114,10 @@ func (t *PostgreSQLQueryPlanAnalyzerTool) Execute(ctx context.Context, params ma
 	suggestions := t.analyzePlanDetails(planData, query)
 
 	return Success(map[string]interface{}{
-		"query":       query,
-		"plan":        planData,
-		"format":      format,
-		"suggestions": suggestions,
+		"query":         query,
+		"plan":          planData,
+		"format":        format,
+		"suggestions":   suggestions,
 		"cost_estimate": t.extractCostEstimate(planData),
 	}, nil), nil
 }
@@ -131,25 +131,25 @@ func (t *PostgreSQLQueryPlanAnalyzerTool) analyzePlanDetails(planData interface{
 	/* Check for expensive operations */
 	if strings.Contains(strings.ToLower(planStr), "hash join") {
 		suggestions = append(suggestions, map[string]interface{}{
-			"type":        "join",
-			"severity":    "medium",
-			"message":     "Hash join detected - consider adding indexes on join columns",
+			"type":     "join",
+			"severity": "medium",
+			"message":  "Hash join detected - consider adding indexes on join columns",
 		})
 	}
 
 	if strings.Contains(strings.ToLower(planStr), "nested loop") {
 		suggestions = append(suggestions, map[string]interface{}{
-			"type":        "join",
-			"severity":    "high",
-			"message":     "Nested loop join detected - may be slow for large tables",
+			"type":     "join",
+			"severity": "high",
+			"message":  "Nested loop join detected - may be slow for large tables",
 		})
 	}
 
 	if strings.Contains(strings.ToLower(planStr), "sort") {
 		suggestions = append(suggestions, map[string]interface{}{
-			"type":        "sort",
-			"severity":    "medium",
-			"message":     "Sort operation detected - consider adding ORDER BY index",
+			"type":     "sort",
+			"severity": "medium",
+			"message":  "Sort operation detected - consider adding ORDER BY index",
 		})
 	}
 
@@ -239,11 +239,11 @@ func (t *PostgreSQLConnectionPoolOptimizerTool) analyzePool(ctx context.Context)
 		var total, active, idle, idleInTx *int64
 		if err := rows.Scan(&total, &active, &idle, &idleInTx); err == nil {
 			return Success(map[string]interface{}{
-				"total_connections":      getInt(total, 0),
-				"active_connections":     getInt(active, 0),
-				"idle_connections":       getInt(idle, 0),
-				"idle_in_transaction":    getInt(idleInTx, 0),
-				"utilization_percent":    float64(getInt(active, 0)) / float64(getInt(total, 1)) * 100,
+				"total_connections":   getInt(total, 0),
+				"active_connections":  getInt(active, 0),
+				"idle_connections":    getInt(idle, 0),
+				"idle_in_transaction": getInt(idleInTx, 0),
+				"utilization_percent": float64(getInt(active, 0)) / float64(getInt(total, 1)) * 100,
 			}, nil), nil
 		}
 	}
@@ -265,7 +265,7 @@ func (t *PostgreSQLConnectionPoolOptimizerTool) recommendSettings(ctx context.Co
 	if rows.Next() {
 		var maxConnStr string
 		if err := rows.Scan(&maxConnStr); err == nil {
-			fmt.Sscanf(maxConnStr, "%d", &maxConn)
+			_, _ = fmt.Sscanf(maxConnStr, "%d", &maxConn)
 		}
 	}
 
@@ -284,10 +284,10 @@ func (t *PostgreSQLConnectionPoolOptimizerTool) recommendSettings(ctx context.Co
 	}
 
 	return Success(map[string]interface{}{
-		"current_max_connections": maxConn,
+		"current_max_connections":     maxConn,
 		"recommended_max_connections": recommendedMax,
-		"recommended_pool_size":     recommendedMax / 2,
-		"reasoning": "Based on current active connection usage",
+		"recommended_pool_size":       recommendedMax / 2,
+		"reasoning":                   "Based on current active connection usage",
 	}, nil), nil
 }
 
@@ -381,11 +381,11 @@ func (t *PostgreSQLVacuumAnalyzerTool) Execute(ctx context.Context, params map[s
 		ratio := getFloat(deadRatio, 0)
 		if ratio > 0.1 {
 			recommendations = append(recommendations, map[string]interface{}{
-				"schema":          schema,
-				"table":           relname,
+				"schema":           schema,
+				"table":            relname,
 				"dead_tuple_ratio": ratio,
-				"live_tuples":     getInt(liveTuples, 0),
-				"dead_tuples":     getInt(deadTuples, 0),
+				"live_tuples":      getInt(liveTuples, 0),
+				"dead_tuples":      getInt(deadTuples, 0),
 				"recommendation":   "VACUUM",
 				"priority":         t.getPriority(ratio),
 				"last_vacuum":      getTime(lastVacuum, time.Time{}),
@@ -492,12 +492,12 @@ func (t *PostgreSQLReplicationLagMonitorTool) Execute(ctx context.Context, param
 
 		lagSec := getFloat(lagSeconds, 0)
 		replica := map[string]interface{}{
-			"client_addr":  getString(clientAddr, "unknown"),
-			"state":        getString(state, "unknown"),
-			"sync_state":   getString(syncState, "unknown"),
-			"lag_bytes":    getFloat(lagBytes, 0),
-			"lag_seconds":  lagSec,
-			"status":       "ok",
+			"client_addr": getString(clientAddr, "unknown"),
+			"state":       getString(state, "unknown"),
+			"sync_state":  getString(syncState, "unknown"),
+			"lag_bytes":   getFloat(lagBytes, 0),
+			"lag_seconds": lagSec,
+			"status":      "ok",
 		}
 
 		if lagSec > threshold {
@@ -584,11 +584,11 @@ func (t *PostgreSQLWaitEventAnalyzerTool) Execute(ctx context.Context, params ma
 		}
 
 		waitEvents = append(waitEvents, map[string]interface{}{
-			"wait_event_type": getString(waitEventType, "unknown"),
-			"wait_event":      getString(waitEvent, "unknown"),
-			"count":           getInt(count, 0),
+			"wait_event_type":         getString(waitEventType, "unknown"),
+			"wait_event":              getString(waitEvent, "unknown"),
+			"count":                   getInt(count, 0),
 			"total_wait_time_seconds": getFloat(totalWaitTime, 0),
-			"recommendation":  t.getRecommendation(getString(waitEventType, ""), getString(waitEvent, "")),
+			"recommendation":          t.getRecommendation(getString(waitEventType, ""), getString(waitEvent, "")),
 		})
 	}
 
@@ -638,4 +638,3 @@ func (t *PostgreSQLWaitEventAnalyzerTool) getPrimaryBottleneck(waitEvents []map[
 	waitEventType, _ := firstEvent["wait_event_type"].(string)
 	return waitEventType
 }
-

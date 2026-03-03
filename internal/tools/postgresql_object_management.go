@@ -126,7 +126,7 @@ func (t *PostgreSQLAlterIndexTool) Execute(ctx context.Context, params map[strin
 	for _, alt := range alterations {
 		query := parts[0] + " " + parts[1] + " " + alt
 		queries = append(queries, query)
-		
+
 		err := t.executor.Exec(ctx, query, nil)
 		if err != nil {
 			return Error(
@@ -145,7 +145,7 @@ func (t *PostgreSQLAlterIndexTool) Execute(ctx context.Context, params map[strin
 	return Success(map[string]interface{}{
 		"index_name": indexName,
 		"schema":     schema,
-		"queries":     queries,
+		"queries":    queries,
 	}, map[string]interface{}{
 		"tool": "postgresql_alter_index",
 	}), nil
@@ -208,15 +208,15 @@ func (t *PostgreSQLDropIndexTool) Execute(ctx context.Context, params map[string
 	}
 
 	parts := []string{"DROP INDEX"}
-	
+
 	if ifExists, ok := params["if_exists"].(bool); ok && ifExists {
 		parts = append(parts, "IF EXISTS")
 	}
-	
+
 	if concurrently, ok := params["concurrently"].(bool); ok && concurrently {
 		parts = append(parts, "CONCURRENTLY")
 	}
-	
+
 	fullIndexName := fmt.Sprintf("%s.%s", quoteIdentifier(schema), quoteIdentifier(indexName))
 	parts = append(parts, fullIndexName)
 
@@ -346,7 +346,7 @@ func (t *PostgreSQLAlterViewTool) Execute(ctx context.Context, params map[string
 	for _, alt := range alterations {
 		query := parts[0] + " " + parts[1] + " " + alt
 		queries = append(queries, query)
-		
+
 		err := t.executor.Exec(ctx, query, nil)
 		if err != nil {
 			return Error(
@@ -428,14 +428,14 @@ func (t *PostgreSQLDropViewTool) Execute(ctx context.Context, params map[string]
 	}
 
 	parts := []string{"DROP VIEW"}
-	
+
 	if ifExists, ok := params["if_exists"].(bool); ok && ifExists {
 		parts = append(parts, "IF EXISTS")
 	}
-	
+
 	fullViewName := fmt.Sprintf("%s.%s", quoteIdentifier(schema), quoteIdentifier(viewName))
 	parts = append(parts, fullViewName)
-	
+
 	if cascade, ok := params["cascade"].(bool); ok && cascade {
 		parts = append(parts, "CASCADE")
 	} else {
@@ -614,7 +614,7 @@ func (t *PostgreSQLAlterFunctionTool) Execute(ctx context.Context, params map[st
 	for _, alt := range alterations {
 		query := parts[0] + " " + parts[1] + " " + alt
 		queries = append(queries, query)
-		
+
 		err := t.executor.Exec(ctx, query, nil)
 		if err != nil {
 			return Error(
@@ -633,7 +633,7 @@ func (t *PostgreSQLAlterFunctionTool) Execute(ctx context.Context, params map[st
 	return Success(map[string]interface{}{
 		"function_name": functionName,
 		"schema":        schema,
-		"queries":        queries,
+		"queries":       queries,
 	}, map[string]interface{}{
 		"tool": "postgresql_alter_function",
 	}), nil
@@ -715,14 +715,14 @@ func (t *PostgreSQLDropFunctionTool) Execute(ctx context.Context, params map[str
 	}
 
 	parts := []string{"DROP FUNCTION"}
-	
+
 	if ifExists, ok := params["if_exists"].(bool); ok && ifExists {
 		parts = append(parts, "IF EXISTS")
 	}
-	
+
 	fullFunctionName := fmt.Sprintf("%s.%s", quoteIdentifier(schema), signature)
 	parts = append(parts, fullFunctionName)
-	
+
 	if cascade, ok := params["cascade"].(bool); ok && cascade {
 		parts = append(parts, "CASCADE")
 	} else {
@@ -853,7 +853,7 @@ func (t *PostgreSQLAlterTriggerTool) Execute(ctx context.Context, params map[str
 	for _, alt := range alterations {
 		query := parts[0] + " " + parts[1] + " " + alt
 		queries = append(queries, query)
-		
+
 		err := t.executor.Exec(ctx, query, nil)
 		if err != nil {
 			return Error(
@@ -942,11 +942,11 @@ func (t *PostgreSQLDropTriggerTool) Execute(ctx context.Context, params map[stri
 
 	fullTableName := fmt.Sprintf("%s.%s", quoteIdentifier(schema), quoteIdentifier(tableName))
 	parts := []string{"DROP TRIGGER"}
-	
+
 	if ifExists, ok := params["if_exists"].(bool); ok && ifExists {
 		parts = append(parts, "IF EXISTS")
 	}
-	
+
 	parts = append(parts, quoteIdentifier(triggerName), "ON", fullTableName)
 
 	dropQuery := strings.Join(parts, " ")
@@ -1064,11 +1064,11 @@ func (t *PostgreSQLCreateSequenceTool) Execute(ctx context.Context, params map[s
 	}
 
 	parts := []string{"CREATE SEQUENCE"}
-	
+
 	if ifNotExists, ok := params["if_not_exists"].(bool); ok && ifNotExists {
 		parts = append(parts, "IF NOT EXISTS")
 	}
-	
+
 	fullSequenceName := fmt.Sprintf("%s.%s", quoteIdentifier(schema), quoteIdentifier(sequenceName))
 	parts = append(parts, fullSequenceName)
 
@@ -1313,7 +1313,7 @@ func (t *PostgreSQLAlterSequenceTool) Execute(ctx context.Context, params map[st
 	for _, alt := range alterations {
 		query := parts[0] + " " + parts[1] + " " + alt
 		queries = append(queries, query)
-		
+
 		err := t.executor.Exec(ctx, query, nil)
 		if err != nil {
 			return Error(
@@ -1332,7 +1332,7 @@ func (t *PostgreSQLAlterSequenceTool) Execute(ctx context.Context, params map[st
 	return Success(map[string]interface{}{
 		"sequence_name": sequenceName,
 		"schema":        schema,
-		"queries":        queries,
+		"queries":       queries,
 	}, map[string]interface{}{
 		"tool": "postgresql_alter_sequence",
 	}), nil
@@ -1395,14 +1395,14 @@ func (t *PostgreSQLDropSequenceTool) Execute(ctx context.Context, params map[str
 	}
 
 	parts := []string{"DROP SEQUENCE"}
-	
+
 	if ifExists, ok := params["if_exists"].(bool); ok && ifExists {
 		parts = append(parts, "IF EXISTS")
 	}
-	
+
 	fullSequenceName := fmt.Sprintf("%s.%s", quoteIdentifier(schema), quoteIdentifier(sequenceName))
 	parts = append(parts, fullSequenceName)
-	
+
 	if cascade, ok := params["cascade"].(bool); ok && cascade {
 		parts = append(parts, "CASCADE")
 	} else {
@@ -1525,11 +1525,11 @@ func (t *PostgreSQLCreateTypeTool) Execute(ctx context.Context, params map[strin
 	}
 
 	parts := []string{"CREATE TYPE"}
-	
+
 	if ifNotExists, ok := params["if_not_exists"].(bool); ok && ifNotExists {
 		parts = append(parts, "IF NOT EXISTS")
 	}
-	
+
 	fullTypeName := fmt.Sprintf("%s.%s", quoteIdentifier(schema), quoteIdentifier(typeName))
 	parts = append(parts, fullTypeName, "AS")
 
@@ -1750,7 +1750,7 @@ func (t *PostgreSQLAlterTypeTool) Execute(ctx context.Context, params map[string
 	for _, alt := range alterations {
 		query := parts[0] + " " + parts[1] + " " + alt
 		queries = append(queries, query)
-		
+
 		err := t.executor.Exec(ctx, query, nil)
 		if err != nil {
 			return Error(
@@ -1832,14 +1832,14 @@ func (t *PostgreSQLDropTypeTool) Execute(ctx context.Context, params map[string]
 	}
 
 	parts := []string{"DROP TYPE"}
-	
+
 	if ifExists, ok := params["if_exists"].(bool); ok && ifExists {
 		parts = append(parts, "IF EXISTS")
 	}
-	
+
 	fullTypeName := fmt.Sprintf("%s.%s", quoteIdentifier(schema), quoteIdentifier(typeName))
 	parts = append(parts, fullTypeName)
-	
+
 	if cascade, ok := params["cascade"].(bool); ok && cascade {
 		parts = append(parts, "CASCADE")
 	} else {
@@ -1958,11 +1958,11 @@ func (t *PostgreSQLCreateDomainTool) Execute(ctx context.Context, params map[str
 	}
 
 	parts := []string{"CREATE DOMAIN"}
-	
+
 	if ifNotExists, ok := params["if_not_exists"].(bool); ok && ifNotExists {
 		parts = append(parts, "IF NOT EXISTS")
 	}
-	
+
 	fullDomainName := fmt.Sprintf("%s.%s", quoteIdentifier(schema), quoteIdentifier(domainName))
 	parts = append(parts, fullDomainName, "AS", baseType)
 
@@ -2151,7 +2151,7 @@ func (t *PostgreSQLAlterDomainTool) Execute(ctx context.Context, params map[stri
 	for _, alt := range alterations {
 		query := parts[0] + " " + parts[1] + " " + alt
 		queries = append(queries, query)
-		
+
 		err := t.executor.Exec(ctx, query, nil)
 		if err != nil {
 			return Error(
@@ -2233,14 +2233,14 @@ func (t *PostgreSQLDropDomainTool) Execute(ctx context.Context, params map[strin
 	}
 
 	parts := []string{"DROP DOMAIN"}
-	
+
 	if ifExists, ok := params["if_exists"].(bool); ok && ifExists {
 		parts = append(parts, "IF EXISTS")
 	}
-	
+
 	fullDomainName := fmt.Sprintf("%s.%s", quoteIdentifier(schema), quoteIdentifier(domainName))
 	parts = append(parts, fullDomainName)
-	
+
 	if cascade, ok := params["cascade"].(bool); ok && cascade {
 		parts = append(parts, "CASCADE")
 	} else {
@@ -2272,7 +2272,3 @@ func (t *PostgreSQLDropDomainTool) Execute(ctx context.Context, params map[strin
 		"tool": "postgresql_drop_domain",
 	}), nil
 }
-
-
-
-

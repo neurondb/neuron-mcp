@@ -38,11 +38,11 @@ type RateLimitConfig struct {
 
 /* TokenBucket implements a token bucket rate limiter */
 type TokenBucket struct {
-	capacity     int
-	tokens       int
-	refillRate   int  /* tokens per second */
-	lastRefill   time.Time
-	mu           sync.Mutex
+	capacity   int
+	tokens     int
+	refillRate int /* tokens per second */
+	lastRefill time.Time
+	mu         sync.Mutex
 }
 
 /* NewTokenBucket creates a new token bucket */
@@ -80,13 +80,13 @@ func (tb *TokenBucket) Allow() bool {
 
 /* RateLimitMiddleware provides rate limiting */
 type RateLimitMiddleware struct {
-	config        *RateLimitConfig
-	logger        *logging.Logger
-	globalBucket  *TokenBucket
+	config          *RateLimitConfig
+	logger          *logging.Logger
+	globalBucket    *TokenBucket
 	userBuckets     map[string]*TokenBucket
 	toolBuckets     map[string]*TokenBucket
 	endpointBuckets map[string]*TokenBucket
-	mu            sync.RWMutex
+	mu              sync.RWMutex
 }
 
 /* NewRateLimitMiddleware creates a new rate limiting middleware */
@@ -300,4 +300,3 @@ func min(a, b int) int {
 	}
 	return b
 }
-

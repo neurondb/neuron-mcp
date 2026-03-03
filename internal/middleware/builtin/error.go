@@ -28,14 +28,14 @@ import (
 
 /* ErrorHandlingMiddleware handles errors */
 type ErrorHandlingMiddleware struct {
-	logger          *logging.Logger
+	logger           *logging.Logger
 	enableErrorStack bool
 }
 
 /* NewErrorHandlingMiddleware creates a new error handling middleware */
 func NewErrorHandlingMiddleware(logger *logging.Logger, enableStack bool) *ErrorHandlingMiddleware {
 	return &ErrorHandlingMiddleware{
-		logger:            logger,
+		logger:           logger,
 		enableErrorStack: enableStack,
 	}
 }
@@ -120,4 +120,3 @@ func (m *ErrorHandlingMiddleware) Execute(ctx context.Context, req *middleware.M
 
 	return resp, nil
 }
-

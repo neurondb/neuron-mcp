@@ -19,7 +19,7 @@ import "github.com/neurondb/NeuronMCP/pkg/mcp"
 type ToolResult struct {
 	Success  bool                   `json:"success"`
 	Data     interface{}            `json:"data,omitempty"`
-	Error    *ToolError            `json:"error,omitempty"`
+	Error    *ToolError             `json:"error,omitempty"`
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 }
 

@@ -139,10 +139,10 @@ func (t *AIModelFinetuningTool) startTraining(ctx context.Context, params map[st
 	}
 
 	return Success(map[string]interface{}{
-		"job_id":    jobID,
-		"status":    "pending",
+		"job_id":     jobID,
+		"status":     "pending",
 		"base_model": baseModel,
-		"message":   "Fine-tuning job started",
+		"message":    "Fine-tuning job started",
 	}, nil), nil
 }
 
@@ -178,9 +178,9 @@ func (t *AIModelFinetuningTool) getStatus(ctx context.Context, params map[string
 		}
 
 		result := map[string]interface{}{
-			"job_id":    jobID,
-			"status":    status,
-			"progress":  getFloat(progress, 0.0),
+			"job_id":     jobID,
+			"status":     status,
+			"progress":   getFloat(progress, 0.0),
 			"created_at": createdAt,
 			"updated_at": updatedAt,
 		}
@@ -346,7 +346,7 @@ func (t *AIPromptVersioningTool) createVersion(ctx context.Context, params map[s
 
 	return Success(map[string]interface{}{
 		"prompt_name": promptName,
-		"version":    version,
+		"version":     version,
 		"message":     "Prompt version created",
 	}, nil), nil
 }
@@ -426,15 +426,15 @@ func (t *AIPromptVersioningTool) getVersion(ctx context.Context, params map[stri
 
 			var variables map[string]interface{}
 			if variablesJSON != nil {
-				json.Unmarshal([]byte(*variablesJSON), &variables)
+				_ = json.Unmarshal([]byte(*variablesJSON), &variables)
 			}
 
 			return Success(map[string]interface{}{
 				"prompt_name": promptName,
-				"version":    v,
-				"template":   template,
-				"variables":  variables,
-				"created_at": createdAt,
+				"version":     v,
+				"template":    template,
+				"variables":   variables,
+				"created_at":  createdAt,
 			}, nil), nil
 		}
 
@@ -465,15 +465,15 @@ func (t *AIPromptVersioningTool) getVersion(ctx context.Context, params map[stri
 
 		var variables map[string]interface{}
 		if variablesJSON != nil {
-			json.Unmarshal([]byte(*variablesJSON), &variables)
+			_ = json.Unmarshal([]byte(*variablesJSON), &variables)
 		}
 
 		return Success(map[string]interface{}{
 			"prompt_name": promptName,
-			"version":    version,
-			"template":   template,
-			"variables":  variables,
-			"created_at": createdAt,
+			"version":     version,
+			"template":    template,
+			"variables":   variables,
+			"created_at":  createdAt,
 		}, nil), nil
 	}
 
@@ -513,8 +513,8 @@ func (t *AIPromptVersioningTool) runABTest(ctx context.Context, params map[strin
 			version, _ := v["version"].(string)
 			/* Execute query with this version and measure performance */
 			versionResults[version] = map[string]interface{}{
-				"latency_ms": 100.0,
-				"tokens_used": 50,
+				"latency_ms":    100.0,
+				"tokens_used":   50,
 				"quality_score": 0.85,
 			}
 		}
@@ -526,8 +526,8 @@ func (t *AIPromptVersioningTool) runABTest(ctx context.Context, params map[strin
 	}
 
 	return Success(map[string]interface{}{
-		"prompt_name": promptName,
-		"test_results": results,
+		"prompt_name":         promptName,
+		"test_results":        results,
 		"recommended_version": versionsList[0]["version"],
 	}, nil), nil
 }
@@ -598,11 +598,11 @@ func (t *AITokenOptimizationTool) Execute(ctx context.Context, params map[string
 	reduction := float64(currentTokens-optimizedTokens) / float64(currentTokens) * 100.0
 
 	return Success(map[string]interface{}{
-		"original_prompt":    prompt,
-		"optimized_prompt":   optimizedPrompt,
-		"original_tokens":    currentTokens,
-		"optimized_tokens":   optimizedTokens,
-		"reduction_percent":  reduction,
+		"original_prompt":   prompt,
+		"optimized_prompt":  optimizedPrompt,
+		"original_tokens":   currentTokens,
+		"optimized_tokens":  optimizedTokens,
+		"reduction_percent": reduction,
 		"target_reduction":  targetReduction,
 		"preserve_meaning":  preserveMeaning,
 	}, nil), nil
@@ -634,10 +634,10 @@ func (t *AITokenOptimizationTool) optimizePrompt(prompt string, targetReduction 
 	if targetReduction > 30 {
 		/* Replace common phrases with shorter alternatives */
 		replacements := map[string]string{
-			"please":     "",
-			"kindly":     "",
-			"could you":  "can you",
-			"would you":  "can you",
+			"please":      "",
+			"kindly":      "",
+			"could you":   "can you",
+			"would you":   "can you",
 			"in order to": "to",
 		}
 
@@ -726,7 +726,7 @@ func (t *AIMultiModelEnsembleTool) Execute(ctx context.Context, params map[strin
 	for _, model := range models {
 		/* Execute query with model */
 		result := map[string]interface{}{
-			"response": fmt.Sprintf("Response from %s for: %s", model, query),
+			"response":   fmt.Sprintf("Response from %s for: %s", model, query),
 			"confidence": 0.85,
 			"latency_ms": 100.0,
 		}
@@ -737,10 +737,10 @@ func (t *AIMultiModelEnsembleTool) Execute(ctx context.Context, params map[strin
 	ensembleResult := t.combineResults(strategy, modelResults, weights)
 
 	return Success(map[string]interface{}{
-		"query":          query,
-		"models":         models,
-		"strategy":       strategy,
-		"model_results":  modelResults,
+		"query":           query,
+		"models":          models,
+		"strategy":        strategy,
+		"model_results":   modelResults,
 		"ensemble_result": ensembleResult,
 	}, nil), nil
 }
@@ -770,10 +770,10 @@ func (t *AIMultiModelEnsembleTool) combineResults(strategy string, results map[s
 		}
 
 		return map[string]interface{}{
-			"method":      "best_of_n",
+			"method":         "best_of_n",
 			"selected_model": bestModel,
-			"confidence":  bestConfidence,
-			"result":     results[bestModel],
+			"confidence":     bestConfidence,
+			"result":         results[bestModel],
 		}
 
 	case "weighted_average":
@@ -781,10 +781,9 @@ func (t *AIMultiModelEnsembleTool) combineResults(strategy string, results map[s
 	default:
 		/* Weighted average of results */
 		return map[string]interface{}{
-			"method": "weighted_average",
-			"result": "Combined result from weighted average",
+			"method":  "weighted_average",
+			"result":  "Combined result from weighted average",
 			"weights": weights,
 		}
 	}
 }
-

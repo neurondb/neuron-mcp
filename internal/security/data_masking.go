@@ -24,10 +24,10 @@ import (
 type MaskingStrategy string
 
 const (
-	MaskingStrategyFull    MaskingStrategy = "full"     /* Replace with asterisks */
-	MaskingStrategyPartial MaskingStrategy = "partial"  /* Show first/last N chars */
-	MaskingStrategyHash     MaskingStrategy = "hash"     /* Hash the value */
-	MaskingStrategyRedact   MaskingStrategy = "redact"   /* Replace with [REDACTED] */
+	MaskingStrategyFull    MaskingStrategy = "full"    /* Replace with asterisks */
+	MaskingStrategyPartial MaskingStrategy = "partial" /* Show first/last N chars */
+	MaskingStrategyHash    MaskingStrategy = "hash"    /* Hash the value */
+	MaskingStrategyRedact  MaskingStrategy = "redact"  /* Replace with [REDACTED] */
 )
 
 /* DataMasker masks sensitive data */
@@ -95,9 +95,3 @@ func (d *DataMasker) MaskRows(rows []map[string]interface{}) []map[string]interf
 	}
 	return masked
 }
-
-
-
-
-
-

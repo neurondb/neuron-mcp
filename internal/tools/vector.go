@@ -78,7 +78,7 @@ func NewVectorSearchTool(db *database.Database, logger *logging.Logger) *VectorS
 					"description": "Additional columns to return in results",
 				},
 			},
-			"required": []interface{}{"table", "vector_column", "query_vector"},
+			"required":             []interface{}{"table", "vector_column", "query_vector"},
 			"additionalProperties": false,
 		},
 	)
@@ -139,11 +139,11 @@ func (t *VectorSearchTool) Execute(ctx context.Context, params map[string]interf
 	/* Validate query vector */
 	if err := validation.ValidateVectorRequired(queryVector, "query_vector", 1, 10000); err != nil {
 		return Error(fmt.Sprintf("Invalid query_vector parameter: %v", err), "VALIDATION_ERROR", map[string]interface{}{
-			"parameter":    "query_vector",
-			"table":        table,
+			"parameter":     "query_vector",
+			"table":         table,
 			"vector_column": vectorColumn,
-			"error":        err.Error(),
-			"params":       params,
+			"error":         err.Error(),
+			"params":        params,
 		}), nil
 	}
 
@@ -171,16 +171,16 @@ func (t *VectorSearchTool) Execute(ctx context.Context, params map[string]interf
 		if !ok {
 			return Error(fmt.Sprintf("additional_columns[%d] must be a string", i), "VALIDATION_ERROR", map[string]interface{}{
 				"parameter": "additional_columns",
-				"index":      i,
-				"params":     params,
+				"index":     i,
+				"params":    params,
 			}), nil
 		}
 		if err := validation.ValidateSQLIdentifier(colStr, fmt.Sprintf("additional_columns[%d]", i)); err != nil {
 			return Error(fmt.Sprintf("Invalid additional_columns[%d]: %v", i, err), "VALIDATION_ERROR", map[string]interface{}{
 				"parameter": "additional_columns",
-				"index":      i,
-				"error":      err.Error(),
-				"params":     params,
+				"index":     i,
+				"error":     err.Error(),
+				"params":    params,
 			}), nil
 		}
 	}
@@ -192,18 +192,18 @@ func (t *VectorSearchTool) Execute(ctx context.Context, params map[string]interf
 			"table":             table,
 			"vector_column":     vectorColumn,
 			"distance_metric":   distanceMetric,
-			"limit":            limit,
+			"limit":             limit,
 			"query_vector_size": len(queryVector),
-			"error":            err.Error(),
+			"error":             err.Error(),
 		}), nil
 	}
 
 	return Success(results, map[string]interface{}{
-		"count":          len(results),
+		"count":           len(results),
 		"distance_metric": distanceMetric,
-		"table":          table,
-		"vector_column":  vectorColumn,
-		"limit":         limit,
+		"table":           table,
+		"vector_column":   vectorColumn,
+		"limit":           limit,
 	}), nil
 }
 
@@ -258,14 +258,14 @@ func (t *VectorSearchL2Tool) Execute(ctx context.Context, params map[string]inte
 			"table":             table,
 			"vector_column":     vectorColumn,
 			"distance_metric":   "l2",
-			"limit":            limit,
+			"limit":             limit,
 			"query_vector_size": len(queryVector),
-			"error":            err.Error(),
+			"error":             err.Error(),
 		}), nil
 	}
 
 	return Success(results, map[string]interface{}{
-		"count":          len(results),
+		"count":           len(results),
 		"distance_metric": "l2",
 	}), nil
 }
@@ -321,14 +321,14 @@ func (t *VectorSearchCosineTool) Execute(ctx context.Context, params map[string]
 			"table":             table,
 			"vector_column":     vectorColumn,
 			"distance_metric":   "cosine",
-			"limit":            limit,
+			"limit":             limit,
 			"query_vector_size": len(queryVector),
-			"error":            err.Error(),
+			"error":             err.Error(),
 		}), nil
 	}
 
 	return Success(results, map[string]interface{}{
-		"count":          len(results),
+		"count":           len(results),
 		"distance_metric": "cosine",
 	}), nil
 }
@@ -384,14 +384,14 @@ func (t *VectorSearchInnerProductTool) Execute(ctx context.Context, params map[s
 			"table":             table,
 			"vector_column":     vectorColumn,
 			"distance_metric":   "inner_product",
-			"limit":            limit,
+			"limit":             limit,
 			"query_vector_size": len(queryVector),
-			"error":            err.Error(),
+			"error":             err.Error(),
 		}), nil
 	}
 
 	return Success(results, map[string]interface{}{
-		"count":          len(results),
+		"count":           len(results),
 		"distance_metric": "inner_product",
 	}), nil
 }
@@ -447,14 +447,14 @@ func (t *VectorSearchL1Tool) Execute(ctx context.Context, params map[string]inte
 			"table":             table,
 			"vector_column":     vectorColumn,
 			"distance_metric":   "l1",
-			"limit":            limit,
+			"limit":             limit,
 			"query_vector_size": len(queryVector),
-			"error":            err.Error(),
+			"error":             err.Error(),
 		}), nil
 	}
 
 	return Success(results, map[string]interface{}{
-		"count":          len(results),
+		"count":           len(results),
 		"distance_metric": "l1",
 	}), nil
 }
@@ -510,14 +510,14 @@ func (t *VectorSearchHammingTool) Execute(ctx context.Context, params map[string
 			"table":             table,
 			"vector_column":     vectorColumn,
 			"distance_metric":   "hamming",
-			"limit":            limit,
+			"limit":             limit,
 			"query_vector_size": len(queryVector),
-			"error":            err.Error(),
+			"error":             err.Error(),
 		}), nil
 	}
 
 	return Success(results, map[string]interface{}{
-		"count":          len(results),
+		"count":           len(results),
 		"distance_metric": "hamming",
 	}), nil
 }
@@ -573,14 +573,14 @@ func (t *VectorSearchChebyshevTool) Execute(ctx context.Context, params map[stri
 			"table":             table,
 			"vector_column":     vectorColumn,
 			"distance_metric":   "chebyshev",
-			"limit":            limit,
+			"limit":             limit,
 			"query_vector_size": len(queryVector),
-			"error":            err.Error(),
+			"error":             err.Error(),
 		}), nil
 	}
 
 	return Success(results, map[string]interface{}{
-		"count":          len(results),
+		"count":           len(results),
 		"distance_metric": "chebyshev",
 	}), nil
 }
@@ -610,7 +610,7 @@ func NewVectorSearchMinkowskiTool(db *database.Database, logger *logging.Logger)
 						"minimum":     1.0,
 						"description": "Minkowski distance parameter p (p=1 is Manhattan, p=2 is Euclidean, p=∞ is Chebyshev)",
 					},
-					"limit":         map[string]interface{}{"type": "number", "default": 10, "minimum": 1, "maximum": 1000},
+					"limit": map[string]interface{}{"type": "number", "default": 10, "minimum": 1, "maximum": 1000},
 				},
 				"required": []interface{}{"table", "vector_column", "query_vector"},
 			},
@@ -647,17 +647,17 @@ func (t *VectorSearchMinkowskiTool) Execute(ctx context.Context, params map[stri
 			"table":             table,
 			"vector_column":     vectorColumn,
 			"distance_metric":   "minkowski",
-			"p_value":          pValue,
-			"limit":            limit,
+			"p_value":           pValue,
+			"limit":             limit,
 			"query_vector_size": len(queryVector),
-			"error":            err.Error(),
+			"error":             err.Error(),
 		}), nil
 	}
 
 	return Success(results, map[string]interface{}{
-		"count":          len(results),
+		"count":           len(results),
 		"distance_metric": "minkowski",
-		"p_value":       pValue,
+		"p_value":         pValue,
 	}), nil
 }
 
@@ -705,7 +705,7 @@ func (t *GenerateEmbeddingTool) Execute(ctx context.Context, params map[string]i
 
 	text, _ := params["text"].(string)
 	model, _ := params["model"].(string)
-	
+
 	textLen := len(text)
 	if textLen == 0 {
 		return Error("text parameter is required and cannot be empty for generate_embedding tool", "VALIDATION_ERROR", map[string]interface{}{
@@ -729,10 +729,10 @@ func (t *GenerateEmbeddingTool) Execute(ctx context.Context, params map[string]i
 	var result interface{}
 	var err error
 	startTime := time.Now()
-	
+
 	query := "SELECT embed_text($1, $2)::text AS embedding"
 	queryParams := []interface{}{text, modelName}
-	
+
 	result, err = t.executor.ExecuteQueryOneWithTimeout(ctx, query, queryParams, EmbeddingQueryTimeout)
 	if err != nil {
 		/* Check if error is about configuration (API key, etc.) - check first method's error */
@@ -740,23 +740,23 @@ func (t *GenerateEmbeddingTool) Execute(ctx context.Context, params map[string]i
 		if strings.Contains(errStr, "llm_api_key") || strings.Contains(errStr, "llm_provider") || strings.Contains(errStr, "Configure neurondb") || strings.Contains(errStr, "embedding generation failed") {
 			t.logger.Error("Embedding generation failed - configuration issue", err, params)
 			return Error(fmt.Sprintf("Embedding generation failed: text_length=%d, model='%s'. The embedding function requires proper configuration. Error: %v. Note: Configuration is managed via PostgreSQL GUC settings (neurondb.llm_api_key and neurondb.llm_provider).", textLen, modelName, err), "CONFIGURATION_ERROR", map[string]interface{}{
-				"text_length": textLen,
-				"model":       modelName,
-				"error":       err.Error(),
+				"text_length":   textLen,
+				"model":         modelName,
+				"error":         err.Error(),
 				"methods_tried": []string{"embed_text"},
-				"hint":        "Check PostgreSQL GUC settings: SHOW neurondb.llm_api_key; SHOW neurondb.llm_provider;",
+				"hint":          "Check PostgreSQL GUC settings: SHOW neurondb.llm_api_key; SHOW neurondb.llm_provider;",
 			}), nil
 		}
-		
+
 		t.logger.Warn("embed_text failed, trying neurondb.embed fallback", map[string]interface{}{
 			"error": err.Error(),
 			"model": modelName,
 		})
-		
+
 		/* neurondb.embed(model text, input_text text, task text) - function signature: model, input_text, task */
 		query = "SELECT neurondb.embed($1, $2, $3)::text AS embedding"
 		queryParams = []interface{}{modelName, text, "embedding"}
-		
+
 		result, err = t.executor.ExecuteQueryOneWithTimeout(ctx, query, queryParams, EmbeddingQueryTimeout)
 		if err != nil {
 			/* Check if error is "no rows returned" - function exists but requires configuration */
@@ -764,29 +764,29 @@ func (t *GenerateEmbeddingTool) Execute(ctx context.Context, params map[string]i
 			if strings.Contains(errStr, "no rows returned") {
 				t.logger.Error("Embedding generation failed - function returned no rows (configuration required)", err, params)
 				return Error(fmt.Sprintf("Embedding generation requires configuration: text_length=%d, model='%s'. The embedding function exists but returned no results, which typically means embedding model configuration is required. Configuration is managed via PostgreSQL GUC settings.", textLen, modelName), "CONFIGURATION_ERROR", map[string]interface{}{
-					"text_length": textLen,
-					"model":       modelName,
-					"error":       err.Error(),
+					"text_length":   textLen,
+					"model":         modelName,
+					"error":         err.Error(),
 					"methods_tried": []string{"embed_text", "neurondb.embed"},
-					"hint":        "Check PostgreSQL GUC settings: SHOW neurondb.llm_api_key; SHOW neurondb.llm_provider;",
+					"hint":          "Check PostgreSQL GUC settings: SHOW neurondb.llm_api_key; SHOW neurondb.llm_provider;",
 				}), nil
 			}
 			/* Check if error is about configuration (API key, etc.) */
 			if strings.Contains(errStr, "llm_api_key") || strings.Contains(errStr, "llm_provider") || strings.Contains(errStr, "Configure neurondb") || strings.Contains(errStr, "embedding generation failed") {
 				t.logger.Error("Embedding generation failed - configuration required", err, params)
 				return Error(fmt.Sprintf("Embedding generation requires configuration: text_length=%d, model='%s'. Error: %v. Configuration is managed via PostgreSQL GUC settings (neurondb.llm_api_key and neurondb.llm_provider).", textLen, modelName, err), "CONFIGURATION_ERROR", map[string]interface{}{
-					"text_length": textLen,
-					"model":       modelName,
-					"error":       err.Error(),
+					"text_length":   textLen,
+					"model":         modelName,
+					"error":         err.Error(),
 					"methods_tried": []string{"embed_text", "neurondb.embed"},
-					"hint":        "Check PostgreSQL GUC settings: SHOW neurondb.llm_api_key; SHOW neurondb.llm_provider;",
+					"hint":          "Check PostgreSQL GUC settings: SHOW neurondb.llm_api_key; SHOW neurondb.llm_provider;",
 				}), nil
 			}
 			t.logger.Error("Embedding generation failed with both methods", err, params)
 			return Error(fmt.Sprintf("Embedding generation failed: text_length=%d, model='%s', error=%v", textLen, modelName, err), "EMBEDDING_ERROR", map[string]interface{}{
-				"text_length": textLen,
-				"model":       modelName,
-				"error":       err.Error(),
+				"text_length":   textLen,
+				"model":         modelName,
+				"error":         err.Error(),
 				"methods_tried": []string{"embed_text", "neurondb.embed"},
 			}), nil
 		}
@@ -799,13 +799,13 @@ func (t *GenerateEmbeddingTool) Execute(ctx context.Context, params map[string]i
 		tokensInput := &tokensEstimate
 		latency := int(time.Since(startTime).Milliseconds())
 		latencyMS := &latency
-		
+
 		/* Log asynchronously (don't fail if logging fails) */
 		/* Use a timeout context to prevent goroutine leak if logging hangs */
 		go func() {
 			logCtx, logCancel := context.WithTimeout(context.Background(), 5*time.Second)
 			defer logCancel()
-			
+
 			if err := t.configHelper.LogModelUsage(logCtx, modelName, "embedding", tokensInput, nil, latencyMS, true, nil); err != nil {
 				if logCtx.Err() != nil {
 					/* Timeout occurred, don't log error */
@@ -866,7 +866,7 @@ func (t *BatchEmbeddingTool) Execute(ctx context.Context, params map[string]inte
 
 	texts, _ := params["texts"].([]interface{})
 	model, _ := params["model"].(string)
-	
+
 	textsCount := len(texts)
 	if textsCount == 0 {
 		return Error("texts parameter is required and cannot be empty array for neurondb_batch_embedding tool", "VALIDATION_ERROR", map[string]interface{}{
@@ -939,4 +939,3 @@ func (t *BatchEmbeddingTool) Execute(ctx context.Context, params map[string]inte
 		"model": modelName,
 	}), nil
 }
-

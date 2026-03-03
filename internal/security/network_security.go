@@ -122,9 +122,9 @@ func GetClientIP(ctx context.Context) string {
 
 /* TLSConfig represents TLS configuration */
 type TLSConfig struct {
-	MinVersion     string /* "1.2", "1.3" */
-	MaxVersion     string
-	CertificatePin []string /* Certificate fingerprints */
+	MinVersion        string /* "1.2", "1.3" */
+	MaxVersion        string
+	CertificatePin    []string /* Certificate fingerprints */
 	RequireClientCert bool
 }
 
@@ -160,9 +160,3 @@ func (p *CertificatePinner) AddPinnedCert(fingerprint string) {
 func (p *CertificatePinner) IsPinned(fingerprint string) bool {
 	return p.pinnedCerts[strings.ToLower(fingerprint)]
 }
-
-
-
-
-
-

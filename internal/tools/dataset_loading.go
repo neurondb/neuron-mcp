@@ -702,7 +702,7 @@ func (t *DatasetLoadingTool) loadDataset(ctx context.Context, sourceType, source
 
 	/* Set up environment */
 	cfgMgr := config.NewConfigManager()
-	cfgMgr.Load("")
+	_, _ = cfgMgr.Load("")
 	dbCfg := cfgMgr.GetDatabaseConfig()
 
 	env := os.Environ()
@@ -1055,7 +1055,7 @@ except Exception as e:
 
 	/* Set up environment */
 	cfgMgr := config.NewConfigManager()
-	cfgMgr.Load("")
+	_, _ = cfgMgr.Load("")
 	dbCfg := cfgMgr.GetDatabaseConfig()
 
 	env := os.Environ()

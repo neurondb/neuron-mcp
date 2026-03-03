@@ -31,9 +31,9 @@ type ResourceQuota struct {
 func DefaultResourceQuota() ResourceQuota {
 	return ResourceQuota{
 		MaxMemoryBytes: 100 * 1024 * 1024, // 100MB
-		MaxCPUTimeMs:   30000,              // 30 seconds
-		MaxVectorSize:  10000,               // 10k dimensions
-		MaxBatchSize:   1000,                // 1000 items
+		MaxCPUTimeMs:   30000,             // 30 seconds
+		MaxVectorSize:  10000,             // 10k dimensions
+		MaxBatchSize:   1000,              // 1000 items
 	}
 }
 
@@ -67,6 +67,3 @@ func EstimateVectorMemory(vectorDim int, batchSize int) int64 {
 	/* Plus overhead for metadata, results, etc. (2x multiplier) */
 	return int64(vectorDim * batchSize * 4 * 2)
 }
-
-
-

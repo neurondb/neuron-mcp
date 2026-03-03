@@ -153,13 +153,13 @@ func (t *ProcessDocumentTool) Execute(ctx context.Context, params map[string]int
 		}), nil
 	}
 
-  /* Use NeuronDB's unified chunking function: neurondb.chunk(document_text, chunk_size, chunk_overlap, method) */
+	/* Use NeuronDB's unified chunking function: neurondb.chunk(document_text, chunk_size, chunk_overlap, method) */
 	query := `SELECT json_agg(json_build_object('chunk_id', chunk_id, 'chunk_text', chunk_text, 'start_pos', start_pos, 'end_pos', end_pos)) AS chunks FROM neurondb.chunk($1, $2, $3, 'fixed')`
 	result, err := t.executor.ExecuteQueryOne(ctx, query, []interface{}{text, chunkSize, overlap})
 	if err != nil {
 		t.logger.Error("Document processing failed", err, params)
 		return Error(fmt.Sprintf("Document processing execution failed: text_length=%d, chunk_size=%d, overlap=%d, generate_embeddings=%v, error=%v", textLen, chunkSize, overlap, generateEmbeddings, err), "RAG_ERROR", map[string]interface{}{
-			"text_length":        textLen,
+			"text_length":         textLen,
 			"chunk_size":          chunkSize,
 			"overlap":             overlap,
 			"generate_embeddings": generateEmbeddings,
@@ -167,7 +167,7 @@ func (t *ProcessDocumentTool) Execute(ctx context.Context, params map[string]int
 		}), nil
 	}
 
-  /* If embeddings requested, generate them for each chunk */
+	/* If embeddings requested, generate them for each chunk */
 	if generateEmbeddings {
 		chunksInterface, ok := result["chunks"]
 		if !ok {
@@ -199,10 +199,10 @@ func (t *ProcessDocumentTool) Execute(ctx context.Context, params map[string]int
 				embedResult, err := t.executor.ExecuteQueryOne(ctx, embedQuery, []interface{}{chunkText, modelName})
 				if err != nil {
 					t.logger.Warn(fmt.Sprintf("Failed to generate embedding for chunk %d", i), map[string]interface{}{
-						"chunk_index": i,
+						"chunk_index":       i,
 						"chunk_text_length": len(chunkText),
-						"model": modelName,
-						"error": err.Error(),
+						"model":             modelName,
+						"error":             err.Error(),
 					})
 					/* Continue without embedding for this chunk */
 					chunkMap["embedding"] = nil
@@ -225,7 +225,7 @@ func (t *ProcessDocumentTool) Execute(ctx context.Context, params map[string]int
 						chunkMap["embedding"] = "[" + strings.Join(parts, ",") + "]"
 					} else {
 						t.logger.Warn(fmt.Sprintf("Invalid embedding format for chunk %d", i), map[string]interface{}{
-							"chunk_index": i,
+							"chunk_index":    i,
 							"embedding_type": fmt.Sprintf("%T", embedResult["embedding"]),
 						})
 						chunkMap["embedding"] = nil
@@ -241,8 +241,8 @@ func (t *ProcessDocumentTool) Execute(ctx context.Context, params map[string]int
 	}
 
 	return Success(result, map[string]interface{}{
-		"chunk_size": chunkSize,
-		"overlap":    overlap,
+		"chunk_size":           chunkSize,
+		"overlap":              overlap,
 		"embeddings_generated": generateEmbeddings,
 	}), nil
 }
@@ -439,18 +439,18 @@ func (t *RetrieveContextTool) Execute(ctx context.Context, params map[string]int
 
 	if table == "" {
 		return Error(fmt.Sprintf("table parameter is required and cannot be empty for neurondb_retrieve_context tool: query_length=%d", len(queryText)), "VALIDATION_ERROR", map[string]interface{}{
-			"parameter":   "table",
+			"parameter":    "table",
 			"query_length": len(queryText),
-			"params":      params,
+			"params":       params,
 		}), nil
 	}
 
 	if vectorColumn == "" {
 		return Error(fmt.Sprintf("vector_column parameter is required and cannot be empty for neurondb_retrieve_context tool: query_length=%d, table='%s'", len(queryText), table), "VALIDATION_ERROR", map[string]interface{}{
-			"parameter":   "vector_column",
+			"parameter":    "vector_column",
 			"query_length": len(queryText),
-			"table":       table,
-			"params":      params,
+			"table":        table,
+			"params":       params,
 		}), nil
 	}
 
@@ -480,23 +480,23 @@ func (t *RetrieveContextTool) Execute(ctx context.Context, params map[string]int
 	/* Validate identifiers to prevent SQL injection */
 	if err := validation.ValidateSQLIdentifier(table, "table"); err != nil {
 		return Error(fmt.Sprintf("Invalid table name for neurondb_retrieve_context tool: %v", err), "VALIDATION_ERROR", map[string]interface{}{
-			"parameter":   "table",
+			"parameter":    "table",
 			"query_length": len(queryText),
-			"error":       err.Error(),
-			"params":      params,
+			"error":        err.Error(),
+			"params":       params,
 		}), nil
 	}
 	if err := validation.ValidateSQLIdentifier(vectorColumn, "vector_column"); err != nil {
 		return Error(fmt.Sprintf("Invalid vector column name for neurondb_retrieve_context tool: %v", err), "VALIDATION_ERROR", map[string]interface{}{
-			"parameter":   "vector_column",
+			"parameter":    "vector_column",
 			"query_length": len(queryText),
-			"table":       table,
-			"error":       err.Error(),
-			"params":      params,
+			"table":        table,
+			"error":        err.Error(),
+			"params":       params,
 		}), nil
 	}
 
-  /* Generate embedding for query */
+	/* Generate embedding for query */
 	/* Get default model if available */
 	modelName := "default"
 	if defaultModel, err := t.configHelper.GetDefaultModel(ctx, "embedding"); err == nil && defaultModel != "" {
@@ -536,9 +536,9 @@ func (t *RetrieveContextTool) Execute(ctx context.Context, params map[string]int
 		embeddingStr = "[" + strings.Join(parts, ",") + "]"
 	} else {
 		return Error("Invalid embedding format from embed_text function", "RAG_ERROR", map[string]interface{}{
-			"query_length":  len(queryText),
-			"table":         table,
-			"vector_column": vectorColumn,
+			"query_length":   len(queryText),
+			"table":          table,
+			"vector_column":  vectorColumn,
 			"embedding_type": fmt.Sprintf("%T", embedResult["embedding"]),
 		}), nil
 	}
@@ -547,17 +547,17 @@ func (t *RetrieveContextTool) Execute(ctx context.Context, params map[string]int
 	/* Use EscapeIdentifier to prevent SQL injection (table and vectorColumn are validated above) */
 	escapedTable := database.EscapeIdentifier(table)
 	escapedVectorCol := database.EscapeIdentifier(vectorColumn)
-	
+
 	var retrieveQuery string
 	var queryParams []interface{}
-	
+
 	/* Determine search mode and build query */
 	/* Use initialK when reranking is enabled, otherwise use limit */
 	retrieveLimit := limit
 	if rerank {
 		retrieveLimit = initialK
 	}
-	
+
 	if hybrid {
 		/* Hybrid search: combine vector and full-text */
 		escapedTextCol := database.EscapeIdentifier(textColumn)
@@ -612,7 +612,7 @@ func (t *RetrieveContextTool) Execute(ctx context.Context, params map[string]int
 		`, escapedVectorCol, escapedTable, escapedVectorCol)
 		queryParams = []interface{}{embeddingStr, retrieveLimit}
 	}
-	
+
 	/* Execute initial retrieval */
 	result, err := t.executor.ExecuteQuery(ctx, retrieveQuery, queryParams)
 	if err != nil {
@@ -635,7 +635,7 @@ func (t *RetrieveContextTool) Execute(ctx context.Context, params map[string]int
 				documents = append(documents, text)
 			}
 		}
-		
+
 		if len(documents) > 0 {
 			/* Use rerank_cross_encoder function */
 			rerankQuery := `SELECT rerank_cross_encoder($1, $2::text[], $3, $4) AS reranked`
@@ -669,12 +669,12 @@ func (t *RetrieveContextTool) Execute(ctx context.Context, params map[string]int
 	}
 
 	return Success(result, map[string]interface{}{
-		"limit": limit,
-		"count": len(result),
+		"limit":    limit,
+		"count":    len(result),
 		"reranked": rerank,
-		"hybrid": hybrid,
+		"hybrid":   hybrid,
 		"temporal": temporal,
-		"faceted": faceted,
+		"faceted":  faceted,
 	}), nil
 }
 
@@ -736,10 +736,10 @@ func (t *GenerateResponseTool) Execute(ctx context.Context, params map[string]in
 
 	if context == nil || len(context) == 0 {
 		return Error(fmt.Sprintf("context parameter is required and cannot be empty array for neurondb_generate_response tool: query_length=%d", len(query)), "VALIDATION_ERROR", map[string]interface{}{
-			"parameter":    "context",
-			"query_length": len(query),
+			"parameter":     "context",
+			"query_length":  len(query),
 			"context_count": 0,
-			"params":       params,
+			"params":        params,
 		}), nil
 	}
 
@@ -772,26 +772,26 @@ func (t *GenerateResponseTool) Execute(ctx context.Context, params map[string]in
 		}
 	}
 
-  /* Use NeuronDB's LLM function for response generation */
-  /* neurondb.llm(task, model, input_text, input_array, params, max_length) */
+	/* Use NeuronDB's LLM function for response generation */
+	/* neurondb.llm(task, model, input_text, input_array, params, max_length) */
 	modelName := "default"
 	if m, ok := params["model"].(string); ok && m != "" {
 		modelName = m
 	}
 
-  /* Build prompt with context */
+	/* Build prompt with context */
 	prompt := fmt.Sprintf("Context:\n%s\n\nQuestion: %s\n\nAnswer:", contextStr, query)
-	
+
 	llmParams := fmt.Sprintf(`{"temperature": 0.7, "max_tokens": 500}`)
 	generateQuery := `SELECT neurondb.llm('generation', $1, $2, NULL, $3::jsonb, 512) AS response`
 	result, err := t.executor.ExecuteQueryOne(ctx, generateQuery, []interface{}{modelName, prompt, llmParams})
 	if err != nil {
 		t.logger.Error("Response generation failed", err, params)
 		return Error(fmt.Sprintf("Response generation execution failed: query_length=%d, context_count=%d, context_total_length=%d, error=%v", len(query), contextCount, len(contextStr), err), "RAG_ERROR", map[string]interface{}{
-			"query_length":        len(query),
-			"context_count":       contextCount,
+			"query_length":         len(query),
+			"context_count":        contextCount,
 			"context_total_length": len(contextStr),
-			"error":               err.Error(),
+			"error":                err.Error(),
 		}), nil
 	}
 
@@ -906,7 +906,7 @@ func (t *ChunkDocumentTool) Execute(ctx context.Context, params map[string]inter
 		}), nil
 	}
 
-  /* Use NeuronDB's unified chunking function: neurondb.chunk(document_text, chunk_size, chunk_overlap, method) */
+	/* Use NeuronDB's unified chunking function: neurondb.chunk(document_text, chunk_size, chunk_overlap, method) */
 	query := `SELECT json_agg(json_build_object('chunk_id', chunk_id, 'chunk_text', chunk_text, 'start_pos', start_pos, 'end_pos', end_pos)) AS chunks FROM neurondb.chunk($1, $2, $3, 'fixed')`
 	result, err := t.executor.ExecuteQueryOne(ctx, query, []interface{}{text, chunkSize, overlap})
 	if err != nil {
@@ -924,4 +924,3 @@ func (t *ChunkDocumentTool) Execute(ctx context.Context, params map[string]inter
 		"overlap":    overlap,
 	}), nil
 }
-

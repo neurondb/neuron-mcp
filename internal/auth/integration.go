@@ -149,15 +149,3 @@ func GetTenantFromContext(ctx context.Context) *TenantContext {
 
 	return tc
 }
-
-
-
-
-
-
-
-
-
-
-
-

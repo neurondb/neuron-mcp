@@ -25,19 +25,19 @@ func ValidateVector(vector []interface{}, fieldName string, minDim, maxDim int) 
 	if vector == nil {
 		return fmt.Errorf("%s cannot be nil", fieldName)
 	}
-	
+
 	if len(vector) == 0 {
 		return fmt.Errorf("%s cannot be empty", fieldName)
 	}
-	
+
 	if minDim > 0 && len(vector) < minDim {
 		return fmt.Errorf("%s dimension %d is less than minimum %d", fieldName, len(vector), minDim)
 	}
-	
+
 	if maxDim > 0 && len(vector) > maxDim {
 		return fmt.Errorf("%s dimension %d exceeds maximum %d", fieldName, len(vector), maxDim)
 	}
-	
+
 	/* Validate all elements are numbers */
 	for i, v := range vector {
 		switch val := v.(type) {
@@ -61,7 +61,7 @@ func ValidateVector(vector []interface{}, fieldName string, minDim, maxDim int) 
 			return fmt.Errorf("%s contains non-numeric value at index %d: %T", fieldName, i, v)
 		}
 	}
-	
+
 	return nil
 }
 
@@ -86,14 +86,14 @@ func ValidateVectorConsistency(vectors [][]interface{}, fieldName string) error 
 	if len(vectors) == 0 {
 		return nil
 	}
-	
+
 	firstDim := len(vectors[0])
 	for i, vec := range vectors[1:] {
 		if len(vec) != firstDim {
 			return fmt.Errorf("%s: vector at index %d has dimension %d, expected %d", fieldName, i+1, len(vec), firstDim)
 		}
 	}
-	
+
 	return nil
 }
 
@@ -102,7 +102,7 @@ func ValidateVectorNormalized(vector []interface{}, fieldName string, tolerance 
 	if tolerance <= 0 {
 		tolerance = 1e-6
 	}
-	
+
 	var sumSquares float64
 	for _, v := range vector {
 		var val float64
@@ -122,16 +122,13 @@ func ValidateVectorNormalized(vector []interface{}, fieldName string, tolerance 
 		}
 		sumSquares += val * val
 	}
-	
+
 	length := math.Sqrt(sumSquares)
 	diff := math.Abs(length - 1.0)
-	
+
 	if diff > tolerance {
 		return fmt.Errorf("%s is not normalized: length is %.6f, expected 1.0 (difference: %.6f)", fieldName, length, diff)
 	}
-	
+
 	return nil
 }
-
-
-

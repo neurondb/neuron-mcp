@@ -59,12 +59,12 @@ func (tf *TestFramework) TestTool(ctx context.Context, toolName string, params m
 	duration := time.Since(startTime)
 
 	return &TestResult{
-		ToolName:    toolName,
-		Params:      params,
-		Result:      result,
-		Error:       err,
-		Duration:    duration,
-		Success:     err == nil && (result == nil || result.Success),
+		ToolName: toolName,
+		Params:   params,
+		Result:   result,
+		Error:    err,
+		Duration: duration,
+		Success:  err == nil && (result == nil || result.Success),
 	}, nil
 }
 
@@ -121,14 +121,14 @@ func (tf *TestFramework) BenchmarkTool(ctx context.Context, toolName string, par
 	avgDuration := totalDuration / time.Duration(iterations)
 
 	return &BenchmarkResult{
-		ToolName:     toolName,
-		Iterations:   iterations,
-		AvgDuration:  avgDuration,
-		MinDuration:  minDuration,
-		MaxDuration:  maxDuration,
+		ToolName:      toolName,
+		Iterations:    iterations,
+		AvgDuration:   avgDuration,
+		MinDuration:   minDuration,
+		MaxDuration:   maxDuration,
 		TotalDuration: totalDuration,
-		Errors:       errors,
-		SuccessRate:  float64(iterations-errors) / float64(iterations),
+		Errors:        errors,
+		SuccessRate:   float64(iterations-errors) / float64(iterations),
 	}, nil
 }
 

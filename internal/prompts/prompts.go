@@ -19,23 +19,24 @@ import (
 	"fmt"
 
 	"github.com/jackc/pgx/v5"
+
 	"github.com/neurondb/NeuronMCP/internal/database"
 	"github.com/neurondb/NeuronMCP/internal/logging"
 )
 
 /* Prompt represents a prompt template */
 type Prompt struct {
-	ID          int                    `json:"id"`
-	Name        string                 `json:"name"`
-	Description string                 `json:"description"`
-	Template    string                 `json:"template"`
-	Variables   []VariableDefinition   `json:"variables"`
-	Category    *string                `json:"category,omitempty"`
-	Tags        []string               `json:"tags,omitempty"`
-	IsDefault   bool                   `json:"isDefault"`
-	CreatedAt   string                 `json:"createdAt"`
-	UpdatedAt   string                 `json:"updatedAt"`
-	CreatedBy   string                 `json:"createdBy"`
+	ID          int                  `json:"id"`
+	Name        string               `json:"name"`
+	Description string               `json:"description"`
+	Template    string               `json:"template"`
+	Variables   []VariableDefinition `json:"variables"`
+	Category    *string              `json:"category,omitempty"`
+	Tags        []string             `json:"tags,omitempty"`
+	IsDefault   bool                 `json:"isDefault"`
+	CreatedAt   string               `json:"createdAt"`
+	UpdatedAt   string               `json:"updatedAt"`
+	CreatedBy   string               `json:"createdBy"`
 }
 
 /* VariableDefinition defines a prompt variable */
@@ -123,10 +124,10 @@ func (m *Manager) ListPrompts(ctx context.Context) ([]Prompt, error) {
 			if err := json.Unmarshal(variablesJSON, &p.Variables); err != nil {
 				if m.logger != nil {
 					m.logger.Warn("Failed to unmarshal variables", map[string]interface{}{
-						"prompt_id":       p.ID,
-						"prompt_name":     p.Name,
+						"prompt_id":      p.ID,
+						"prompt_name":    p.Name,
 						"variables_json": string(variablesJSON),
-						"error":           err.Error(),
+						"error":          err.Error(),
 					})
 				}
 				/* Continue with empty variables rather than failing */
@@ -216,10 +217,10 @@ func (m *Manager) GetPrompt(ctx context.Context, name string) (*Prompt, error) {
 		if err := json.Unmarshal(variablesJSON, &p.Variables); err != nil {
 			if m.logger != nil {
 				m.logger.Warn("Failed to unmarshal variables", map[string]interface{}{
-					"prompt_id":       p.ID,
-					"prompt_name":     p.Name,
-					"variables_json":  string(variablesJSON),
-					"error":           err.Error(),
+					"prompt_id":      p.ID,
+					"prompt_name":    p.Name,
+					"variables_json": string(variablesJSON),
+					"error":          err.Error(),
 				})
 			}
 			/* Continue with empty variables rather than failing */
@@ -273,4 +274,3 @@ func (m *Manager) RenderPrompt(ctx context.Context, name string, variables map[s
 
 	return rendered, nil
 }
-

@@ -37,7 +37,7 @@ type ToolInterface interface {
 
 /* DebugToolCallTool executes a tool with detailed logging and tracing */
 type DebugToolCallTool struct {
-	baseTool *BaseToolWrapper
+	baseTool     *BaseToolWrapper
 	toolRegistry ToolRegistryInterface
 	logger       *logging.Logger
 }
@@ -132,10 +132,10 @@ func (t *DebugToolCallTool) Execute(ctx context.Context, params map[string]inter
 	startTime := time.Now()
 	if t.logger != nil {
 		t.logger.Info("Debug tool execution started", map[string]interface{}{
-			"tool_name":    toolName,
-			"arguments":    arguments,
+			"tool_name":     toolName,
+			"arguments":     arguments,
 			"trace_enabled": enableTrace,
-			"log_level":    logLevel,
+			"log_level":     logLevel,
 		})
 	}
 
@@ -147,11 +147,11 @@ func (t *DebugToolCallTool) Execute(ctx context.Context, params map[string]inter
 
 	/* Build debug information */
 	debugInfo := map[string]interface{}{
-		"tool_name":     toolName,
-		"arguments":     arguments,
+		"tool_name":         toolName,
+		"arguments":         arguments,
 		"execution_time_ms": duration.Milliseconds(),
-		"success":       err == nil && (result == nil || result.Success),
-		"timestamp":     startTime,
+		"success":           err == nil && (result == nil || result.Success),
+		"timestamp":         startTime,
 	}
 
 	if err != nil {
@@ -326,9 +326,9 @@ func (t *DebugQueryPlanTool) Execute(ctx context.Context, params map[string]inte
 		"plan_text":  fmt.Sprintf("%s", planLines),
 		"statistics": stats,
 		"options": map[string]interface{}{
-			"analyze":  analyze,
-			"verbose":  verbose,
-			"buffers":  buffers,
+			"analyze": analyze,
+			"verbose": verbose,
+			"buffers": buffers,
 		},
 	}), nil
 }
@@ -336,8 +336,8 @@ func (t *DebugQueryPlanTool) Execute(ctx context.Context, params map[string]inte
 /* MonitorActiveConnectionsTool monitors active database connections */
 type MonitorActiveConnectionsTool struct {
 	baseTool *BaseToolWrapper
-	db     *database.Database
-	logger *logging.Logger
+	db       *database.Database
+	logger   *logging.Logger
 }
 
 /* NewMonitorActiveConnectionsTool creates a new monitor connections tool */
@@ -375,19 +375,25 @@ func (t *MonitorActiveConnectionsTool) Name() string { return t.baseTool.Name() 
 func (t *MonitorActiveConnectionsTool) Description() string { return t.baseTool.Description() }
 
 /* InputSchema returns the input schema */
-func (t *MonitorActiveConnectionsTool) InputSchema() map[string]interface{} { return t.baseTool.InputSchema() }
+func (t *MonitorActiveConnectionsTool) InputSchema() map[string]interface{} {
+	return t.baseTool.InputSchema()
+}
 
 /* Version returns the tool version */
 func (t *MonitorActiveConnectionsTool) Version() string { return t.baseTool.Version() }
 
 /* OutputSchema returns the output schema */
-func (t *MonitorActiveConnectionsTool) OutputSchema() map[string]interface{} { return t.baseTool.OutputSchema() }
+func (t *MonitorActiveConnectionsTool) OutputSchema() map[string]interface{} {
+	return t.baseTool.OutputSchema()
+}
 
 /* Deprecated returns whether the tool is deprecated */
 func (t *MonitorActiveConnectionsTool) Deprecated() bool { return t.baseTool.Deprecated() }
 
 /* Deprecation returns deprecation information */
-func (t *MonitorActiveConnectionsTool) Deprecation() *mcp.DeprecationInfo { return t.baseTool.Deprecation() }
+func (t *MonitorActiveConnectionsTool) Deprecation() *mcp.DeprecationInfo {
+	return t.baseTool.Deprecation()
+}
 
 /* Execute monitors connections */
 func (t *MonitorActiveConnectionsTool) Execute(ctx context.Context, params map[string]interface{}) (*ToolResult, error) {
@@ -439,18 +445,18 @@ func (t *MonitorActiveConnectionsTool) Execute(ctx context.Context, params map[s
 
 		if err := rows.Scan(&pid, &usename, &appName, &clientAddr, &state, &queryStart, &stateChange, &queryDuration, &stateDuration, &queryPreview, &waitEventType, &waitEvent); err == nil {
 			connections = append(connections, map[string]interface{}{
-				"pid":             pid,
-				"username":        usename,
-				"application_name": appName,
-				"client_address":  clientAddr,
-				"state":           state,
-				"query_start":     queryStart,
-				"state_change":    stateChange,
+				"pid":                    pid,
+				"username":               usename,
+				"application_name":       appName,
+				"client_address":         clientAddr,
+				"state":                  state,
+				"query_start":            queryStart,
+				"state_change":           stateChange,
 				"query_duration_seconds": queryDuration,
 				"state_duration_seconds": stateDuration,
-				"query_preview":   queryPreview,
-				"wait_event_type": waitEventType,
-				"wait_event":      waitEvent,
+				"query_preview":          queryPreview,
+				"wait_event_type":        waitEventType,
+				"wait_event":             waitEvent,
 			})
 		}
 	}
@@ -475,10 +481,10 @@ func (t *MonitorActiveConnectionsTool) Execute(ctx context.Context, params map[s
 			var total, active, idle, idleInTrans, maxDuration interface{}
 			if err := summaryRows.Scan(&total, &active, &idle, &idleInTrans, &maxDuration); err == nil {
 				summary = map[string]interface{}{
-					"total":                total,
-					"active":               active,
-					"idle":                 idle,
-					"idle_in_transaction":  idleInTrans,
+					"total":                      total,
+					"active":                     active,
+					"idle":                       idle,
+					"idle_in_transaction":        idleInTrans,
 					"max_query_duration_seconds": maxDuration,
 				}
 			}
@@ -496,15 +502,15 @@ func (t *MonitorActiveConnectionsTool) Execute(ctx context.Context, params map[s
 /* MonitorQueryPerformanceTool tracks slow queries */
 type MonitorQueryPerformanceTool struct {
 	baseTool *BaseToolWrapper
-	db     *database.Database
-	logger *logging.Logger
+	db       *database.Database
+	logger   *logging.Logger
 }
 
 /* NewMonitorQueryPerformanceTool creates a new query performance monitor */
 func NewMonitorQueryPerformanceTool(db *database.Database, logger *logging.Logger) *MonitorQueryPerformanceTool {
 	return &MonitorQueryPerformanceTool{
 		baseTool: &BaseToolWrapper{
-			name: "monitor_query_performance",
+			name:        "monitor_query_performance",
 			description: "Track and analyze slow queries and performance issues",
 			inputSchema: map[string]interface{}{
 				"type": "object",
@@ -540,19 +546,25 @@ func (t *MonitorQueryPerformanceTool) Name() string { return t.baseTool.Name() }
 func (t *MonitorQueryPerformanceTool) Description() string { return t.baseTool.Description() }
 
 /* InputSchema returns the input schema */
-func (t *MonitorQueryPerformanceTool) InputSchema() map[string]interface{} { return t.baseTool.InputSchema() }
+func (t *MonitorQueryPerformanceTool) InputSchema() map[string]interface{} {
+	return t.baseTool.InputSchema()
+}
 
 /* Version returns the tool version */
 func (t *MonitorQueryPerformanceTool) Version() string { return t.baseTool.Version() }
 
 /* OutputSchema returns the output schema */
-func (t *MonitorQueryPerformanceTool) OutputSchema() map[string]interface{} { return t.baseTool.OutputSchema() }
+func (t *MonitorQueryPerformanceTool) OutputSchema() map[string]interface{} {
+	return t.baseTool.OutputSchema()
+}
 
 /* Deprecated returns whether the tool is deprecated */
 func (t *MonitorQueryPerformanceTool) Deprecated() bool { return t.baseTool.Deprecated() }
 
 /* Deprecation returns deprecation information */
-func (t *MonitorQueryPerformanceTool) Deprecation() *mcp.DeprecationInfo { return t.baseTool.Deprecation() }
+func (t *MonitorQueryPerformanceTool) Deprecation() *mcp.DeprecationInfo {
+	return t.baseTool.Deprecation()
+}
 
 /* Execute monitors query performance */
 func (t *MonitorQueryPerformanceTool) Execute(ctx context.Context, params map[string]interface{}) (*ToolResult, error) {
@@ -580,7 +592,7 @@ func (t *MonitorQueryPerformanceTool) Execute(ctx context.Context, params map[st
 	if err == nil {
 		defer rows.Close()
 		if rows.Next() {
-			rows.Scan(&hasStats)
+			_ = rows.Scan(&hasStats)
 		}
 	}
 
@@ -628,38 +640,38 @@ func (t *MonitorQueryPerformanceTool) Execute(ctx context.Context, params map[st
 
 		if err := rows.Scan(&queryID, &queryPreview, &calls, &totalTime, &meanTime, &maxTime, &stddevTime, &rowsCount, &hitPercent); err == nil {
 			queries = append(queries, map[string]interface{}{
-				"query_id":           queryID,
-				"query_preview":      queryPreview,
-				"calls":              calls,
-				"total_exec_time_ms": totalTime,
-				"mean_exec_time_ms":  meanTime,
-				"max_exec_time_ms":   maxTime,
+				"query_id":            queryID,
+				"query_preview":       queryPreview,
+				"calls":               calls,
+				"total_exec_time_ms":  totalTime,
+				"mean_exec_time_ms":   meanTime,
+				"max_exec_time_ms":    maxTime,
 				"stddev_exec_time_ms": stddevTime,
-				"rows":               rowsCount,
-				"cache_hit_percent":  hitPercent,
+				"rows":                rowsCount,
+				"cache_hit_percent":   hitPercent,
 			})
 		}
 	}
 
 	return successResult(map[string]interface{}{
-		"queries":    queries,
-		"count":      len(queries),
+		"queries":         queries,
+		"count":           len(queries),
 		"min_duration_ms": minDuration,
-		"timestamp":  time.Now(),
+		"timestamp":       time.Now(),
 	}), nil
 }
 
 /* TraceRequestTool enables request tracing for debugging */
 type TraceRequestTool struct {
 	baseTool *BaseToolWrapper
-	logger *logging.Logger
+	logger   *logging.Logger
 }
 
 /* NewTraceRequestTool creates a new trace request tool */
 func NewTraceRequestTool(logger *logging.Logger) *TraceRequestTool {
 	return &TraceRequestTool{
 		baseTool: &BaseToolWrapper{
-			name: "trace_request",
+			name:        "trace_request",
 			description: "Enable request tracing for debugging (returns trace ID for use in subsequent requests)",
 			inputSchema: map[string]interface{}{
 				"type": "object",

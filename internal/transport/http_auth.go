@@ -27,21 +27,21 @@ import (
 
 /* APIKey represents an API key with scoped permissions */
 type APIKey struct {
-	ID          string
-	KeyHash     string
-	UserID      string
-	Scopes      []string
-	RateLimit   int /* Requests per minute */
-	ExpiresAt   *time.Time
-	CreatedAt   time.Time
-	LastUsed    *time.Time
+	ID        string
+	KeyHash   string
+	UserID    string
+	Scopes    []string
+	RateLimit int /* Requests per minute */
+	ExpiresAt *time.Time
+	CreatedAt time.Time
+	LastUsed  *time.Time
 }
 
 /* APIKeyStore manages API keys */
 type APIKeyStore struct {
-	mu    sync.RWMutex
-	keys  map[string]*APIKey /* Keyed by key hash */
-	byID  map[string]*APIKey /* Keyed by key ID */
+	mu   sync.RWMutex
+	keys map[string]*APIKey /* Keyed by key hash */
+	byID map[string]*APIKey /* Keyed by key ID */
 }
 
 /* NewAPIKeyStore creates a new API key store */
@@ -102,11 +102,11 @@ func HashAPIKey(apiKey string) string {
 
 /* HTTPAuthMiddleware provides HTTP authentication */
 type HTTPAuthMiddleware struct {
-	apiKeyStore    *APIKeyStore
-	bearerTokens   map[string]*BearerToken
-	mu             sync.RWMutex
-	enabled        bool
-	requireAuth    bool
+	apiKeyStore  *APIKeyStore
+	bearerTokens map[string]*BearerToken
+	mu           sync.RWMutex
+	enabled      bool
+	requireAuth  bool
 }
 
 /* BearerToken represents a bearer token */
@@ -274,10 +274,10 @@ type RateLimiter struct {
 
 /* RateLimitEntry tracks rate limit for a key */
 type RateLimitEntry struct {
-	Requests   []time.Time
-	Limit      int
-	Window     time.Duration
-	LastReset  time.Time
+	Requests  []time.Time
+	Limit     int
+	Window    time.Duration
+	LastReset time.Time
 }
 
 /* NewRateLimiter creates a new rate limiter */

@@ -25,12 +25,12 @@ import (
 
 /* CapabilitiesManager manages server capabilities and version information */
 type CapabilitiesManager struct {
-	mu             sync.RWMutex
-	serverVersion  string
-	serverName     string
-	toolRegistry   *tools.ToolRegistry
-	featureFlags   map[string]bool
-	modelVersions  map[string]string
+	mu                  sync.RWMutex
+	serverVersion       string
+	serverName          string
+	toolRegistry        *tools.ToolRegistry
+	featureFlags        map[string]bool
+	modelVersions       map[string]string
 	enableSubscriptions bool
 }
 
@@ -150,7 +150,6 @@ func (cm *CapabilitiesManager) GetServerCapabilities() mcp.ServerCapabilities {
 		},
 	}
 }
-
 
 /* GetModelVersion gets a model version */
 func (cm *CapabilitiesManager) GetModelVersion(modelName string) string {

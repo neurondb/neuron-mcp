@@ -76,19 +76,19 @@ func min(a, b float64) float64 {
 
 /* RateLimiterMiddleware implements adaptive rate limiting */
 type RateLimiterMiddleware struct {
-	logger           *logging.Logger
-	globalBucket     *TokenBucket
-	userBuckets      map[string]*TokenBucket
-	toolBuckets      map[string]*TokenBucket
-	mu               sync.RWMutex
-	stats            *RateLimiterStats
-	enableAdaptive   bool
-	enablePerUser    bool
-	enablePerTool    bool
-	userCapacity     float64
-	userRefillRate   float64
-	toolCapacity     float64
-	toolRefillRate   float64
+	logger         *logging.Logger
+	globalBucket   *TokenBucket
+	userBuckets    map[string]*TokenBucket
+	toolBuckets    map[string]*TokenBucket
+	mu             sync.RWMutex
+	stats          *RateLimiterStats
+	enableAdaptive bool
+	enablePerUser  bool
+	enablePerTool  bool
+	userCapacity   float64
+	userRefillRate float64
+	toolCapacity   float64
+	toolRefillRate float64
 }
 
 /* RateLimiterStats tracks rate limiter statistics */
@@ -311,6 +311,3 @@ func (m *RateLimiterMiddleware) GetGlobalTokens() float64 {
 func (m *RateLimiterMiddleware) Name() string {
 	return "rate_limiter"
 }
-
-
-

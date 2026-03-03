@@ -81,7 +81,7 @@ func (t *VecmapOperationsTool) Execute(ctx context.Context, params map[string]in
 		return Error("vecmap1 is required and cannot be empty", "VALIDATION_ERROR", nil), nil
 	}
 
-  /* Decode base64 vecmap data */
+	/* Decode base64 vecmap data */
 	vecmap1Bytes, err := base64.StdEncoding.DecodeString(vecmap1)
 	if err != nil {
 		return Error(fmt.Sprintf("Invalid base64 vecmap1 data: %v", err), "VALIDATION_ERROR", nil), nil
@@ -143,12 +143,3 @@ func (t *VecmapOperationsTool) Execute(ctx context.Context, params map[string]in
 		"operation": operation,
 	}), nil
 }
-
-
-
-
-
-
-
-
-

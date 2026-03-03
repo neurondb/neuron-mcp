@@ -6,11 +6,11 @@ import (
 
 /* mockRows implements Rows for testing */
 type mockRows struct {
-	rows    [][]interface{}
-	fields  []FieldDescription
-	index   int
-	closed  bool
-	err     error
+	rows   [][]interface{}
+	fields []FieldDescription
+	index  int
+	closed bool
+	err    error
 }
 
 func (m *mockRows) Next() bool {

@@ -77,7 +77,7 @@ func (t *PostgreSQLConnectionsTool) Execute(ctx context.Context, params map[stri
 		"connections": results,
 		"count":       len(results),
 	}, map[string]interface{}{
-		"tool": "postgresql_connections",
+		"tool":  "postgresql_connections",
 		"count": len(results),
 	}), nil
 }
@@ -141,7 +141,7 @@ func (t *PostgreSQLLocksTool) Execute(ctx context.Context, params map[string]int
 		"locks": results,
 		"count": len(results),
 	}, map[string]interface{}{
-		"tool": "postgresql_locks",
+		"tool":  "postgresql_locks",
 		"count": len(results),
 	}), nil
 }
@@ -200,7 +200,7 @@ func (t *PostgreSQLReplicationTool) Execute(ctx context.Context, params map[stri
 		"replication": results,
 		"count":       len(results),
 	}, map[string]interface{}{
-		"tool": "postgresql_replication",
+		"tool":  "postgresql_replication",
 		"count": len(results),
 	}), nil
 }
@@ -292,7 +292,7 @@ func (t *PostgreSQLSettingsTool) Execute(ctx context.Context, params map[string]
 		"settings": results,
 		"count":    len(results),
 	}, map[string]interface{}{
-		"tool": "postgresql_settings",
+		"tool":  "postgresql_settings",
 		"count": len(results),
 	}), nil
 }
@@ -345,18 +345,9 @@ func (t *PostgreSQLExtensionsTool) Execute(ctx context.Context, params map[strin
 
 	return Success(map[string]interface{}{
 		"extensions": results,
-		"count":     len(results),
+		"count":      len(results),
 	}, map[string]interface{}{
-		"tool": "postgresql_extensions",
+		"tool":  "postgresql_extensions",
 		"count": len(results),
 	}), nil
 }
-
-
-
-
-
-
-
-
-

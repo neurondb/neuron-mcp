@@ -450,7 +450,7 @@ func (t *QuantizationAnalysisTool) Execute(ctx context.Context, params map[strin
 		})
 		return Error(fmt.Sprintf("Quantization analysis failed: operation='%s', error=%v", operation, err), "EXECUTION_ERROR", map[string]interface{}{
 			"operation": operation,
-			"error":    err.Error(),
+			"error":     err.Error(),
 		}), nil
 	}
 
@@ -458,12 +458,3 @@ func (t *QuantizationAnalysisTool) Execute(ctx context.Context, params map[strin
 		"operation": operation,
 	}), nil
 }
-
-
-
-
-
-
-
-
-

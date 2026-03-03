@@ -32,11 +32,11 @@ const (
 
 /* HealthCheck represents a health check */
 type HealthCheck struct {
-	Name        string
-	Status      HealthStatus
-	LastCheck   time.Time
-	Message     string
-	Details     map[string]interface{}
+	Name      string
+	Status    HealthStatus
+	LastCheck time.Time
+	Message   string
+	Details   map[string]interface{}
 }
 
 /* HealthChecker performs health checks */
@@ -99,10 +99,10 @@ type LoadBalancer struct {
 
 /* Instance represents a server instance */
 type Instance struct {
-	ID       string
-	Address  string
-	Healthy  bool
-	Weight   int
+	ID          string
+	Address     string
+	Healthy     bool
+	Weight      int
 	Connections int
 }
 
@@ -165,8 +165,8 @@ func (l *LoadBalancer) SelectInstance() *Instance {
 
 /* FailoverManager manages failover */
 type FailoverManager struct {
-	primary   *Instance
-	replicas  []Instance
+	primary       *Instance
+	replicas      []Instance
 	healthChecker *HealthChecker
 }
 
@@ -198,4 +198,3 @@ func (f *FailoverManager) Failover() (*Instance, error) {
 
 	return nil, fmt.Errorf("no healthy replica available")
 }
-

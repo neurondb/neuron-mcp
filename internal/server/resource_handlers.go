@@ -26,10 +26,10 @@ import (
 
 /* setupResourceHandlers sets up resource-related MCP handlers */
 func (s *Server) setupResourceHandlers() {
-  /* List resources handler */
+	/* List resources handler */
 	s.mcpServer.SetHandler("resources/list", s.handleListResources)
 
-  /* Read resource handler */
+	/* Read resource handler */
 	s.mcpServer.SetHandler("resources/read", s.handleReadResource)
 
 	/* Subscribe/unsubscribe handlers (only if subscriptions enabled) */
@@ -63,7 +63,7 @@ func (s *Server) handleListResources(ctx context.Context, params json.RawMessage
 	}
 
 	definitions := s.resources.ListResources()
-	
+
 	mcpDefs := make([]mcp.ResourceDefinition, 0, len(definitions))
 	for i, def := range definitions {
 		/* Validate resource definition */
@@ -86,7 +86,7 @@ func (s *Server) handleListResources(ctx context.Context, params json.RawMessage
 			}
 			continue
 		}
-		
+
 		mcpDefs = append(mcpDefs, mcp.ResourceDefinition{
 			URI:         def.URI,
 			URITemplate: def.URITemplate,
@@ -101,7 +101,7 @@ func (s *Server) handleListResources(ctx context.Context, params json.RawMessage
 			"total_resources": len(mcpDefs),
 		})
 	}
-	
+
 	return mcp.ListResourcesResponse{Resources: mcpDefs}, nil
 }
 
@@ -191,7 +191,7 @@ func (s *Server) handleReadResource(ctx context.Context, params json.RawMessage)
 		if content.URI == "" {
 			if s.logger != nil {
 				s.logger.Warn("Skipping resource content with empty URI", map[string]interface{}{
-					"index": i,
+					"index":     i,
 					"mime_type": content.MimeType,
 				})
 			}
@@ -213,8 +213,8 @@ func (s *Server) handleReadResource(ctx context.Context, params json.RawMessage)
 
 	if s.logger != nil {
 		s.logger.Debug("Resource read successful", map[string]interface{}{
-			"uri":            req.URI,
-			"content_count":  len(mcpContents),
+			"uri":           req.URI,
+			"content_count": len(mcpContents),
 		})
 	}
 
@@ -287,8 +287,8 @@ func (s *Server) handleSubscribeResource(ctx context.Context, params json.RawMes
 	callback := func(update *resources.ResourceUpdate) {
 		if s.logger != nil {
 			s.logger.Info("Resource update notification", map[string]interface{}{
-				"uri":      update.URI,
-				"type":     update.Type,
+				"uri":       update.URI,
+				"type":      update.Type,
 				"timestamp": update.Timestamp,
 			})
 		}
@@ -311,7 +311,7 @@ func (s *Server) handleSubscribeResource(ctx context.Context, params json.RawMes
 
 	if s.logger != nil {
 		s.logger.Debug("Resource subscription created", map[string]interface{}{
-			"uri":            req.URI,
+			"uri":             req.URI,
 			"subscription_id": subID,
 		})
 	}
@@ -390,4 +390,3 @@ func (s *Server) handleUnsubscribeResource(ctx context.Context, params json.RawM
 
 	return map[string]interface{}{"success": true}, nil
 }
-

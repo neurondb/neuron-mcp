@@ -28,7 +28,7 @@ import (
 
 /* Manager manages completion requests */
 type Manager struct {
-	promptsManager  *prompts.Manager
+	promptsManager   *prompts.Manager
 	resourcesManager *resources.Manager
 }
 

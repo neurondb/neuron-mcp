@@ -32,10 +32,10 @@ type CreateMessageRequest struct {
 
 /* CreateMessageResponse represents a sampling/createMessage response */
 type CreateMessageResponse struct {
-	Content   string                 `json:"content"`
-	Model     string                 `json:"model"`
-	StopReason string                `json:"stopReason,omitempty"`
-	Metadata  map[string]interface{} `json:"metadata,omitempty"`
+	Content    string                 `json:"content"`
+	Model      string                 `json:"model"`
+	StopReason string                 `json:"stopReason,omitempty"`
+	Metadata   map[string]interface{} `json:"metadata,omitempty"`
 }
 
 /* HandleCreateMessage handles the sampling/createMessage request */
@@ -100,4 +100,3 @@ func (m *Manager) HandleCreateMessage(ctx context.Context, params json.RawMessag
 		Metadata:   response.Metadata,
 	}, nil
 }
-

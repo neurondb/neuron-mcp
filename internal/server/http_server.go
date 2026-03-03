@@ -124,6 +124,3 @@ func (h *HTTPServer) Start() {
 func (h *HTTPServer) Shutdown(ctx context.Context) error {
 	return h.server.Shutdown(ctx)
 }
-
-
-

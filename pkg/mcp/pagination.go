@@ -24,25 +24,25 @@ import (
 
 /* PaginationParams represents pagination parameters in requests */
 type PaginationParams struct {
-	Limit            int    `json:"limit,omitempty"`
-	Cursor           string `json:"cursor,omitempty"`
+	Limit             int    `json:"limit,omitempty"`
+	Cursor            string `json:"cursor,omitempty"`
 	ContinuationToken string `json:"continuation_token,omitempty"`
 }
 
 /* PaginatedResponse represents a paginated response */
 type PaginatedResponse struct {
-	Items            []interface{}     `json:"items"`
-	HasMore          bool              `json:"has_more"`
-	NextCursor       string            `json:"next_cursor,omitempty"`
-	ContinuationToken string            `json:"continuation_token,omitempty"`
-	TotalCount       *int              `json:"total_count,omitempty"`
-	Metadata         map[string]interface{} `json:"metadata,omitempty"`
+	Items             []interface{}          `json:"items"`
+	HasMore           bool                   `json:"has_more"`
+	NextCursor        string                 `json:"next_cursor,omitempty"`
+	ContinuationToken string                 `json:"continuation_token,omitempty"`
+	TotalCount        *int                   `json:"total_count,omitempty"`
+	Metadata          map[string]interface{} `json:"metadata,omitempty"`
 }
 
 /* CursorData represents the data encoded in a cursor */
 type CursorData struct {
-	Offset    int       `json:"offset"`
-	Timestamp time.Time `json:"timestamp"`
+	Offset    int                    `json:"offset"`
+	Timestamp time.Time              `json:"timestamp"`
 	Params    map[string]interface{} `json:"params,omitempty"`
 }
 
@@ -97,15 +97,3 @@ func ValidateLimit(limit int) int {
 	}
 	return limit
 }
-
-
-
-
-
-
-
-
-
-
-
-

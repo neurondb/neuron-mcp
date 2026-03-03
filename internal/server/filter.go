@@ -19,11 +19,11 @@ func (s *Server) filterToolsByFeatures(definitions []tools.ToolDefinition) []too
 		/* If config is not available, return all tools */
 		return definitions
 	}
-	
+
 	features := s.config.GetFeaturesConfig()
 	filtered := make([]tools.ToolDefinition, 0, len(definitions))
 	filteredOut := make([]string, 0)
-	
+
 	for _, def := range definitions {
 		/* Skip tools with empty names */
 		if def.Name == "" {
@@ -35,21 +35,21 @@ func (s *Server) filterToolsByFeatures(definitions []tools.ToolDefinition) []too
 			filteredOut = append(filteredOut, "<empty>")
 			continue
 		}
-		
+
 		if shouldIncludeTool(def.Name, features, s.logger) {
 			filtered = append(filtered, def)
 		} else {
 			filteredOut = append(filteredOut, def.Name)
 		}
 	}
-	
+
 	if s.logger != nil && len(filteredOut) > 0 {
 		s.logger.Debug("Tools filtered out by feature flags", map[string]interface{}{
 			"filtered_count": len(filteredOut),
 			"filtered_tools": filteredOut,
 		})
 	}
-	
+
 	return filtered
 }
 
@@ -58,65 +58,65 @@ func shouldIncludeTool(toolName string, features *config.FeaturesConfig, logger 
 	if toolName == "" {
 		return false
 	}
-	
+
 	/* If features config is nil, default to enabled for all tools */
 	if features == nil {
 		return true
 	}
-	
-  /* PostgreSQL tools - always enabled by default */
+
+	/* PostgreSQL tools - always enabled by default */
 	if isPostgreSQLTool(toolName) {
 		return true
 	}
-	
-  /* Vector tools - default to enabled if feature config exists and is enabled, or if no config (default enabled) */
+
+	/* Vector tools - default to enabled if feature config exists and is enabled, or if no config (default enabled) */
 	if isVectorTool(toolName) {
 		if features.Vector == nil {
 			return true
 		}
 		return features.Vector.Enabled
 	}
-	
-  /* ML tools - default to enabled */
+
+	/* ML tools - default to enabled */
 	if isMLTool(toolName) {
 		if features.ML == nil {
 			return true
 		}
 		return features.ML.Enabled
 	}
-	
-  /* Analytics tools - default to enabled */
+
+	/* Analytics tools - default to enabled */
 	if isAnalyticsTool(toolName) {
 		if features.Analytics == nil {
 			return true
 		}
 		return features.Analytics.Enabled
 	}
-	
-  /* RAG tools - default to enabled */
+
+	/* RAG tools - default to enabled */
 	if isRAGTool(toolName) {
 		if features.RAG == nil {
 			return true
 		}
 		return features.RAG.Enabled
 	}
-	
-  /* Project tools - default to enabled */
+
+	/* Project tools - default to enabled */
 	if isProjectTool(toolName) {
 		if features.Projects == nil {
 			return true
 		}
 		return features.Projects.Enabled
 	}
-	
-  /* GPU tools - default to enabled */
+
+	/* GPU tools - default to enabled */
 	if isGPUTool(toolName) {
 		if features.GPU == nil {
 			return true
 		}
 		return features.GPU.Enabled
 	}
-	
+
 	/* Default to enabled for unknown tool categories */
 	return true
 }
@@ -248,4 +248,3 @@ func isPostgreSQLTool(name string) bool {
 	}
 	return len(name) >= 11 && name[:11] == "postgresql_"
 }
-

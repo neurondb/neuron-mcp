@@ -36,9 +36,9 @@ type MCPConfig struct {
 /* GetEnv returns environment variables, merging with current environment */
 func (c *MCPConfig) GetEnv() map[string]string {
 	env := make(map[string]string)
-  /* Copy current environment */
+	/* Copy current environment */
 	for _, e := range os.Environ() {
-   /* Split on first '=' */
+		/* Split on first '=' */
 		for i := 0; i < len(e); i++ {
 			if e[i] == '=' {
 				env[e[:i]] = e[i+1:]
@@ -46,7 +46,7 @@ func (c *MCPConfig) GetEnv() map[string]string {
 			}
 		}
 	}
-  /* Override with config env */
+	/* Override with config env */
 	for k, v := range c.Env {
 		env[k] = v
 	}
@@ -75,7 +75,7 @@ func (c *MCPClient) Connect() error {
 		return fmt.Errorf("already connected")
 	}
 
-  /* Create transport */
+	/* Create transport */
 	transport, err := NewClientTransport(c.config.Command, c.config.GetEnv(), c.config.Args)
 	if err != nil {
 		return fmt.Errorf("failed to create transport: %w", err)
@@ -83,7 +83,7 @@ func (c *MCPClient) Connect() error {
 
 	c.transport = transport
 
-  /* Start server process */
+	/* Start server process */
 	if c.verbose {
 		fmt.Printf("Starting MCP server process: %s\n", c.config.Command)
 	}
@@ -92,7 +92,7 @@ func (c *MCPClient) Connect() error {
 		return fmt.Errorf("failed to start transport: %w", err)
 	}
 
-  /* Initialize connection */
+	/* Initialize connection */
 	return c.initialize()
 }
 
@@ -102,7 +102,7 @@ func (c *MCPClient) initialize() error {
 		return nil
 	}
 
-  /* Send initialize request */
+	/* Send initialize request */
 	initRequest := &mcp.JSONRPCRequest{
 		JSONRPC: "2.0",
 		ID:      json.RawMessage(`"` + generateID() + `"`),
@@ -130,7 +130,7 @@ func (c *MCPClient) initialize() error {
 		fmt.Println("MCP connection initialized successfully")
 	}
 
-  /* Send initialized notification */
+	/* Send initialized notification */
 	notification := map[string]interface{}{
 		"jsonrpc": "2.0",
 		"method":  "notifications/initialized",
@@ -138,7 +138,7 @@ func (c *MCPClient) initialize() error {
 	}
 
 	if err := c.transport.SendNotification(notification); err != nil {
-   /* Notification errors are not fatal */
+		/* Notification errors are not fatal */
 		if c.verbose {
 			fmt.Printf("Warning: Failed to send initialized notification to MCP server: %v\n", err)
 		}
@@ -184,7 +184,7 @@ func (c *MCPClient) ListTools() (map[string]interface{}, error) {
 		if resultMap, ok := response.Result.(map[string]interface{}); ok {
 			return resultMap, nil
 		}
-   /* If result is not a map, wrap it */
+		/* If result is not a map, wrap it */
 		return map[string]interface{}{
 			"result": response.Result,
 		}, nil
@@ -227,7 +227,7 @@ func (c *MCPClient) CallTool(toolName string, arguments map[string]interface{}) 
 		if resultMap, ok := response.Result.(map[string]interface{}); ok {
 			return resultMap, nil
 		}
-   /* If result is not a map, wrap it */
+		/* If result is not a map, wrap it */
 		return map[string]interface{}{
 			"result": response.Result,
 		}, nil
@@ -238,7 +238,7 @@ func (c *MCPClient) CallTool(toolName string, arguments map[string]interface{}) 
 
 /* ExecuteCommand executes a command string */
 func (c *MCPClient) ExecuteCommand(commandStr string) (map[string]interface{}, error) {
-  /* Parse command */
+	/* Parse command */
 	toolName, arguments, err := ParseCommand(commandStr)
 	if err != nil {
 		return map[string]interface{}{
@@ -246,7 +246,7 @@ func (c *MCPClient) ExecuteCommand(commandStr string) (map[string]interface{}, e
 		}, nil
 	}
 
-  /* Handle special commands */
+	/* Handle special commands */
 	if toolName == "list_tools" {
 		return c.ListTools()
 	}
@@ -265,7 +265,7 @@ func (c *MCPClient) ExecuteCommand(commandStr string) (map[string]interface{}, e
 		return c.ReadResource(uri)
 	}
 
-  /* Call tool */
+	/* Call tool */
 	return c.CallTool(toolName, arguments)
 }
 
@@ -345,4 +345,3 @@ func (c *MCPClient) ReadResource(uri string) (map[string]interface{}, error) {
 func generateID() string {
 	return fmt.Sprintf("%d", time.Now().UnixNano())
 }
-

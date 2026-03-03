@@ -96,7 +96,7 @@ func (m *TimeoutMiddleware) Execute(ctx context.Context, req *middleware.MCPRequ
 				panicErr := fmt.Errorf("panic in timeout middleware: %v", r)
 				if m.logger != nil {
 					m.logger.Warn("Panic recovered in timeout middleware", map[string]interface{}{
-						"method":     req.Method,
+						"method":      req.Method,
 						"panic_value": fmt.Sprintf("%v", r),
 					})
 				}
@@ -110,7 +110,7 @@ func (m *TimeoutMiddleware) Execute(ctx context.Context, req *middleware.MCPRequ
 				}
 			}
 		}()
-		
+
 		/* Check if context is already cancelled before starting */
 		select {
 		case <-ctx.Done():
@@ -118,9 +118,9 @@ func (m *TimeoutMiddleware) Execute(ctx context.Context, req *middleware.MCPRequ
 			return
 		default:
 		}
-		
+
 		resp, err := next(ctx, req)
-		
+
 		/* Check context again before sending result */
 		select {
 		case <-ctx.Done():
@@ -175,4 +175,3 @@ func (m *TimeoutMiddleware) Execute(ctx context.Context, req *middleware.MCPRequ
 		}, nil
 	}
 }
-

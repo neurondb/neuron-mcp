@@ -63,4 +63,3 @@ func (r *ConfigResource) GetContent(ctx context.Context) (interface{}, error) {
 	`
 	return r.executeQuery(ctx, query, nil)
 }
-

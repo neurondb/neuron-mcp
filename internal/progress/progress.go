@@ -33,15 +33,15 @@ var (
 
 /* ProgressStatus represents progress status */
 type ProgressStatus struct {
-	ID        string                 `json:"id"`
-	Status    string                 `json:"status"` /* pending, running, completed, failed */
-	Progress  float64                `json:"progress"` /* 0.0 to 1.0 */
-	Message   string                 `json:"message,omitempty"`
-	StartedAt time.Time              `json:"startedAt"`
-	UpdatedAt time.Time              `json:"updatedAt"`
-	CompletedAt *time.Time           `json:"completedAt,omitempty"`
-	Metadata  map[string]interface{} `json:"metadata,omitempty"`
-	Error     string                 `json:"error,omitempty"`
+	ID          string                 `json:"id"`
+	Status      string                 `json:"status"`   /* pending, running, completed, failed */
+	Progress    float64                `json:"progress"` /* 0.0 to 1.0 */
+	Message     string                 `json:"message,omitempty"`
+	StartedAt   time.Time              `json:"startedAt"`
+	UpdatedAt   time.Time              `json:"updatedAt"`
+	CompletedAt *time.Time             `json:"completedAt,omitempty"`
+	Metadata    map[string]interface{} `json:"metadata,omitempty"`
+	Error       string                 `json:"error,omitempty"`
 }
 
 /* Tracker tracks progress for operations */
@@ -58,14 +58,14 @@ type Tracker struct {
 /* NewTracker creates a new progress tracker */
 func NewTracker() *Tracker {
 	t := &Tracker{
-		progresses: make(map[string]*ProgressStatus),
-		maxItems:   DefaultMaxProgressItems,
+		progresses:  make(map[string]*ProgressStatus),
+		maxItems:    DefaultMaxProgressItems,
 		cleanupStop: make(chan struct{}),
 	}
-	
+
 	/* Start automatic cleanup */
 	t.startCleanup()
-	
+
 	return t
 }
 
@@ -73,14 +73,14 @@ func NewTracker() *Tracker {
 func (t *Tracker) startCleanup() {
 	t.cleanupMu.Lock()
 	defer t.cleanupMu.Unlock()
-	
+
 	if t.cleanupRunning {
 		return
 	}
-	
+
 	t.cleanupTicker = time.NewTicker(DefaultCleanupInterval)
 	t.cleanupRunning = true
-	
+
 	go func() {
 		for {
 			select {
@@ -97,11 +97,11 @@ func (t *Tracker) startCleanup() {
 func (t *Tracker) StopCleanup() {
 	t.cleanupMu.Lock()
 	defer t.cleanupMu.Unlock()
-	
+
 	if !t.cleanupRunning {
 		return
 	}
-	
+
 	if t.cleanupTicker != nil {
 		t.cleanupTicker.Stop()
 	}
@@ -156,7 +156,7 @@ func (t *Tracker) Start(id string, message string) (*ProgressStatus, error) {
 				delete(t.progresses, pid)
 			}
 		}
-		
+
 		/* If still at capacity, return error */
 		if len(t.progresses) >= t.maxItems {
 			return nil, fmt.Errorf("progress: maximum number of tracked items reached: current_count=%d, max_items=%d", len(t.progresses), t.maxItems)
@@ -346,7 +346,7 @@ func (t *Tracker) Cleanup(maxAge time.Duration) {
 				entries = append(entries, entry{id: id, completed: *p.CompletedAt})
 			}
 		}
-		
+
 		/* Remove oldest entries until under limit */
 		toRemove := len(t.progresses) - t.maxItems
 		for i := 0; i < toRemove && i < len(entries); i++ {
@@ -355,4 +355,3 @@ func (t *Tracker) Cleanup(maxAge time.Duration) {
 		}
 	}
 }
-

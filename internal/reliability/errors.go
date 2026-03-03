@@ -52,12 +52,12 @@ const (
 
 /* StructuredError represents a structured error with code and details */
 type StructuredError struct {
-	Code         ErrorCode
-	Message      string
-	Details      map[string]interface{}
-	RequestID    string
+	Code          ErrorCode
+	Message       string
+	Details       map[string]interface{}
+	RequestID     string
 	OriginalError error
-	Suggestions  []string /* Helpful suggestions for resolving the error */
+	Suggestions   []string /* Helpful suggestions for resolving the error */
 }
 
 /* Error returns the error message */
@@ -126,7 +126,7 @@ func GetSuggestions(err error) []string {
 /* generateSuggestions generates suggestions based on error code */
 func generateSuggestions(code ErrorCode, details map[string]interface{}) []string {
 	suggestions := []string{}
-	
+
 	switch code {
 	case ErrorCodeConnection:
 		suggestions = append(suggestions,
@@ -172,7 +172,7 @@ func generateSuggestions(code ErrorCode, details map[string]interface{}) []strin
 			"Enable write access in the configuration if needed",
 		)
 	}
-	
+
 	return suggestions
 }
 
@@ -283,16 +283,16 @@ func (ec *ErrorClassifier) ClassifyPostgresError(err error, requestID string) *S
 
 	/* PostgreSQL error codes (common ones) */
 	pgErrorPatterns := map[string]ErrorCode{
-		"42P01": ErrorCodeNotFound,        /* undefined_table */
-		"42703": ErrorCodeQuery,          /* undefined_column */
-		"23505": ErrorCodeQuery,          /* unique_violation */
-		"23503": ErrorCodeQuery,          /* foreign_key_violation */
-		"28P01": ErrorCodePermission,     /* invalid_authorization_specification */
-		"3D000": ErrorCodeConnection,      /* invalid_catalog_name */
-		"08003": ErrorCodeConnection,      /* connection_does_not_exist */
-		"08006": ErrorCodeConnection,      /* connection_failure */
-		"57014": ErrorCodeTimeout,        /* query_canceled */
-		"53300": ErrorCodeConnection,      /* too_many_connections */
+		"42P01": ErrorCodeNotFound,   /* undefined_table */
+		"42703": ErrorCodeQuery,      /* undefined_column */
+		"23505": ErrorCodeQuery,      /* unique_violation */
+		"23503": ErrorCodeQuery,      /* foreign_key_violation */
+		"28P01": ErrorCodePermission, /* invalid_authorization_specification */
+		"3D000": ErrorCodeConnection, /* invalid_catalog_name */
+		"08003": ErrorCodeConnection, /* connection_does_not_exist */
+		"08006": ErrorCodeConnection, /* connection_failure */
+		"57014": ErrorCodeTimeout,    /* query_canceled */
+		"53300": ErrorCodeConnection, /* too_many_connections */
 	}
 
 	/* Check for PostgreSQL error codes */
@@ -364,4 +364,3 @@ func IsRetryableError(err error) bool {
 	}
 	return false
 }
-

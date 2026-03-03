@@ -42,15 +42,3 @@ func (t *Tracker) HandleGetProgress(ctx context.Context, params json.RawMessage)
 
 	return status, nil
 }
-
-
-
-
-
-
-
-
-
-
-
-

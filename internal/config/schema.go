@@ -17,34 +17,34 @@ import "time"
 
 /* ServerConfig is the root configuration structure */
 type ServerConfig struct {
-	Database      DatabaseConfig      `json:"database"`
-	Server        ServerSettings      `json:"server"`
-	Logging       LoggingConfig       `json:"logging"`
-	Features      FeaturesConfig      `json:"features"`
-	Safety        *SafetyConfig       `json:"safety,omitempty"`
+	Database      DatabaseConfig       `json:"database"`
+	Server        ServerSettings       `json:"server"`
+	Logging       LoggingConfig        `json:"logging"`
+	Features      FeaturesConfig       `json:"features"`
+	Safety        *SafetyConfig        `json:"safety,omitempty"`
 	Observability *ObservabilityConfig `json:"observability,omitempty"`
-	Reliability   *ReliabilityConfig  `json:"reliability,omitempty"`
-	Plugins       []PluginConfig      `json:"plugins,omitempty"`
-	Middleware    []MiddlewareConfig  `json:"middleware,omitempty"`
+	Reliability   *ReliabilityConfig   `json:"reliability,omitempty"`
+	Plugins       []PluginConfig       `json:"plugins,omitempty"`
+	Middleware    []MiddlewareConfig   `json:"middleware,omitempty"`
 }
 
 /* DatabaseConfig holds database connection configuration */
 type DatabaseConfig struct {
-	ConnectionString *string   `json:"connectionString,omitempty"`
-	Host             *string   `json:"host,omitempty"`
-	Port             *int      `json:"port,omitempty"`
-	Database         *string   `json:"database,omitempty"`
-	User             *string   `json:"user,omitempty"`
-	Password         *string   `json:"password,omitempty"`
+	ConnectionString *string     `json:"connectionString,omitempty"`
+	Host             *string     `json:"host,omitempty"`
+	Port             *int        `json:"port,omitempty"`
+	Database         *string     `json:"database,omitempty"`
+	User             *string     `json:"user,omitempty"`
+	Password         *string     `json:"password,omitempty"`
 	Pool             *PoolConfig `json:"pool,omitempty"`
 	SSL              interface{} `json:"ssl,omitempty"` // bool or SSLConfig
 }
 
 /* PoolConfig holds connection pool settings */
 type PoolConfig struct {
-	Min                   *int `json:"min,omitempty"`
-	Max                   *int `json:"max,omitempty"`
-	IdleTimeoutMillis      *int `json:"idleTimeoutMillis,omitempty"`
+	Min                     *int `json:"min,omitempty"`
+	Max                     *int `json:"max,omitempty"`
+	IdleTimeoutMillis       *int `json:"idleTimeoutMillis,omitempty"`
 	ConnectionTimeoutMillis *int `json:"connectionTimeoutMillis,omitempty"`
 }
 
@@ -58,88 +58,88 @@ type SSLConfig struct {
 
 /* ServerSettings holds server configuration */
 type ServerSettings struct {
-	Name            *string            `json:"name,omitempty"`
-	Version         *string            `json:"version,omitempty"`
-	Timeout         *int               `json:"timeout,omitempty"`
-	MaxRequestSize  *int               `json:"maxRequestSize,omitempty"`
-	EnableMetrics   *bool              `json:"enableMetrics,omitempty"`
-	EnableHealthCheck *bool            `json:"enableHealthCheck,omitempty"`
-	HTTPTransport   *HTTPTransportConfig `json:"httpTransport,omitempty"`
+	Name                  *string                      `json:"name,omitempty"`
+	Version               *string                      `json:"version,omitempty"`
+	Timeout               *int                         `json:"timeout,omitempty"`
+	MaxRequestSize        *int                         `json:"maxRequestSize,omitempty"`
+	EnableMetrics         *bool                        `json:"enableMetrics,omitempty"`
+	EnableHealthCheck     *bool                        `json:"enableHealthCheck,omitempty"`
+	HTTPTransport         *HTTPTransportConfig         `json:"httpTransport,omitempty"`
 	ResourceSubscriptions *ResourceSubscriptionsConfig `json:"resourceSubscriptions,omitempty"`
 }
 
 /* ResourceSubscriptionsConfig holds resource subscription configuration */
 type ResourceSubscriptionsConfig struct {
-	Enabled      *bool     `json:"enabled,omitempty"`
-	AllowFiltering *bool   `json:"allowFiltering,omitempty"`
+	Enabled          *bool `json:"enabled,omitempty"`
+	AllowFiltering   *bool `json:"allowFiltering,omitempty"`
 	MaxSubscriptions *int  `json:"maxSubscriptions,omitempty"`
 }
 
 /* HTTPTransportConfig holds HTTP transport configuration */
 type HTTPTransportConfig struct {
-	Enabled     *bool                `json:"enabled,omitempty"`
-	Address     *string              `json:"address,omitempty"`
-	Auth        *HTTPAuthConfig      `json:"auth,omitempty"`
-	TLS         *HTTPTLSConfig       `json:"tls,omitempty"`
+	Enabled *bool           `json:"enabled,omitempty"`
+	Address *string         `json:"address,omitempty"`
+	Auth    *HTTPAuthConfig `json:"auth,omitempty"`
+	TLS     *HTTPTLSConfig  `json:"tls,omitempty"`
 }
 
 /* HTTPTLSConfig holds TLS configuration for HTTPS */
 type HTTPTLSConfig struct {
-	Enabled     *bool   `json:"enabled,omitempty"`
-	CertFile    *string `json:"certFile,omitempty"`
-	KeyFile     *string `json:"keyFile,omitempty"`
-	CAFile      *string `json:"caFile,omitempty"`      /* Client CA for mTLS */
-	MinVersion  *string `json:"minVersion,omitempty"`   /* "1.2" or "1.3" */
-	ClientAuth  *string `json:"clientAuth,omitempty"`   /* "none", "request", "require" */
+	Enabled    *bool   `json:"enabled,omitempty"`
+	CertFile   *string `json:"certFile,omitempty"`
+	KeyFile    *string `json:"keyFile,omitempty"`
+	CAFile     *string `json:"caFile,omitempty"`     /* Client CA for mTLS */
+	MinVersion *string `json:"minVersion,omitempty"` /* "1.2" or "1.3" */
+	ClientAuth *string `json:"clientAuth,omitempty"` /* "none", "request", "require" */
 }
 
 /* HTTPAuthConfig holds HTTP authentication configuration */
 type HTTPAuthConfig struct {
-	Enabled      *bool     `json:"enabled,omitempty"`
-	RequireAuth  *bool     `json:"requireAuth,omitempty"`
-	BearerTokens []string  `json:"bearerTokens,omitempty"`
+	Enabled      *bool          `json:"enabled,omitempty"`
+	RequireAuth  *bool          `json:"requireAuth,omitempty"`
+	BearerTokens []string       `json:"bearerTokens,omitempty"`
 	APIKeys      []APIKeyConfig `json:"apiKeys,omitempty"`
 }
 
 /* APIKeyConfig holds API key configuration */
 type APIKeyConfig struct {
-	ID        string    `json:"id"`
-	Key       string    `json:"key"`
-	UserID    string    `json:"userId"`
-	Scopes    []string  `json:"scopes,omitempty"`
-	RateLimit *int      `json:"rateLimit,omitempty"`
-	ExpiresAt *string   `json:"expiresAt,omitempty"`
+	ID        string   `json:"id"`
+	Key       string   `json:"key"`
+	UserID    string   `json:"userId"`
+	Scopes    []string `json:"scopes,omitempty"`
+	RateLimit *int     `json:"rateLimit,omitempty"`
+	ExpiresAt *string  `json:"expiresAt,omitempty"`
 }
 
 /* LoggingConfig holds logging configuration */
 type LoggingConfig struct {
-	Level              string  `json:"level"`
-	Format             string  `json:"format"`
-	Output             *string `json:"output,omitempty"`
-	EnableRequestLogging  *bool `json:"enableRequestLogging,omitempty"`
-	EnableResponseLogging *bool `json:"enableResponseLogging,omitempty"`
-	EnableErrorStack      *bool `json:"enableErrorStack,omitempty"`
+	Level                 string  `json:"level"`
+	Format                string  `json:"format"`
+	Output                *string `json:"output,omitempty"`
+	EnableRequestLogging  *bool   `json:"enableRequestLogging,omitempty"`
+	EnableResponseLogging *bool   `json:"enableResponseLogging,omitempty"`
+	EnableErrorStack      *bool   `json:"enableErrorStack,omitempty"`
 }
 
 /* FeaturesConfig holds feature flags and settings */
 type FeaturesConfig struct {
-	Vector        *VectorFeatureConfig        `json:"vector,omitempty"`
-	ML            *MLFeatureConfig            `json:"ml,omitempty"`
-	Analytics     *AnalyticsFeatureConfig     `json:"analytics,omitempty"`
-	RAG           *RAGFeatureConfig          `json:"rag,omitempty"`
-	Projects      *ProjectsFeatureConfig      `json:"projects,omitempty"`
-	GPU           *GPUFeatureConfig           `json:"gpu,omitempty"`
-	Quantization  *QuantizationFeatureConfig  `json:"quantization,omitempty"`
+	Vector         *VectorFeatureConfig         `json:"vector,omitempty"`
+	ML             *MLFeatureConfig             `json:"ml,omitempty"`
+	Analytics      *AnalyticsFeatureConfig      `json:"analytics,omitempty"`
+	RAG            *RAGFeatureConfig            `json:"rag,omitempty"`
+	Projects       *ProjectsFeatureConfig       `json:"projects,omitempty"`
+	GPU            *GPUFeatureConfig            `json:"gpu,omitempty"`
+	Quantization   *QuantizationFeatureConfig   `json:"quantization,omitempty"`
 	Dimensionality *DimensionalityFeatureConfig `json:"dimensionality,omitempty"`
-	Reranking     *RerankingFeatureConfig    `json:"reranking,omitempty"`
-	Hybrid        *HybridFeatureConfig        `json:"hybrid,omitempty"`
-	Workers       *WorkersFeatureConfig       `json:"workers,omitempty"`
-	Indexing      *IndexingFeatureConfig      `json:"indexing,omitempty"`
+	Reranking      *RerankingFeatureConfig      `json:"reranking,omitempty"`
+	Hybrid         *HybridFeatureConfig         `json:"hybrid,omitempty"`
+	Workers        *WorkersFeatureConfig        `json:"workers,omitempty"`
+	Indexing       *IndexingFeatureConfig       `json:"indexing,omitempty"`
 }
 
 /* VectorFeatureConfig holds vector feature settings */
 type VectorFeatureConfig struct {
-	Enabled             bool    `json:"enabled"`
+	Enabled               bool    `json:"enabled"`
 	DefaultDistanceMetric *string `json:"defaultDistanceMetric,omitempty"`
 	MaxVectorDimension    *int    `json:"maxVectorDimension,omitempty"`
 	DefaultLimit          *int    `json:"defaultLimit,omitempty"`
@@ -147,29 +147,29 @@ type VectorFeatureConfig struct {
 
 /* MLFeatureConfig holds ML feature settings */
 type MLFeatureConfig struct {
-	Enabled        bool     `json:"enabled"`
-	Algorithms     []string `json:"algorithms,omitempty"`
-	MaxTrainingTime *int    `json:"maxTrainingTime,omitempty"`
-	GPUEnabled     *bool    `json:"gpuEnabled,omitempty"`
+	Enabled         bool     `json:"enabled"`
+	Algorithms      []string `json:"algorithms,omitempty"`
+	MaxTrainingTime *int     `json:"maxTrainingTime,omitempty"`
+	GPUEnabled      *bool    `json:"gpuEnabled,omitempty"`
 }
 
 /* AnalyticsFeatureConfig holds analytics feature settings */
 type AnalyticsFeatureConfig struct {
-	Enabled      bool `json:"enabled"`
-	MaxClusters  *int `json:"maxClusters,omitempty"`
+	Enabled       bool `json:"enabled"`
+	MaxClusters   *int `json:"maxClusters,omitempty"`
 	MaxIterations *int `json:"maxIterations,omitempty"`
 }
 
 /* RAGFeatureConfig holds RAG feature settings */
 type RAGFeatureConfig struct {
-	Enabled        bool `json:"enabled"`
+	Enabled          bool `json:"enabled"`
 	DefaultChunkSize *int `json:"defaultChunkSize,omitempty"`
 	DefaultOverlap   *int `json:"defaultOverlap,omitempty"`
 }
 
 /* ProjectsFeatureConfig holds projects feature settings */
 type ProjectsFeatureConfig struct {
-	Enabled    bool `json:"enabled"`
+	Enabled     bool `json:"enabled"`
 	MaxProjects *int `json:"maxProjects,omitempty"`
 }
 
@@ -181,77 +181,77 @@ type GPUFeatureConfig struct {
 
 /* QuantizationFeatureConfig holds quantization feature settings */
 type QuantizationFeatureConfig struct {
-	Enabled      bool    `json:"enabled"`
+	Enabled       bool    `json:"enabled"`
 	DefaultMethod *string `json:"defaultMethod,omitempty"`
 }
 
 /* DimensionalityFeatureConfig holds dimensionality feature settings */
 type DimensionalityFeatureConfig struct {
-	Enabled      bool `json:"enabled"`
+	Enabled       bool `json:"enabled"`
 	MaxComponents *int `json:"maxComponents,omitempty"`
 }
 
 /* RerankingFeatureConfig holds reranking feature settings */
 type RerankingFeatureConfig struct {
-	Enabled     bool     `json:"enabled"`
+	Enabled      bool    `json:"enabled"`
 	DefaultModel *string `json:"defaultModel,omitempty"`
 }
 
 /* HybridFeatureConfig holds hybrid search feature settings */
 type HybridFeatureConfig struct {
-	Enabled          bool    `json:"enabled"`
+	Enabled             bool     `json:"enabled"`
 	DefaultVectorWeight *float64 `json:"defaultVectorWeight,omitempty"`
 }
 
 /* WorkersFeatureConfig holds workers feature settings */
 type WorkersFeatureConfig struct {
-	Enabled   bool `json:"enabled"`
+	Enabled    bool `json:"enabled"`
 	MaxWorkers *int `json:"maxWorkers,omitempty"`
 }
 
 /* IndexingFeatureConfig holds indexing feature settings */
 type IndexingFeatureConfig struct {
-	Enabled              bool `json:"enabled"`
-	DefaultHNSWM        *int `json:"defaultHNSWM,omitempty"`
+	Enabled                   bool `json:"enabled"`
+	DefaultHNSWM              *int `json:"defaultHNSWM,omitempty"`
 	DefaultHNSWEFConstruction *int `json:"defaultHNSWEFConstruction,omitempty"`
 }
 
 /* PluginConfig holds plugin configuration */
 type PluginConfig struct {
-	Name     string                 `json:"name"`
-	Enabled  bool                   `json:"enabled"`
-	Path     *string                `json:"path,omitempty"`
-	Config   map[string]interface{} `json:"config,omitempty"`
+	Name    string                 `json:"name"`
+	Enabled bool                   `json:"enabled"`
+	Path    *string                `json:"path,omitempty"`
+	Config  map[string]interface{} `json:"config,omitempty"`
 }
 
 /* MiddlewareConfig holds middleware configuration */
 type MiddlewareConfig struct {
-	Name     string                 `json:"name"`
-	Enabled  bool                   `json:"enabled"`
-	Order    *int                   `json:"order,omitempty"`
-	Config   map[string]interface{} `json:"config,omitempty"`
+	Name    string                 `json:"name"`
+	Enabled bool                   `json:"enabled"`
+	Order   *int                   `json:"order,omitempty"`
+	Config  map[string]interface{} `json:"config,omitempty"`
 }
 
 /* SafetyConfig holds safety mode configuration */
 type SafetyConfig struct {
-	DefaultMode       string   `json:"defaultMode"` // "read_only", "read_write", "allowlist"
-	AllowWriteAccess  bool     `json:"allowWriteAccess"`
+	DefaultMode        string   `json:"defaultMode"` // "read_only", "read_write", "allowlist"
+	AllowWriteAccess   bool     `json:"allowWriteAccess"`
 	StatementAllowlist []string `json:"statementAllowlist,omitempty"`
 }
 
 /* ObservabilityConfig holds observability configuration */
 type ObservabilityConfig struct {
-	EnableTracing     bool   `json:"enableTracing"`
-	TracingEndpoint   string `json:"tracingEndpoint,omitempty"`
-	EnableRequestIDs  bool   `json:"enableRequestIDs"`
+	EnableTracing    bool   `json:"enableTracing"`
+	TracingEndpoint  string `json:"tracingEndpoint,omitempty"`
+	EnableRequestIDs bool   `json:"enableRequestIDs"`
 }
 
 /* ReliabilityConfig holds reliability configuration */
 type ReliabilityConfig struct {
 	DefaultTimeout int            `json:"defaultTimeout"` // seconds
 	ToolTimeouts   map[string]int `json:"toolTimeouts,omitempty"`
-	EnableRetries   bool           `json:"enableRetries"`
-	MaxRetries      int            `json:"maxRetries"`
+	EnableRetries  bool           `json:"enableRetries"`
+	MaxRetries     int            `json:"maxRetries"`
 }
 
 /* Helper methods for getting values with defaults */

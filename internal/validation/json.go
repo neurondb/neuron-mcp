@@ -26,17 +26,17 @@ func ValidateJSONSchema(value interface{}, schema map[string]interface{}) error 
 	if schema == nil {
 		return nil // No schema means no validation
 	}
-	
+
 	props, ok := schema["properties"].(map[string]interface{})
 	if !ok {
 		return nil // No properties means no validation
 	}
-	
+
 	valueMap, ok := value.(map[string]interface{})
 	if !ok {
 		return fmt.Errorf("value must be a map/object for schema validation")
 	}
-	
+
 	/* Check required fields */
 	if required, ok := schema["required"].([]interface{}); ok {
 		for _, req := range required {
@@ -49,24 +49,24 @@ func ValidateJSONSchema(value interface{}, schema map[string]interface{}) error 
 			}
 		}
 	}
-	
+
 	/* Validate each property */
 	for propName, propSchema := range props {
 		propSchemaMap, ok := propSchema.(map[string]interface{})
 		if !ok {
 			continue
 		}
-		
+
 		propValue, exists := valueMap[propName]
 		if !exists {
 			continue // Optional field
 		}
-		
+
 		if err := validateProperty(propValue, propSchemaMap, propName); err != nil {
 			return fmt.Errorf("property '%s': %w", propName, err)
 		}
 	}
-	
+
 	/* Check additionalProperties */
 	if additionalProps, ok := schema["additionalProperties"].(bool); ok && !additionalProps {
 		for key := range valueMap {
@@ -75,7 +75,7 @@ func ValidateJSONSchema(value interface{}, schema map[string]interface{}) error 
 			}
 		}
 	}
-	
+
 	return nil
 }
 
@@ -87,29 +87,29 @@ func validateProperty(value interface{}, schema map[string]interface{}, fieldNam
 			return err
 		}
 	}
-	
+
 	/* Validate string constraints */
-	if typeStr, _ := schema["type"].(string); typeStr == "string" {
+	if typeStr, ok := schema["type"].(string); ok && typeStr == "string" {
 		strValue, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("expected string, got %T", value)
 		}
-		
+
 		if minLen, ok := schema["minLength"].(float64); ok {
 			if len(strValue) < int(minLen) {
 				return fmt.Errorf("length %d is less than minimum %d", len(strValue), int(minLen))
 			}
 		}
-		
+
 		if maxLen, ok := schema["maxLength"].(float64); ok {
 			if len(strValue) > int(maxLen) {
 				return fmt.Errorf("length %d exceeds maximum %d", len(strValue), int(maxLen))
 			}
 		}
 	}
-	
+
 	/* Validate number constraints */
-	if typeStr, _ := schema["type"].(string); typeStr == "number" || typeStr == "integer" {
+	if typeStr, ok := schema["type"].(string); ok && (typeStr == "number" || typeStr == "integer") {
 		var numValue float64
 		switch v := value.(type) {
 		case float64:
@@ -125,46 +125,52 @@ func validateProperty(value interface{}, schema map[string]interface{}, fieldNam
 		default:
 			return fmt.Errorf("expected number, got %T", value)
 		}
-		
+
 		if minimum, ok := schema["minimum"].(float64); ok {
 			if numValue < minimum {
 				return fmt.Errorf("value %f is less than minimum %f", numValue, minimum)
 			}
 		}
-		
+
 		if maximum, ok := schema["maximum"].(float64); ok {
 			if numValue > maximum {
 				return fmt.Errorf("value %f exceeds maximum %f", numValue, maximum)
 			}
 		}
 	}
-	
+
 	/* Validate array constraints */
-	if typeStr, _ := schema["type"].(string); typeStr == "array" {
+	if typeStr, ok := schema["type"].(string); ok && typeStr == "array" {
 		arrValue, ok := value.([]interface{})
 		if !ok {
 			return fmt.Errorf("expected array, got %T", value)
 		}
-		
+
 		if minItems, ok := schema["minItems"].(float64); ok {
 			if len(arrValue) < int(minItems) {
 				return fmt.Errorf("array length %d is less than minimum %d", len(arrValue), int(minItems))
 			}
 		}
-		
+
 		if maxItems, ok := schema["maxItems"].(float64); ok {
 			if len(arrValue) > int(maxItems) {
 				return fmt.Errorf("array length %d exceeds maximum %d", len(arrValue), int(maxItems))
 			}
 		}
 	}
-	
+
 	/* Validate enum */
 	if enum, ok := schema["enum"].([]interface{}); ok {
-		valueJSON, _ := json.Marshal(value)
+		valueJSON, err := json.Marshal(value)
+		if err != nil {
+			return err
+		}
 		found := false
 		for _, enumVal := range enum {
-			enumJSON, _ := json.Marshal(enumVal)
+			enumJSON, err := json.Marshal(enumVal)
+			if err != nil {
+				return err
+			}
 			if string(valueJSON) == string(enumJSON) {
 				found = true
 				break
@@ -174,7 +180,7 @@ func validateProperty(value interface{}, schema map[string]interface{}, fieldNam
 			return fmt.Errorf("value is not in enum list")
 		}
 	}
-	
+
 	return nil
 }
 
@@ -224,9 +230,6 @@ func validateType(value interface{}, expectedType, fieldName string) error {
 	default:
 		return fmt.Errorf("unknown type: %s", expectedType)
 	}
-	
+
 	return nil
 }
-
-
-

@@ -32,15 +32,3 @@ func (p *Processor) HandleCallBatch(ctx context.Context, params json.RawMessage)
 
 	return p.ProcessBatch(ctx, req)
 }
-
-
-
-
-
-
-
-
-
-
-
-

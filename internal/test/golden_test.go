@@ -25,8 +25,8 @@ import (
 
 /* GoldenTranscript represents a golden test transcript */
 type GoldenTranscript struct {
-	TestName    string                   `json:"test_name"`
-	ToolCall    ToolCall                 `json:"tool_call"`
+	TestName       string                 `json:"test_name"`
+	ToolCall       ToolCall               `json:"tool_call"`
 	ExpectedResult map[string]interface{} `json:"expected_result"`
 }
 
@@ -80,8 +80,8 @@ func RunGoldenTest(t *testing.T, testName string, toolCall ToolCall, actualResul
 		/* If file doesn't exist, create it */
 		if os.IsNotExist(err) {
 			transcript = &GoldenTranscript{
-				TestName:     testName,
-				ToolCall:     toolCall,
+				TestName:       testName,
+				ToolCall:       toolCall,
 				ExpectedResult: actualResult,
 			}
 			if err := SaveGoldenTranscript(goldenPath, transcript); err != nil {
@@ -107,15 +107,3 @@ func compareResults(expected, actual map[string]interface{}) bool {
 	actualJSON, _ := json.Marshal(actual)
 	return string(expectedJSON) == string(actualJSON)
 }
-
-
-
-
-
-
-
-
-
-
-
-

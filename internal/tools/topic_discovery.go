@@ -92,7 +92,7 @@ func (t *TopicDiscoveryTool) Execute(ctx context.Context, params map[string]inte
 		return Error("table and text_column are required", "VALIDATION_ERROR", nil), nil
 	}
 
-  /* Use NeuronDB topic discovery function */
+	/* Use NeuronDB topic discovery function */
 	query := "SELECT * FROM discover_topics($1::text, $2::text, $3::int, $4::text)"
 	queryParams := []interface{}{table, textColumn, numTopics, algorithm}
 
@@ -113,12 +113,3 @@ func (t *TopicDiscoveryTool) Execute(ctx context.Context, params map[string]inte
 		"count":      len(results),
 	}), nil
 }
-
-
-
-
-
-
-
-
-

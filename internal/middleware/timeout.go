@@ -31,9 +31,9 @@ type TimeoutMiddleware struct {
 
 /* TimeoutConfig configures timeout behavior */
 type TimeoutConfig struct {
-	DefaultTimeout  time.Duration         // Default timeout for all tools
+	DefaultTimeout  time.Duration            // Default timeout for all tools
 	ToolTimeouts    map[string]time.Duration // Per-tool timeout overrides
-	EnableOverrides bool                  // Allow tools to override via params
+	EnableOverrides bool                     // Allow tools to override via params
 }
 
 /* NewTimeoutMiddleware creates a new timeout middleware */
@@ -44,7 +44,7 @@ func NewTimeoutMiddleware(logger *logging.Logger, config TimeoutConfig) *Timeout
 	if config.ToolTimeouts == nil {
 		config.ToolTimeouts = make(map[string]time.Duration)
 	}
-	
+
 	if config.ToolTimeouts["load_dataset"] == 0 {
 		config.ToolTimeouts["load_dataset"] = 300 * time.Second // 5 minutes
 	}
@@ -73,14 +73,14 @@ func NewTimeoutMiddleware(logger *logging.Logger, config TimeoutConfig) *Timeout
 func (m *TimeoutMiddleware) Execute(ctx context.Context, params map[string]interface{}, next MiddlewareFunc) (interface{}, error) {
 	/* Determine timeout for this request */
 	timeout := m.defaultTimeout
-	
+
 	/* Check for tool-specific timeout */
 	if toolName, ok := params["_tool_name"].(string); ok {
 		if toolTimeout, exists := m.toolTimeouts[toolName]; exists {
 			timeout = toolTimeout
 		}
 	}
-	
+
 	/* Allow override via params if enabled */
 	if m.enableOverrides {
 		if timeoutParam, ok := params["_timeout"].(float64); ok && timeoutParam > 0 {
@@ -118,9 +118,9 @@ func (m *TimeoutMiddleware) Execute(ctx context.Context, params map[string]inter
 			return
 		default:
 		}
-		
+
 		result, err := next(timeoutCtx, params)
-		
+
 		/* Check context again before sending result */
 		select {
 		case <-timeoutCtx.Done():
@@ -174,6 +174,3 @@ func (m *TimeoutMiddleware) GetToolTimeout(toolName string) time.Duration {
 	}
 	return m.defaultTimeout
 }
-
-
-

@@ -38,8 +38,8 @@ type ToolResult struct {
 /* ToolError represents a tool error */
 type ToolError struct {
 	Message string
-	Code     string
-	Details  interface{}
+	Code    string
+	Details interface{}
 }
 
 /* BaseToolInterface provides base tool functionality */

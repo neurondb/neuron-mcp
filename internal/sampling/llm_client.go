@@ -65,7 +65,7 @@ func (c *LLMClient) CallOllama(ctx context.Context, baseURL, model string, messa
 
 	/* Use chat API if messages are provided */
 	endpoint := fmt.Sprintf("%s/api/chat", baseURL)
-	
+
 	req := OllamaRequest{
 		Model:    model,
 		Messages: messages,
@@ -114,12 +114,12 @@ func (c *LLMClient) CallOllama(ctx context.Context, baseURL, model string, messa
 
 /* OpenAIRequest represents an OpenAI-compatible API request */
 type OpenAIRequest struct {
-	Model       string                 `json:"model"`
-	Messages    []Message              `json:"messages"`
-	Temperature float64                `json:"temperature,omitempty"`
-	MaxTokens   int                    `json:"max_tokens,omitempty"`
-	TopP        float64                `json:"top_p,omitempty"`
-	Stream      bool                   `json:"stream"`
+	Model       string    `json:"model"`
+	Messages    []Message `json:"messages"`
+	Temperature float64   `json:"temperature,omitempty"`
+	MaxTokens   int       `json:"max_tokens,omitempty"`
+	TopP        float64   `json:"top_p,omitempty"`
+	Stream      bool      `json:"stream"`
 }
 
 /* OpenAIResponse represents an OpenAI API response */
@@ -193,11 +193,3 @@ func (c *LLMClient) CallOpenAI(ctx context.Context, baseURL, apiKey, model strin
 
 	return openAIResp.Choices[0].Message.Content, nil
 }
-
-
-
-
-
-
-
-

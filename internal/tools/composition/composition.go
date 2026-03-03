@@ -95,7 +95,7 @@ func (t *ToolChainTool) OutputSchema() map[string]interface{} { return t.baseToo
 func (t *ToolChainTool) Deprecated() bool { return t.baseTool.Deprecated() }
 
 /* Deprecation returns deprecation information */
-func (t *ToolChainTool) Deprecation() *mcp.DeprecationInfo { 
+func (t *ToolChainTool) Deprecation() *mcp.DeprecationInfo {
 	if dep := t.baseTool.Deprecation(); dep != nil {
 		if d, ok := dep.(*mcp.DeprecationInfo); ok {
 			return d
@@ -167,10 +167,10 @@ func (t *ToolChainTool) Execute(ctx context.Context, params map[string]interface
 				return errorResult(fmt.Sprintf("tool not found: %s (at index %d)", toolName, i), "TOOL_NOT_FOUND", nil), nil
 			}
 			results = append(results, map[string]interface{}{
-				"index":     i,
-				"tool":      toolName,
-				"success":   false,
-				"error":     fmt.Sprintf("tool not found: %s", toolName),
+				"index":   i,
+				"tool":    toolName,
+				"success": false,
+				"error":   fmt.Sprintf("tool not found: %s", toolName),
 			})
 			continue
 		}
@@ -372,7 +372,7 @@ func (t *ToolParallelTool) OutputSchema() map[string]interface{} { return t.base
 func (t *ToolParallelTool) Deprecated() bool { return t.baseTool.Deprecated() }
 
 /* Deprecation returns deprecation information */
-func (t *ToolParallelTool) Deprecation() *mcp.DeprecationInfo { 
+func (t *ToolParallelTool) Deprecation() *mcp.DeprecationInfo {
 	if dep := t.baseTool.Deprecation(); dep != nil {
 		if d, ok := dep.(*mcp.DeprecationInfo); ok {
 			return d
@@ -441,8 +441,8 @@ func (t *ToolParallelTool) Execute(ctx context.Context, params map[string]interf
 
 			mu.Lock()
 			resultData := map[string]interface{}{
-				"id":              id,
-				"tool":            name,
+				"id":                id,
+				"tool":              name,
 				"execution_time_ms": duration.Milliseconds(),
 			}
 
@@ -598,7 +598,7 @@ func (t *ToolConditionalTool) OutputSchema() map[string]interface{} { return t.b
 func (t *ToolConditionalTool) Deprecated() bool { return t.baseTool.Deprecated() }
 
 /* Deprecation returns deprecation information */
-func (t *ToolConditionalTool) Deprecation() *mcp.DeprecationInfo { 
+func (t *ToolConditionalTool) Deprecation() *mcp.DeprecationInfo {
 	if dep := t.baseTool.Deprecation(); dep != nil {
 		if d, ok := dep.(*mcp.DeprecationInfo); ok {
 			return d
@@ -801,7 +801,7 @@ func (t *ToolRetryTool) OutputSchema() map[string]interface{} { return t.baseToo
 func (t *ToolRetryTool) Deprecated() bool { return t.baseTool.Deprecated() }
 
 /* Deprecation returns deprecation information */
-func (t *ToolRetryTool) Deprecation() *mcp.DeprecationInfo { 
+func (t *ToolRetryTool) Deprecation() *mcp.DeprecationInfo {
 	if dep := t.baseTool.Deprecation(); dep != nil {
 		if d, ok := dep.(*mcp.DeprecationInfo); ok {
 			return d
@@ -874,10 +874,10 @@ func (t *ToolRetryTool) Execute(ctx context.Context, params map[string]interface
 
 		if t.logger != nil {
 			t.logger.Warn("Tool retry attempt failed", map[string]interface{}{
-				"tool":       toolName,
-				"attempt":    attempt + 1,
+				"tool":        toolName,
+				"attempt":     attempt + 1,
 				"max_retries": maxRetries,
-				"error":      err,
+				"error":       err,
 			})
 		}
 	}

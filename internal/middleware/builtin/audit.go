@@ -125,15 +125,3 @@ func (m *AuditMiddleware) Execute(ctx context.Context, req *middleware.MCPReques
 
 	return resp, err
 }
-
-
-
-
-
-
-
-
-
-
-
-

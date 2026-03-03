@@ -71,15 +71,3 @@ func CheckConfirmation(toolName string, requireConfirm bool, confirmed bool) err
 	}
 	return nil
 }
-
-
-
-
-
-
-
-
-
-
-
-

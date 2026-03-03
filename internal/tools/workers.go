@@ -89,12 +89,12 @@ func (t *WorkerManagementTool) Execute(ctx context.Context, params map[string]in
 		for _, workerName := range workers {
 			if config, err := t.configHelper.GetWorkerConfig(ctx, workerName); err == nil {
 				workerConfigs[workerName] = map[string]interface{}{
-					"enabled": config.Enabled,
+					"enabled":    config.Enabled,
 					"naptime_ms": config.NaptimeMS,
 				}
 			}
 		}
-		
+
 		/* Try neurondb.worker_status() first, fallback to checking if function exists */
 		query = "SELECT * FROM neurondb.worker_status()"
 		queryParams = []interface{}{}
@@ -106,15 +106,15 @@ func (t *WorkerManagementTool) Execute(ctx context.Context, params map[string]in
 			})
 			return Success(map[string]interface{}{
 				"workers": workerConfigs,
-				"note":   "Worker status function not available, showing configuration from database",
+				"note":    "Worker status function not available, showing configuration from database",
 			}, map[string]interface{}{
 				"operation": operation,
 			}), nil
 		}
-		
+
 		/* Merge database configs with status result */
 		result["configs"] = workerConfigs
-		
+
 		return Success(result, map[string]interface{}{
 			"operation": operation,
 		}), nil
@@ -142,7 +142,7 @@ func (t *WorkerManagementTool) Execute(ctx context.Context, params map[string]in
 		if jobType == "" {
 			return Error("job_type is required for queue_job", "VALIDATION_ERROR", nil), nil
 		}
-   /* Format job params as JSON */
+		/* Format job params as JSON */
 		paramsJSON := "{}"
 		if len(jobParams) > 0 {
 			paramsBytes, err := json.Marshal(jobParams)
@@ -168,7 +168,7 @@ func (t *WorkerManagementTool) Execute(ctx context.Context, params map[string]in
 		t.logger.Error("Worker management operation failed", err, params)
 		return Error(fmt.Sprintf("Worker management operation failed: operation='%s', error=%v", operation, err), "EXECUTION_ERROR", map[string]interface{}{
 			"operation": operation,
-			"error":    err.Error(),
+			"error":     err.Error(),
 		}), nil
 	}
 
@@ -176,4 +176,3 @@ func (t *WorkerManagementTool) Execute(ctx context.Context, params map[string]in
 		"operation": operation,
 	}), nil
 }
-

@@ -124,7 +124,7 @@ func (t *PostgreSQLReplicationLagTool) Execute(ctx context.Context, params map[s
 
 	return Success(map[string]interface{}{
 		"replication_lag": results,
-		"count":          len(results),
+		"count":           len(results),
 	}, map[string]interface{}{
 		"tool": "postgresql_replication_lag",
 	}), nil
@@ -381,23 +381,17 @@ func (t *PostgreSQLClusterTool) Execute(ctx context.Context, params map[string]i
 	}
 
 	t.logger.Info("Table clustered", map[string]interface{}{
-		"schema":     schema,
-		"table":      tableName,
-		"index":      indexName,
+		"schema": schema,
+		"table":  tableName,
+		"index":  indexName,
 	})
 
 	return Success(map[string]interface{}{
-		"schema":     schema,
-		"table":      tableName,
-		"index":      indexName,
-		"query":      clusterQuery,
+		"schema": schema,
+		"table":  tableName,
+		"index":  indexName,
+		"query":  clusterQuery,
 	}, map[string]interface{}{
 		"tool": "postgresql_cluster",
 	}), nil
 }
-
-
-
-
-
-

@@ -48,4 +48,3 @@ type ToolExecutor interface {
 	ExecuteQueryOne(ctx context.Context, query string, params []interface{}) (map[string]interface{}, error)
 	ExecuteVectorSearch(ctx context.Context, table, vectorColumn string, queryVector []interface{}, distanceMetric string, limit int, additionalColumns []interface{}) ([]map[string]interface{}, error)
 }
-

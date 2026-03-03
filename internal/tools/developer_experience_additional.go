@@ -318,7 +318,7 @@ func (t *SchemaVisualizerTool) getSchemaInfo(ctx context.Context, schemaName str
 				column["constraint"] = *constraintType
 			}
 
-			columns := tables[*tableName]["columns"].([]map[string]interface{})
+			columns, _ := tables[*tableName]["columns"].([]map[string]interface{})
 			columns = append(columns, column)
 			tables[*tableName]["columns"] = columns
 		}

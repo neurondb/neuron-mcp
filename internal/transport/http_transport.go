@@ -57,8 +57,8 @@ type HTTPTransport struct {
 	middleware        *middleware.Manager
 	requestHandler    HTTPRequestHandler /* Use interface instead of concrete type */
 	prometheusHandler http.Handler
-	maxRequestSize    int64 /* Maximum request size in bytes */
-	logger            interface{} /* Logger interface - will be set if available */
+	maxRequestSize    int64       /* Maximum request size in bytes */
+	_logger           interface{} /* Logger interface - will be set if available */
 	authMiddleware    *HTTPAuthMiddleware
 	rateLimiter       *RateLimiter
 }
@@ -92,7 +92,7 @@ func NewHTTPTransport(addr string, mcpServer *mcp.Server, middlewareManager *mid
 	}
 
 	mux := http.NewServeMux()
-	
+
 	/* MCP endpoint with CORS support - Streamable HTTP: POST (requests) and GET (SSE) on same path */
 	mux.HandleFunc("/mcp", func(w http.ResponseWriter, r *http.Request) {
 		/* Handle OPTIONS for CORS preflight */
@@ -122,25 +122,25 @@ func NewHTTPTransport(addr string, mcpServer *mcp.Server, middlewareManager *mid
 		}
 		transport.handleMCP(w, r)
 	})
-	
+
 	/* SSE endpoint for streaming */
 	mux.HandleFunc("/mcp/stream", transport.handleSSE)
-	
+
 	/* Health endpoint */
 	mux.HandleFunc("/health", transport.handleHealth)
-	
+
 	/* Prometheus metrics endpoint */
 	if prometheusHandler != nil {
 		mux.Handle("/metrics", prometheusHandler)
 	}
 
 	transport.server = &http.Server{
-		Addr:              addr,
-		Handler:           mux,
-		ReadTimeout:       30 * time.Second,
-		WriteTimeout:      30 * time.Second,
-		IdleTimeout:       120 * time.Second,
-		MaxHeaderBytes:    1 << 20, /* 1MB max header size */
+		Addr:           addr,
+		Handler:        mux,
+		ReadTimeout:    30 * time.Second,
+		WriteTimeout:   30 * time.Second,
+		IdleTimeout:    120 * time.Second,
+		MaxHeaderBytes: 1 << 20, /* 1MB max header size */
 	}
 
 	if tlsParams != nil && tlsParams.Enabled {
@@ -222,9 +222,9 @@ func (t *HTTPTransport) handleMCP(w http.ResponseWriter, r *http.Request) {
 		if v != "2025-11-25" && v != "2025-03-26" {
 			w.Header().Set("MCP-Protocol-Version", "2025-11-25")
 			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(mcp.JSONRPCResponse{
+			_ = json.NewEncoder(w).Encode(mcp.JSONRPCResponse{
 				JSONRPC: "2.0",
-				Error: &mcp.JSONRPCError{Code: mcp.ErrCodeInvalidRequest, Message: "Unsupported MCP-Protocol-Version: " + v},
+				Error:   &mcp.JSONRPCError{Code: mcp.ErrCodeInvalidRequest, Message: "Unsupported MCP-Protocol-Version: " + v},
 			})
 			return
 		}
@@ -269,7 +269,7 @@ func (t *HTTPTransport) handleMCP(w http.ResponseWriter, r *http.Request) {
 	var req mcp.JSONRPCRequest
 	decoder := json.NewDecoder(reqBody)
 	decoder.DisallowUnknownFields() /* Reject unknown fields for security */
-	
+
 	if err := decoder.Decode(&req); err != nil {
 		var errorMsg string
 		if err == io.EOF {
@@ -287,8 +287,9 @@ func (t *HTTPTransport) handleMCP(w http.ResponseWriter, r *http.Request) {
 	if t.maxRequestSize > 0 {
 		/* Try to read one more byte to detect overflow */
 		var buf [1]byte
-		if n, _ := reqBody.Read(buf[:]); n > 0 {
-			t.writeJSONRPCError(w, req.ID, mcp.ErrCodeInvalidRequest, 
+		n, _ := reqBody.Read(buf[:])
+		if n > 0 {
+			t.writeJSONRPCError(w, req.ID, mcp.ErrCodeInvalidRequest,
 				fmt.Sprintf("Request body exceeds maximum size of %d bytes", t.maxRequestSize))
 			return
 		}
@@ -326,7 +327,7 @@ func (t *HTTPTransport) handleMCP(w http.ResponseWriter, r *http.Request) {
 
 	/* Create context from request with timeout handling */
 	ctx := r.Context()
-	
+
 	/* Add auth information to context */
 	if authResult.Authenticated {
 		ctx = context.WithValue(ctx, "user_id", authResult.UserID)
@@ -336,7 +337,7 @@ func (t *HTTPTransport) handleMCP(w http.ResponseWriter, r *http.Request) {
 			ctx = context.WithValue(ctx, "api_key_id", authResult.APIKeyID)
 		}
 	}
-	
+
 	/* Check if context is already cancelled */
 	select {
 	case <-ctx.Done():
@@ -452,7 +453,7 @@ func (t *HTTPTransport) writeJSONRPCResponse(w http.ResponseWriter, id json.RawM
 	if sessionID != "" {
 		w.Header().Set("MCP-Session-Id", sessionID)
 	}
-	
+
 	/* CORS */
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")
@@ -462,11 +463,11 @@ func (t *HTTPTransport) writeJSONRPCResponse(w http.ResponseWriter, id json.RawM
 		/* Extract error code and message */
 		errorCode := mcp.ErrCodeInternalError
 		errorMessage := "Internal error"
-		
+
 		if len(mcpResp.Content) > 0 {
 			errorMessage = mcpResp.Content[0].Text
 		}
-		
+
 		if mcpResp.Metadata != nil {
 			if code, ok := mcpResp.Metadata["error_code"].(string); ok {
 				/* Map error codes */
@@ -554,21 +555,21 @@ func (t *HTTPTransport) writeJSONRPCError(w http.ResponseWriter, id json.RawMess
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("MCP-Protocol-Version", "2025-11-25")
 
-		/* Set HTTP status based on error code */
-		httpStatus := http.StatusInternalServerError
-		switch {
-		case code == -32000: /* Custom unauthorized code */
-			httpStatus = http.StatusUnauthorized
-		case code == mcp.ErrCodeParseError:
-			httpStatus = http.StatusBadRequest
-		case code == mcp.ErrCodeInvalidRequest || code == mcp.ErrCodeInvalidParams:
-			httpStatus = http.StatusBadRequest
-		case code == mcp.ErrCodeMethodNotFound:
-			httpStatus = http.StatusNotFound
-		default:
-			httpStatus = http.StatusInternalServerError
-		}
-		w.WriteHeader(httpStatus)
+	/* Set HTTP status based on error code */
+	httpStatus := http.StatusInternalServerError
+	switch {
+	case code == -32000: /* Custom unauthorized code */
+		httpStatus = http.StatusUnauthorized
+	case code == mcp.ErrCodeParseError:
+		httpStatus = http.StatusBadRequest
+	case code == mcp.ErrCodeInvalidRequest || code == mcp.ErrCodeInvalidParams:
+		httpStatus = http.StatusBadRequest
+	case code == mcp.ErrCodeMethodNotFound:
+		httpStatus = http.StatusNotFound
+	default:
+		httpStatus = http.StatusInternalServerError
+	}
+	w.WriteHeader(httpStatus)
 
 	resp := mcp.JSONRPCResponse{
 		JSONRPC: "2.0",
@@ -635,7 +636,7 @@ func (t *HTTPTransport) handleHealth(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	w.Header().Set("Content-Type", "application/json")
-	
+
 	/* Check if request handler is available */
 	healthy := true
 	if t.requestHandler == nil {
@@ -656,4 +657,3 @@ func (t *HTTPTransport) handleHealth(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to encode health response", http.StatusInternalServerError)
 	}
 }
-

@@ -142,7 +142,7 @@ func (t *PostgreSQLInsertTool) Execute(ctx context.Context, params map[string]in
 	/* ON CONFLICT */
 	if onConflict, ok := params["on_conflict"].(map[string]interface{}); ok && len(onConflict) > 0 {
 		parts = append(parts, "ON CONFLICT")
-		
+
 		if target, ok := onConflict["target"].([]interface{}); ok && len(target) > 0 {
 			targetList := []string{}
 			for _, t := range target {
@@ -154,7 +154,7 @@ func (t *PostgreSQLInsertTool) Execute(ctx context.Context, params map[string]in
 				parts = append(parts, "("+strings.Join(targetList, ", ")+")")
 			}
 		}
-		
+
 		if action, ok := onConflict["action"].(string); ok {
 			switch strings.ToUpper(action) {
 			case "DO NOTHING":
@@ -194,7 +194,7 @@ func (t *PostgreSQLInsertTool) Execute(ctx context.Context, params map[string]in
 	/* Execute INSERT */
 	var results []map[string]interface{}
 	var err error
-	
+
 	if len(paramValues) > 0 {
 		/* Use parameterized query */
 		if returning, ok := params["returning"].([]interface{}); ok && len(returning) > 0 {
@@ -225,8 +225,8 @@ func (t *PostgreSQLInsertTool) Execute(ctx context.Context, params map[string]in
 	}
 
 	t.logger.Info("Rows inserted", map[string]interface{}{
-		"table_name":   tableName,
-		"schema":       schema,
+		"table_name":    tableName,
+		"schema":        schema,
 		"rows_affected": rowsAffected,
 	})
 
@@ -336,7 +336,7 @@ func (t *PostgreSQLUpdateTool) Execute(ctx context.Context, params map[string]in
 	where, _ := params["where"].(string)
 	if where != "" {
 		parts = append(parts, "WHERE", where)
-		
+
 		if whereParams, ok := params["where_params"].([]interface{}); ok && len(whereParams) > 0 {
 			/* Replace $1, $2, etc. in WHERE clause with parameterized values */
 			for _, p := range whereParams {
@@ -363,7 +363,7 @@ func (t *PostgreSQLUpdateTool) Execute(ctx context.Context, params map[string]in
 	/* Execute UPDATE */
 	var results []map[string]interface{}
 	var err error
-	
+
 	if returning, ok := params["returning"].([]interface{}); ok && len(returning) > 0 {
 		results, err = t.executor.ExecuteQuery(ctx, updateQuery, paramValues)
 	} else {
@@ -384,8 +384,8 @@ func (t *PostgreSQLUpdateTool) Execute(ctx context.Context, params map[string]in
 	}
 
 	t.logger.Info("Rows updated", map[string]interface{}{
-		"table_name":   tableName,
-		"schema":       schema,
+		"table_name":    tableName,
+		"schema":        schema,
 		"rows_affected": rowsAffected,
 	})
 
@@ -477,7 +477,7 @@ func (t *PostgreSQLDeleteTool) Execute(ctx context.Context, params map[string]in
 	where, _ := params["where"].(string)
 	if where != "" {
 		parts = append(parts, "WHERE", where)
-		
+
 		if whereParams, ok := params["where_params"].([]interface{}); ok && len(whereParams) > 0 {
 			for _, p := range whereParams {
 				paramValues = append(paramValues, p)
@@ -503,7 +503,7 @@ func (t *PostgreSQLDeleteTool) Execute(ctx context.Context, params map[string]in
 	/* Execute DELETE */
 	var results []map[string]interface{}
 	var err error
-	
+
 	if returning, ok := params["returning"].([]interface{}); ok && len(returning) > 0 {
 		results, err = t.executor.ExecuteQuery(ctx, deleteQuery, paramValues)
 	} else {
@@ -524,8 +524,8 @@ func (t *PostgreSQLDeleteTool) Execute(ctx context.Context, params map[string]in
 	}
 
 	t.logger.Info("Rows deleted", map[string]interface{}{
-		"table_name":   tableName,
-		"schema":       schema,
+		"table_name":    tableName,
+		"schema":        schema,
 		"rows_affected": rowsAffected,
 	})
 
@@ -610,7 +610,7 @@ func (t *PostgreSQLTruncateTool) Execute(ctx context.Context, params map[string]
 
 	/* Get table names */
 	tableNames := []string{}
-	
+
 	if tableNamesArray, ok := params["table_names"].([]interface{}); ok && len(tableNamesArray) > 0 {
 		for _, tn := range tableNamesArray {
 			if tnStr, ok := tn.(string); ok {
@@ -627,17 +627,17 @@ func (t *PostgreSQLTruncateTool) Execute(ctx context.Context, params map[string]
 
 	/* Build TRUNCATE statement */
 	parts := []string{"TRUNCATE"}
-	
+
 	if only, ok := params["only"].(bool); ok && only {
 		parts = append(parts, "ONLY")
 	}
-	
+
 	parts = append(parts, strings.Join(tableNames, ", "))
-	
+
 	if restartIdentity, ok := params["restart_identity"].(bool); ok && restartIdentity {
 		parts = append(parts, "RESTART IDENTITY")
 	}
-	
+
 	if cascade, ok := params["cascade"].(bool); ok && cascade {
 		parts = append(parts, "CASCADE")
 	} else {
@@ -664,7 +664,7 @@ func (t *PostgreSQLTruncateTool) Execute(ctx context.Context, params map[string]
 	return Success(map[string]interface{}{
 		"table_names": tableNames,
 		"schema":      schema,
-		"query":        truncateQuery,
+		"query":       truncateQuery,
 	}, map[string]interface{}{
 		"tool": "postgresql_truncate",
 	}), nil
@@ -854,7 +854,7 @@ func (t *PostgreSQLCopyTool) Execute(ctx context.Context, params map[string]inte
 	}
 
 	t.logger.Info("COPY operation completed", map[string]interface{}{
-		"direction": direction,
+		"direction":  direction,
 		"table_name": tableName,
 		"schema":     schema,
 		"source":     source,
@@ -870,7 +870,3 @@ func (t *PostgreSQLCopyTool) Execute(ctx context.Context, params map[string]inte
 		"tool": "postgresql_copy",
 	}), nil
 }
-
-
-
-

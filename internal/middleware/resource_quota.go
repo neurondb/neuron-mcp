@@ -49,11 +49,11 @@ type ToolResourceStats struct {
 
 /* ResourceQuotaConfig configures resource quota behavior */
 type ResourceQuotaConfig struct {
-	MaxMemoryMB       int   // Maximum memory per operation (MB)
-	MaxVectorDim      int   // Maximum vector dimension
-	MaxBatchSize      int   // Maximum batch size
-	MaxConcurrent     int   // Maximum concurrent operations
-	EnableThrottling  bool  // Enable adaptive throttling
+	MaxMemoryMB      int  // Maximum memory per operation (MB)
+	MaxVectorDim     int  // Maximum vector dimension
+	MaxBatchSize     int  // Maximum batch size
+	MaxConcurrent    int  // Maximum concurrent operations
+	EnableThrottling bool // Enable adaptive throttling
 }
 
 /* NewResourceQuotaMiddleware creates a new resource quota middleware */
@@ -72,10 +72,10 @@ func NewResourceQuotaMiddleware(logger *logging.Logger, config ResourceQuotaConf
 	}
 
 	quota := &validation.ResourceQuota{
-		MaxMemoryBytes:   int64(config.MaxMemoryMB) * 1024 * 1024,
-		MaxVectorSize:    config.MaxVectorDim,
-		MaxBatchSize:     config.MaxBatchSize,
-		MaxCPUTimeMs:     300000, // 5 minutes
+		MaxMemoryBytes: int64(config.MaxMemoryMB) * 1024 * 1024,
+		MaxVectorSize:  config.MaxVectorDim,
+		MaxBatchSize:   config.MaxBatchSize,
+		MaxCPUTimeMs:   300000, // 5 minutes
 	}
 
 	return &ResourceQuotaMiddleware{
@@ -90,7 +90,7 @@ func NewResourceQuotaMiddleware(logger *logging.Logger, config ResourceQuotaConf
 /* Execute enforces resource quotas during tool execution */
 func (m *ResourceQuotaMiddleware) Execute(ctx context.Context, params map[string]interface{}, next MiddlewareFunc) (interface{}, error) {
 	start := time.Now()
-	
+
 	/* Check concurrent operations limit */
 	current := atomic.AddInt32(&m.concurrentOps, 1)
 	if current > m.maxConcurrent {
@@ -173,7 +173,7 @@ func (m *ResourceQuotaMiddleware) validateVectorParams(params map[string]interfa
 /* validateBatchSize validates batch size parameters against quota */
 func (m *ResourceQuotaMiddleware) validateBatchSize(params map[string]interface{}) error {
 	batchSizeParams := []string{"batch_size", "limit", "top_k", "k"}
-	
+
 	for _, param := range batchSizeParams {
 		if size, ok := params[param].(float64); ok {
 			if int(size) > m.quota.MaxBatchSize {
@@ -204,11 +204,11 @@ func (m *ResourceQuotaMiddleware) recordStats(params map[string]interface{}, dur
 	stats.TotalExecutions++
 	stats.TotalDuration += duration
 	stats.LastExecutionTime = time.Now()
-	
+
 	if memUsedMB > stats.PeakMemoryMB {
 		stats.PeakMemoryMB = memUsedMB
 	}
-	
+
 	/* Update rolling average */
 	alpha := 0.2 // Exponential smoothing factor
 	stats.AverageMemoryMB = alpha*float64(memUsedMB) + (1-alpha)*stats.AverageMemoryMB
@@ -241,7 +241,7 @@ func (m *ResourceQuotaMiddleware) recordThrottle(params map[string]interface{}) 
 func (m *ResourceQuotaMiddleware) GetStats(toolName string) *ToolResourceStats {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	if stats, exists := m.toolStats[toolName]; exists {
 		statsCopy := *stats
 		return &statsCopy
@@ -253,7 +253,7 @@ func (m *ResourceQuotaMiddleware) GetStats(toolName string) *ToolResourceStats {
 func (m *ResourceQuotaMiddleware) GetAllStats() map[string]*ToolResourceStats {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	result := make(map[string]*ToolResourceStats)
 	for name, stats := range m.toolStats {
 		statsCopy := *stats
@@ -266,4 +266,3 @@ func (m *ResourceQuotaMiddleware) GetAllStats() map[string]*ToolResourceStats {
 func (m *ResourceQuotaMiddleware) Name() string {
 	return "resource_quota"
 }
-

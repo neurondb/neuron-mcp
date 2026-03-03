@@ -108,40 +108,40 @@ func (t *PostgreSQLCreateDatabaseTool) Execute(ctx context.Context, params map[s
 
 	/* Build CREATE DATABASE statement */
 	parts := []string{"CREATE DATABASE"}
-	
+
 	if ifNotExists, ok := params["if_not_exists"].(bool); ok && ifNotExists {
 		parts = append(parts, "IF NOT EXISTS")
 	}
-	
+
 	parts = append(parts, quoteIdentifier(databaseName))
 
 	/* Add options */
 	options := []string{}
-	
+
 	if owner, ok := params["owner"].(string); ok && owner != "" {
 		options = append(options, fmt.Sprintf("OWNER = %s", quoteIdentifier(owner)))
 	}
-	
+
 	if template, ok := params["template"].(string); ok && template != "" {
 		options = append(options, fmt.Sprintf("TEMPLATE = %s", quoteIdentifier(template)))
 	}
-	
+
 	if encoding, ok := params["encoding"].(string); ok && encoding != "" {
 		options = append(options, fmt.Sprintf("ENCODING = %s", quoteLiteral(encoding)))
 	}
-	
+
 	if collation, ok := params["collation"].(string); ok && collation != "" {
 		options = append(options, fmt.Sprintf("LC_COLLATE = %s", quoteLiteral(collation)))
 	}
-	
+
 	if ctype, ok := params["ctype"].(string); ok && ctype != "" {
 		options = append(options, fmt.Sprintf("LC_CTYPE = %s", quoteLiteral(ctype)))
 	}
-	
+
 	if tablespace, ok := params["tablespace"].(string); ok && tablespace != "" {
 		options = append(options, fmt.Sprintf("TABLESPACE = %s", quoteIdentifier(tablespace)))
 	}
-	
+
 	if connLimit, ok := params["connection_limit"].(float64); ok {
 		options = append(options, fmt.Sprintf("CONNECTION LIMIT = %d", int(connLimit)))
 	} else if connLimit, ok := params["connection_limit"].(int); ok {
@@ -237,13 +237,13 @@ func (t *PostgreSQLDropDatabaseTool) Execute(ctx context.Context, params map[str
 
 	/* Build DROP DATABASE statement */
 	parts := []string{"DROP DATABASE"}
-	
+
 	if ifExists, ok := params["if_exists"].(bool); ok && ifExists {
 		parts = append(parts, "IF EXISTS")
 	}
-	
+
 	parts = append(parts, quoteIdentifier(databaseName))
-	
+
 	if force, ok := params["force"].(bool); ok && force {
 		parts = append(parts, "WITH (FORCE)")
 	}
@@ -385,7 +385,7 @@ func (t *PostgreSQLAlterDatabaseTool) Execute(ctx context.Context, params map[st
 	for _, alt := range alterations {
 		query := parts[0] + " " + parts[1] + " " + alt
 		queries = append(queries, query)
-		
+
 		err := t.executor.Exec(ctx, query, nil)
 		if err != nil {
 			return Error(
@@ -464,13 +464,13 @@ func (t *PostgreSQLCreateSchemaTool) Execute(ctx context.Context, params map[str
 
 	/* Build CREATE SCHEMA statement */
 	parts := []string{"CREATE SCHEMA"}
-	
+
 	if ifNotExists, ok := params["if_not_exists"].(bool); ok && ifNotExists {
 		parts = append(parts, "IF NOT EXISTS")
 	}
-	
+
 	parts = append(parts, quoteIdentifier(schemaName))
-	
+
 	if authorization, ok := params["authorization"].(string); ok && authorization != "" {
 		parts = append(parts, fmt.Sprintf("AUTHORIZATION %s", quoteIdentifier(authorization)))
 	}
@@ -547,13 +547,13 @@ func (t *PostgreSQLDropSchemaTool) Execute(ctx context.Context, params map[strin
 
 	/* Build DROP SCHEMA statement */
 	parts := []string{"DROP SCHEMA"}
-	
+
 	if ifExists, ok := params["if_exists"].(bool); ok && ifExists {
 		parts = append(parts, "IF EXISTS")
 	}
-	
+
 	parts = append(parts, quoteIdentifier(schemaName))
-	
+
 	if cascade, ok := params["cascade"].(bool); ok && cascade {
 		parts = append(parts, "CASCADE")
 	} else {
@@ -655,7 +655,7 @@ func (t *PostgreSQLAlterSchemaTool) Execute(ctx context.Context, params map[stri
 	for _, alt := range alterations {
 		query := parts[0] + " " + parts[1] + " " + alt
 		queries = append(queries, query)
-		
+
 		err := t.executor.Exec(ctx, query, nil)
 		if err != nil {
 			return Error(
@@ -706,7 +706,3 @@ func quoteLiteral(value string) string {
 	escaped := strings.ReplaceAll(value, "'", "''")
 	return fmt.Sprintf("'%s'", escaped)
 }
-
-
-
-

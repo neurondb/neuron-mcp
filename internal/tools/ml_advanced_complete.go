@@ -126,12 +126,12 @@ func (t *MLModelRetrainingTool) Execute(ctx context.Context, params map[string]i
 	}
 
 	return Success(map[string]interface{}{
-		"model_id":      int(modelID),
-		"model_info":    modelInfo,
+		"model_id":       int(modelID),
+		"model_info":     modelInfo,
 		"training_table": trainingTable,
 		"incremental":    incremental,
 		"schedule":       schedule,
-		"instructions":  instructions,
+		"instructions":   instructions,
 		"sql_example":    fmt.Sprintf("SELECT neurondb.train('%v', '%s', '%v', '%v', '{}'::jsonb)", modelInfo["algorithm"], trainingTable, modelInfo["feature_columns"], modelInfo["target_column"]),
 	}, map[string]interface{}{
 		"tool": "ml_model_retraining",
@@ -386,14 +386,13 @@ func (t *MLModelExportFormatsTool) Execute(ctx context.Context, params map[strin
 	}
 
 	return Success(map[string]interface{}{
-		"model_id":    int(modelID),
-		"format":      format,
-		"output_path": outputPath,
-		"model_info":  modelInfo,
+		"model_id":     int(modelID),
+		"format":       format,
+		"output_path":  outputPath,
+		"model_info":   modelInfo,
 		"instructions": instructions,
-		"note":        "Use the export_model tool or neurondb.export_model() function for actual export",
+		"note":         "Use the export_model tool or neurondb.export_model() function for actual export",
 	}, map[string]interface{}{
 		"tool": "ml_model_export_formats",
 	}), nil
 }
-

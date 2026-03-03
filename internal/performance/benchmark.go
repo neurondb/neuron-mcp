@@ -25,28 +25,28 @@ import (
 
 /* BenchmarkResult represents a single benchmark result */
 type BenchmarkResult struct {
-	ToolName      string            `json:"tool_name"`
-	Operation     string            `json:"operation"`
-	Duration      time.Duration     `json:"duration"`
-	Success       bool              `json:"success"`
-	Error         string            `json:"error,omitempty"`
-	Metadata      map[string]interface{} `json:"metadata,omitempty"`
+	ToolName  string                 `json:"tool_name"`
+	Operation string                 `json:"operation"`
+	Duration  time.Duration          `json:"duration"`
+	Success   bool                   `json:"success"`
+	Error     string                 `json:"error,omitempty"`
+	Metadata  map[string]interface{} `json:"metadata,omitempty"`
 }
 
 /* BenchmarkStats represents aggregated benchmark statistics */
 type BenchmarkStats struct {
-	ToolName      string            `json:"tool_name"`
-	TotalRuns     int               `json:"total_runs"`
-	SuccessCount  int               `json:"success_count"`
-	FailureCount  int               `json:"failure_count"`
-	MinDuration   time.Duration     `json:"min_duration"`
-	MaxDuration   time.Duration     `json:"max_duration"`
-	MeanDuration  time.Duration     `json:"mean_duration"`
-	P50Duration   time.Duration     `json:"p50_duration"`
-	P95Duration   time.Duration     `json:"p95_duration"`
-	P99Duration   time.Duration     `json:"p99_duration"`
-	Throughput    float64           `json:"throughput"` // requests per second
-	Metadata      map[string]interface{} `json:"metadata,omitempty"`
+	ToolName     string                 `json:"tool_name"`
+	TotalRuns    int                    `json:"total_runs"`
+	SuccessCount int                    `json:"success_count"`
+	FailureCount int                    `json:"failure_count"`
+	MinDuration  time.Duration          `json:"min_duration"`
+	MaxDuration  time.Duration          `json:"max_duration"`
+	MeanDuration time.Duration          `json:"mean_duration"`
+	P50Duration  time.Duration          `json:"p50_duration"`
+	P95Duration  time.Duration          `json:"p95_duration"`
+	P99Duration  time.Duration          `json:"p99_duration"`
+	Throughput   float64                `json:"throughput"` // requests per second
+	Metadata     map[string]interface{} `json:"metadata,omitempty"`
 }
 
 /* BenchmarkRunner runs performance benchmarks */
@@ -213,9 +213,9 @@ func percentile(durations []time.Duration, p float64) time.Duration {
 
 /* BenchmarkReport generates a formatted benchmark report */
 type BenchmarkReport struct {
-	Timestamp   time.Time                  `json:"timestamp"`
-	Stats       []BenchmarkStats           `json:"stats"`
-	Summary     map[string]interface{}     `json:"summary"`
+	Timestamp time.Time              `json:"timestamp"`
+	Stats     []BenchmarkStats       `json:"stats"`
+	Summary   map[string]interface{} `json:"summary"`
 }
 
 /* GenerateReport generates a benchmark report */
@@ -273,9 +273,3 @@ func FormatDuration(d time.Duration) string {
 	}
 	return fmt.Sprintf("%.2fs", float64(d)/float64(time.Second))
 }
-
-
-
-
-
-

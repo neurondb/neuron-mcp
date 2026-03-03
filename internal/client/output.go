@@ -64,7 +64,7 @@ func (om *OutputManager) Save() (string, error) {
 		outputFile = fmt.Sprintf("results_%s.json", timestamp)
 	}
 
-  /* Ensure directory exists */
+	/* Ensure directory exists */
 	dir := filepath.Dir(outputFile)
 	if dir != "" && dir != "." {
 		if err := os.MkdirAll(dir, 0755); err != nil {
@@ -72,7 +72,7 @@ func (om *OutputManager) Save() (string, error) {
 		}
 	}
 
-  /* Count successful and failed commands */
+	/* Count successful and failed commands */
 	successful := 0
 	failed := 0
 	for _, r := range om.results {
@@ -83,19 +83,19 @@ func (om *OutputManager) Save() (string, error) {
 		}
 	}
 
-  /* Prepare output data */
+	/* Prepare output data */
 	outputData := map[string]interface{}{
 		"metadata": map[string]interface{}{
-			"start_time":        om.startTime.Format(time.RFC3339),
-			"end_time":          time.Now().Format(time.RFC3339),
-			"total_commands":    len(om.results),
+			"start_time":          om.startTime.Format(time.RFC3339),
+			"end_time":            time.Now().Format(time.RFC3339),
+			"total_commands":      len(om.results),
 			"successful_commands": successful,
-			"failed_commands":    failed,
+			"failed_commands":     failed,
 		},
 		"results": om.results,
 	}
 
-  /* Write to file */
+	/* Write to file */
 	data, err := json.MarshalIndent(outputData, "", "  ")
 	if err != nil {
 		return "", fmt.Errorf("failed to marshal output: %w", err)
@@ -107,12 +107,3 @@ func (om *OutputManager) Save() (string, error) {
 
 	return outputFile, nil
 }
-
-
-
-
-
-
-
-
-
