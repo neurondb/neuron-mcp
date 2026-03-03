@@ -81,18 +81,18 @@ func (t *VectorSimilarityTool) Execute(ctx context.Context, params map[string]in
 
 	if vector1 == nil || len(vector1) == 0 {
 		return Error("vector1 parameter is required and cannot be empty array for neurondb_vector_similarity tool", "VALIDATION_ERROR", map[string]interface{}{
-			"parameter": "vector1",
+			"parameter":         "vector1",
 			"vector1_dimension": 0,
-			"params": params,
+			"params":            params,
 		}), nil
 	}
 
 	if vector2 == nil || len(vector2) == 0 {
 		return Error(fmt.Sprintf("vector2 parameter is required and cannot be empty array for neurondb_vector_similarity tool: vector1_dimension=%d", len(vector1)), "VALIDATION_ERROR", map[string]interface{}{
-			"parameter": "vector2",
+			"parameter":         "vector2",
 			"vector1_dimension": len(vector1),
 			"vector2_dimension": 0,
-			"params": params,
+			"params":            params,
 		}), nil
 	}
 
@@ -128,7 +128,7 @@ func (t *VectorSimilarityTool) Execute(ctx context.Context, params map[string]in
 		query = `SELECT $1::vector <#> $2::vector AS similarity`
 	case "l1":
 		query = `SELECT vector_l1_distance($1::vector, $2::vector) AS similarity`
- 	default: /* l2 */
+	default: /* l2 */
 		query = `SELECT $1::vector <-> $2::vector AS similarity`
 	}
 
@@ -278,7 +278,7 @@ func (t *CreateVectorIndexTool) Execute(ctx context.Context, params map[string]i
 			table, vectorColumn, indexName, numLists,
 		})
 	} else {
-   /* Default to HNSW */
+		/* Default to HNSW */
 		m := 16
 		if mVal, ok := params["m"].(float64); ok {
 			m = int(mVal)
@@ -327,4 +327,3 @@ func (t *CreateVectorIndexTool) Execute(ctx context.Context, params map[string]i
 		"index_type": indexType,
 	}), nil
 }
-

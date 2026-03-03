@@ -71,13 +71,13 @@ func (rw *RESTWrapper) handleGet(w http.ResponseWriter, r *http.Request, toolNam
 	}
 
 	response := map[string]interface{}{
-		"name":        tool.Name(),
-		"description": tool.Description(),
+		"name":         tool.Name(),
+		"description":  tool.Description(),
 		"input_schema": tool.InputSchema(),
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	_ = json.NewEncoder(w).Encode(response)
 }
 
 /* handlePost handles POST request */
@@ -111,7 +111,7 @@ func (rw *RESTWrapper) handlePost(w http.ResponseWriter, r *http.Request, toolNa
 
 	/* Return result */
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(result)
+	_ = json.NewEncoder(w).Encode(result)
 }
 
 /* RegisterRoutes registers REST routes */
@@ -125,7 +125,7 @@ func (rw *RESTWrapper) RegisterRoutes(mux *http.ServeMux) {
 			/* List all tools */
 			definitions := rw.toolRegistry.GetAllDefinitions()
 			w.Header().Set("Content-Type", "application/json")
-			json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"tools": definitions,
 			})
 		} else {
@@ -133,4 +133,3 @@ func (rw *RESTWrapper) RegisterRoutes(mux *http.ServeMux) {
 		}
 	})
 }
-

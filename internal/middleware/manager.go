@@ -63,4 +63,3 @@ func (m *Manager) GetAll() []Middleware {
 	defer m.mu.RUnlock()
 	return append([]Middleware(nil), m.middlewares...)
 }
-

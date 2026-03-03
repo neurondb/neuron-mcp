@@ -35,12 +35,12 @@ var (
 
 func main() {
 	var (
-		showVersion = flag.Bool("version", false, "Show version information")
+		showVersion      = flag.Bool("version", false, "Show version information")
 		showVersionShort = flag.Bool("v", false, "Show version information (short)")
-		configPath  = flag.String("c", "", "Path to configuration file")
-		configPathLong = flag.String("config", "", "Path to configuration file")
-		showHelp    = flag.Bool("help", false, "Show help message")
-		showHelpShort = flag.Bool("h", false, "Show help message (short)")
+		configPath       = flag.String("c", "", "Path to configuration file")
+		configPathLong   = flag.String("config", "", "Path to configuration file")
+		showHelp         = flag.Bool("help", false, "Show help message")
+		showHelpShort    = flag.Bool("h", false, "Show help message (short)")
 	)
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [OPTIONS]\n\n", os.Args[0])
@@ -78,7 +78,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-  /* Handle signals */
+	/* Handle signals */
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 
@@ -87,14 +87,14 @@ func main() {
 		cancel()
 	}()
 
-  /* Create and start server */
+	/* Create and start server */
 	srv, err := server.NewServerWithConfig(cfgPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: Failed to create NeuronMCP server: %v\n", err)
 		os.Exit(1)
 	}
 
-  /* Start server */
+	/* Start server */
 	if err := srv.Start(ctx); err != nil {
 		if err != context.Canceled {
 			fmt.Fprintf(os.Stderr, "Error: Server startup failed: %v\n", err)
@@ -102,9 +102,8 @@ func main() {
 		}
 	}
 
-  /* Cleanup */
+	/* Cleanup */
 	if err := srv.Stop(); err != nil {
 		fmt.Fprintf(os.Stderr, "Warning: Error occurred during server shutdown: %v\n", err)
 	}
 }
-

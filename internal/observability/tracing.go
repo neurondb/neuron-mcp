@@ -158,16 +158,16 @@ func (t *Tracer) GetTrace(traceID TraceID) []*Span {
 /* StartSpanWithRequestID starts a new span with request ID from context */
 func (t *Tracer) StartSpanWithRequestID(ctx context.Context, name string) (context.Context, SpanID) {
 	ctx, spanID := t.StartSpan(ctx, name)
-	
+
 	/* Add request ID as span attribute if available */
 	/* GetRequestIDFromContext is in the same package (observability) */
 	if reqID, ok := GetRequestIDFromContext(ctx); ok {
 		t.AddSpanAttribute(spanID, "request_id", reqID.String())
 	}
-	
+
 	/* Store span in context */
 	ctx = context.WithValue(ctx, SpanKey{}, t.GetSpan(spanID))
-	
+
 	return ctx, spanID
 }
 

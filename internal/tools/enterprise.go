@@ -212,7 +212,7 @@ func (t *MultiTenantManagementTool) getTenant(ctx context.Context, params map[st
 
 		var config map[string]interface{}
 		if configJSON != nil {
-			json.Unmarshal([]byte(*configJSON), &config)
+			_ = json.Unmarshal([]byte(*configJSON), &config)
 		}
 
 		result := map[string]interface{}{
@@ -509,7 +509,7 @@ func (t *DataGovernanceTool) getPolicy(ctx context.Context, params map[string]in
 		if err := rows.Scan(&classification, &tagsJSON); err == nil {
 			var tags []string
 			if tagsJSON != nil {
-				json.Unmarshal([]byte(*tagsJSON), &tags)
+				_ = json.Unmarshal([]byte(*tagsJSON), &tags)
 			}
 
 			return Success(map[string]interface{}{

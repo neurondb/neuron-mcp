@@ -90,4 +90,3 @@ func (r *IndexHealthResource) GetContent(ctx context.Context) (interface{}, erro
 	query := `SELECT * FROM neurondb.index_health`
 	return r.executeQuery(ctx, query, nil)
 }
-

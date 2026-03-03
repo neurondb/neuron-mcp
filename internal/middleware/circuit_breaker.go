@@ -46,33 +46,33 @@ func (s CircuitBreakerState) String() string {
 
 /* CircuitBreakerStats tracks circuit breaker statistics */
 type CircuitBreakerStats struct {
-	TotalRequests     int64
+	TotalRequests      int64
 	SuccessfulRequests int64
-	FailedRequests    int64
-	RejectedRequests  int64
-	StateChanges      int64
-	LastStateChange   time.Time
-	CurrentState      CircuitBreakerState
-	ErrorRate         float64
-	LastError         string
-	LastErrorTime     time.Time
+	FailedRequests     int64
+	RejectedRequests   int64
+	StateChanges       int64
+	LastStateChange    time.Time
+	CurrentState       CircuitBreakerState
+	ErrorRate          float64
+	LastError          string
+	LastErrorTime      time.Time
 }
 
 /* CircuitBreakerMiddleware implements circuit breaker pattern for resilience */
 type CircuitBreakerMiddleware struct {
-	logger              *logging.Logger
-	mu                  sync.RWMutex
-	state               CircuitBreakerState
-	failureThreshold    int
-	successThreshold    int
-	timeout             time.Duration
-	failureCount        int
-	successCount        int
-	lastFailureTime     time.Time
-	lastStateChange     time.Time
-	stats               *CircuitBreakerStats
-	perToolBreakers     map[string]*CircuitBreakerState
-	perToolStats        map[string]*CircuitBreakerStats
+	logger               *logging.Logger
+	mu                   sync.RWMutex
+	state                CircuitBreakerState
+	failureThreshold     int
+	successThreshold     int
+	timeout              time.Duration
+	failureCount         int
+	successCount         int
+	lastFailureTime      time.Time
+	lastStateChange      time.Time
+	stats                *CircuitBreakerStats
+	perToolBreakers      map[string]*CircuitBreakerState
+	perToolStats         map[string]*CircuitBreakerStats
 	enablePerToolBreaker bool
 }
 
@@ -360,6 +360,3 @@ func (m *CircuitBreakerMiddleware) Reset() {
 func (m *CircuitBreakerMiddleware) Name() string {
 	return "circuit_breaker"
 }
-
-
-

@@ -23,7 +23,7 @@ import (
 
 /* setupProgressHandlers sets up progress MCP handlers */
 func (s *Server) setupProgressHandlers() {
-  /* Get progress handler */
+	/* Get progress handler */
 	s.mcpServer.SetHandler("progress/get", s.handleGetProgress)
 }
 
@@ -38,7 +38,7 @@ func (s *Server) handleGetProgress(ctx context.Context, params json.RawMessage) 
 	if s.progress == nil {
 		return nil, fmt.Errorf("progress tracker is not initialized")
 	}
-	
+
 	mcpReq := &middleware.MCPRequest{
 		Method:   "progress/get",
 		Params:   make(map[string]interface{}),
@@ -64,15 +64,3 @@ func (s *Server) handleGetProgress(ctx context.Context, params json.RawMessage) 
 		}, nil
 	})
 }
-
-
-
-
-
-
-
-
-
-
-
-

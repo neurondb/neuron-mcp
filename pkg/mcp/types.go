@@ -58,7 +58,7 @@ type ReadResourceRequest struct {
 }
 
 type SubscribeResourceRequest struct {
-	URI    string `json:"uri"`
+	URI    string  `json:"uri"`
 	Filter *string `json:"filter,omitempty"` /* Optional filter pattern */
 }
 
@@ -71,24 +71,24 @@ type SubscribeResourceResponse struct {
 }
 
 type ResourceUpdateNotification struct {
-	SubscriptionID string                 `json:"subscriptionId"`
-	URI            string                 `json:"uri"`
-	Type           string                 `json:"type"` /* created, updated, deleted */
-	Content        interface{}            `json:"content,omitempty"`
+	SubscriptionID string      `json:"subscriptionId"`
+	URI            string      `json:"uri"`
+	Type           string      `json:"type"` /* created, updated, deleted */
+	Content        interface{} `json:"content,omitempty"`
 }
 
 /* MCP Response types */
 type ToolDefinition struct {
-	Name             string                 `json:"name"`
-	Description      string                 `json:"description"`
-	InputSchema      map[string]interface{} `json:"inputSchema"`
-	OutputSchema     map[string]interface{} `json:"outputSchema,omitempty"`
-	Version          string                 `json:"version,omitempty"`
-	Deprecated       bool                   `json:"deprecated,omitempty"`
-	Deprecation      *DeprecationInfo       `json:"deprecation,omitempty"`
-	ReadOnlyHint     bool                   `json:"readOnlyHint,omitempty"`
-	DestructiveHint  bool                   `json:"destructiveHint,omitempty"`
-	IdempotentHint   bool                   `json:"idempotentHint,omitempty"`
+	Name            string                 `json:"name"`
+	Description     string                 `json:"description"`
+	InputSchema     map[string]interface{} `json:"inputSchema"`
+	OutputSchema    map[string]interface{} `json:"outputSchema,omitempty"`
+	Version         string                 `json:"version,omitempty"`
+	Deprecated      bool                   `json:"deprecated,omitempty"`
+	Deprecation     *DeprecationInfo       `json:"deprecation,omitempty"`
+	ReadOnlyHint    bool                   `json:"readOnlyHint,omitempty"`
+	DestructiveHint bool                   `json:"destructiveHint,omitempty"`
+	IdempotentHint  bool                   `json:"idempotentHint,omitempty"`
 }
 
 /* DeprecationInfo provides information about tool deprecation */
@@ -144,13 +144,13 @@ type ServerInfo struct {
 }
 
 type ServerCapabilities struct {
-	Tools        ToolsCapability              `json:"tools,omitempty"`
-	Resources    ResourcesCapability          `json:"resources,omitempty"`
-	Prompts      map[string]interface{}       `json:"prompts,omitempty"`
-	Sampling     map[string]interface{}       `json:"sampling,omitempty"`
-	Elicitation  *ElicitationCapability       `json:"elicitation,omitempty"`
-	Completions  *CompletionsCapability       `json:"completions,omitempty"`
-	Experimental map[string]interface{}       `json:"experimental,omitempty"`
+	Tools        ToolsCapability        `json:"tools,omitempty"`
+	Resources    ResourcesCapability    `json:"resources,omitempty"`
+	Prompts      map[string]interface{} `json:"prompts,omitempty"`
+	Sampling     map[string]interface{} `json:"sampling,omitempty"`
+	Elicitation  *ElicitationCapability `json:"elicitation,omitempty"`
+	Completions  *CompletionsCapability `json:"completions,omitempty"`
+	Experimental map[string]interface{} `json:"experimental,omitempty"`
 }
 
 type ToolsCapability struct {
@@ -197,13 +197,13 @@ type InitializeResponse struct {
 
 /* Completion request types */
 type CompletionRequest struct {
-	Ref       CompletionReference `json:"ref"`
-	Argument  CompletionArgument  `json:"argument"`
-	Context   map[string]interface{} `json:"context,omitempty"`
+	Ref      CompletionReference    `json:"ref"`
+	Argument CompletionArgument     `json:"argument"`
+	Context  map[string]interface{} `json:"context,omitempty"`
 }
 
 type CompletionReference struct {
-	Type string `json:"type"` /* ref/prompt or ref/resource */
+	Type string `json:"type"`           /* ref/prompt or ref/resource */
 	Name string `json:"name,omitempty"` /* Prompt name for ref/prompt */
 }
 
@@ -221,4 +221,3 @@ type CompletionResult struct {
 	Total   int      `json:"total"`
 	HasMore bool     `json:"hasMore"`
 }
-

@@ -52,7 +52,7 @@ func (ts *TestServer) CallTool(ctx context.Context, toolName string, arguments m
 	if ts.Server == nil {
 		return nil, fmt.Errorf("server is nil")
 	}
-	
+
 	/* Get tool registry from server */
 	if ts.ToolRegistry == nil {
 		ts.ToolRegistry = ts.Server.GetToolRegistry()
@@ -60,25 +60,25 @@ func (ts *TestServer) CallTool(ctx context.Context, toolName string, arguments m
 			return nil, fmt.Errorf("tool registry not available")
 		}
 	}
-	
+
 	/* Get the tool from registry */
 	tool := ts.ToolRegistry.GetTool(toolName)
 	if tool == nil {
 		return nil, fmt.Errorf("tool not found: %s", toolName)
 	}
-	
+
 	/* Execute the tool */
 	result, err := tool.Execute(ctx, arguments)
 	if err != nil {
 		return nil, fmt.Errorf("tool execution failed: %w", err)
 	}
-	
+
 	/* Convert tools.ToolResult to mcp.ToolResult */
 	mcpResult := &mcp.ToolResult{
 		Content: make([]mcp.ContentBlock, 0),
 		IsError: !result.Success,
 	}
-	
+
 	/* Convert result data to JSON content */
 	if result.Data != nil {
 		/* For now, we'll create a simple text content block */
@@ -89,7 +89,7 @@ func (ts *TestServer) CallTool(ctx context.Context, toolName string, arguments m
 			Text: contentJSON,
 		})
 	}
-	
+
 	return mcpResult, nil
 }
 
@@ -98,7 +98,7 @@ func (ts *TestServer) ListTools(ctx context.Context) ([]mcp.ToolDefinition, erro
 	if ts.Server == nil {
 		return nil, fmt.Errorf("server is nil")
 	}
-	
+
 	/* Get tool definitions from registry */
 	if ts.ToolRegistry == nil {
 		ts.ToolRegistry = ts.Server.GetToolRegistry()
@@ -106,9 +106,9 @@ func (ts *TestServer) ListTools(ctx context.Context) ([]mcp.ToolDefinition, erro
 			return nil, fmt.Errorf("tool registry not available")
 		}
 	}
-	
+
 	definitions := ts.ToolRegistry.GetAllDefinitions()
-	
+
 	/* Convert to mcp.ToolDefinition */
 	mcpTools := make([]mcp.ToolDefinition, len(definitions))
 	for i, def := range definitions {
@@ -125,7 +125,7 @@ func (ts *TestServer) ListTools(ctx context.Context) ([]mcp.ToolDefinition, erro
 			IdempotentHint:  def.Annotations.Idempotent,
 		}
 	}
-	
+
 	return mcpTools, nil
 }
 
@@ -152,4 +152,3 @@ func AssertToolVersion(tool tools.Tool, expectedVersion string) error {
 	}
 	return nil
 }
-

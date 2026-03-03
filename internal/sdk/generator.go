@@ -159,4 +159,3 @@ func (sg *SDKGenerator) generateJava(definitions []ToolDefinition) string {
 	sb.WriteString("}\n")
 	return sb.String()
 }
-

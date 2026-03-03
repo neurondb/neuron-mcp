@@ -102,13 +102,3 @@ func (a *ResourceQuotaAdapter) Execute(ctx context.Context, req *middleware.MCPR
 
 	return next(ctx, req)
 }
-
-
-
-
-
-
-
-
-
-

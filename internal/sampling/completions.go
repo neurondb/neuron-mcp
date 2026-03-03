@@ -38,7 +38,7 @@ func (m *Manager) CreateMessageStream(ctx context.Context, req SamplingRequest, 
 
 	/* For now, we'll do a non-streaming call and simulate streaming */
 	/* In a full implementation, this would use SSE or similar */
-	
+
 	response, err := m.CreateMessage(ctx, req)
 	if err != nil {
 		/* Send error to stream */
@@ -47,7 +47,7 @@ func (m *Manager) CreateMessageStream(ctx context.Context, req SamplingRequest, 
 			"error": err.Error(),
 		}
 		errorJSON, _ := json.Marshal(errorData)
-		writer.Write(errorJSON)
+		_ = writer.Write(errorJSON)
 		writer.Flush()
 		return fmt.Errorf("failed to create message: %w", err)
 	}
@@ -66,7 +66,7 @@ func (m *Manager) CreateMessageStream(ctx context.Context, req SamplingRequest, 
 		}
 	} else {
 		chunkSize := 20 /* Reasonable chunk size for streaming */
-		
+
 		for i := 0; i < len(content); i += chunkSize {
 			/* Check context cancellation */
 			select {
@@ -79,14 +79,14 @@ func (m *Manager) CreateMessageStream(ctx context.Context, req SamplingRequest, 
 			if end > len(content) {
 				end = len(content)
 			}
-			
+
 			chunk := content[i:end]
 			chunkData := map[string]interface{}{
 				"type":    "content",
 				"content": chunk,
 				"index":   i,
 			}
-			
+
 			chunkJSON, err := json.Marshal(chunkData)
 			if err != nil {
 				return fmt.Errorf("failed to marshal chunk: %w", err)
@@ -95,7 +95,7 @@ func (m *Manager) CreateMessageStream(ctx context.Context, req SamplingRequest, 
 			if err := writer.Write(chunkJSON); err != nil {
 				return fmt.Errorf("failed to write chunk at index %d: %w", i, err)
 			}
-			
+
 			if err := writer.Flush(); err != nil {
 				return fmt.Errorf("failed to flush at index %d: %w", i, err)
 			}
@@ -144,4 +144,3 @@ func (sw *streamWriter) Flush() error {
 	}
 	return nil
 }
-

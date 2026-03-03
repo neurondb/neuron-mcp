@@ -55,7 +55,7 @@ func (s *Server) handleComplete(ctx context.Context, params json.RawMessage) (in
 	}
 
 	mcpReq := &middleware.MCPRequest{
-		Method:   "completion/complete",
+		Method: "completion/complete",
 		Params: map[string]interface{}{
 			"ref":      req.Ref,
 			"argument": req.Argument,

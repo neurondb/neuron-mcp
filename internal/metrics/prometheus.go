@@ -33,7 +33,7 @@ func NewPrometheusExporter(collector *Collector) *PrometheusExporter {
 /* Export exports metrics in Prometheus format */
 func (e *PrometheusExporter) Export() string {
 	metrics := e.collector.GetMetrics()
-	
+
 	output := fmt.Sprintf(`# HELP neurondb_mcp_requests_total Total number of requests
 # TYPE neurondb_mcp_requests_total counter
 neurondb_mcp_requests_total %d
@@ -176,4 +176,3 @@ func (e *PrometheusExporter) Handler() http.HandlerFunc {
 		fmt.Fprint(w, e.Export())
 	}
 }
-

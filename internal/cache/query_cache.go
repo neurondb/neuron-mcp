@@ -26,11 +26,11 @@ import (
 
 /* QueryCache provides query result caching */
 type QueryCache struct {
-	cache    map[string]*QueryCacheEntry
-	mu       sync.RWMutex
-	ttl      time.Duration
-	maxSize  int
-	eviction string
+	cache     map[string]*QueryCacheEntry
+	mu        sync.RWMutex
+	ttl       time.Duration
+	maxSize   int
+	_eviction string
 }
 
 /* QueryCacheEntry represents a cached query result */
@@ -168,7 +168,10 @@ func (qc *QueryCache) generateKey(query string, params []interface{}) string {
 		"params": params,
 	}
 
-	keyJSON, _ := json.Marshal(keyData)
+	keyJSON, err := json.Marshal(keyData)
+	if err != nil {
+		return query + ":"
+	}
 	hash := sha256.Sum256(keyJSON)
 	return hex.EncodeToString(hash[:])
 }
@@ -208,4 +211,3 @@ func (qc *QueryCache) GetStats() map[string]interface{} {
 		"hit_rate":   float64(totalHits) / float64(len(qc.cache)+1),
 	}
 }
-

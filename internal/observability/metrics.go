@@ -24,8 +24,8 @@ import (
 type MetricType string
 
 const (
-	MetricTypeCounter MetricType = "counter"
-	MetricTypeGauge   MetricType = "gauge"
+	MetricTypeCounter   MetricType = "counter"
+	MetricTypeGauge     MetricType = "gauge"
 	MetricTypeHistogram MetricType = "histogram"
 	MetricTypeSummary   MetricType = "summary"
 )
@@ -238,9 +238,3 @@ func (r *ResourceMetrics) RecordMemoryUsage(bytes int64) {
 func (r *ResourceMetrics) RecordConnections(count int) {
 	r.SetGauge("connections_total", float64(count), nil)
 }
-
-
-
-
-
-

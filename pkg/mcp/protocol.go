@@ -68,9 +68,9 @@ const (
 
 /* MCP-specific error codes */
 const (
-	ErrCodeToolNotFound    = -32001
+	ErrCodeToolNotFound     = -32001
 	ErrCodeResourceNotFound = -32002
-	ErrCodeExecutionError  = -32003
+	ErrCodeExecutionError   = -32003
 )
 
 /* SerializeResponse serializes a JSON-RPC response to JSON */
@@ -92,8 +92,8 @@ func ValidateRequest(req *JSONRPCRequest) error {
 	if req.Method == "" {
 		return fmt.Errorf("method is required")
 	}
-  /* Note: ID is optional for notifications, but required for requests */
-  /* We'll handle this in the server */
+	/* Note: ID is optional for notifications, but required for requests */
+	/* We'll handle this in the server */
 	return nil
 }
 
@@ -104,4 +104,3 @@ func IsNotification(req *JSONRPCRequest) bool {
 	}
 	return len(req.ID) == 0 || bytes.Equal(req.ID, []byte("null"))
 }
-

@@ -56,13 +56,3 @@ func (s *DefaultScopeChecker) GetUserScopes(ctx context.Context) []string {
 	/* In a real implementation, this would query from auth system */
 	return []string{}
 }
-
-
-
-
-
-
-
-
-
-

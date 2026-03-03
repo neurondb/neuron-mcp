@@ -280,4 +280,3 @@ func (t *VectorGraphVisualizationTool) Execute(ctx context.Context, params map[s
 		"tool": "vector_graph_visualization",
 	}), nil
 }
-

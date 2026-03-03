@@ -23,18 +23,18 @@ import (
 type ComplianceStandard string
 
 const (
-	ComplianceGDPR  ComplianceStandard = "gdpr"
-	ComplianceSOC2 ComplianceStandard = "soc2"
-	ComplianceHIPAA ComplianceStandard = "hipaa"
+	ComplianceGDPR   ComplianceStandard = "gdpr"
+	ComplianceSOC2   ComplianceStandard = "soc2"
+	ComplianceHIPAA  ComplianceStandard = "hipaa"
 	CompliancePCIDSS ComplianceStandard = "pci_dss"
 )
 
 /* ComplianceConfig represents compliance configuration */
 type ComplianceConfig struct {
-	Standards      []ComplianceStandard
-	DataRetention  time.Duration
-	AuditRetention time.Duration
-	EncryptionAtRest bool
+	Standards           []ComplianceStandard
+	DataRetention       time.Duration
+	AuditRetention      time.Duration
+	EncryptionAtRest    bool
 	EncryptionInTransit bool
 }
 
@@ -97,14 +97,14 @@ func (g *GDPRCompliance) DataPortability(userID string) ([]byte, error) {
 
 /* AuditLogEntry represents an audit log entry */
 type AuditLogEntry struct {
-	Timestamp   time.Time
-	UserID      string
-	Action      string
-	Resource    string
-	IPAddress   string
-	UserAgent   string
-	Result      string /* "success", "failure" */
-	Details     map[string]interface{}
+	Timestamp time.Time
+	UserID    string
+	Action    string
+	Resource  string
+	IPAddress string
+	UserAgent string
+	Result    string /* "success", "failure" */
+	Details   map[string]interface{}
 }
 
 /* AuditLogger logs compliance-related events */
@@ -146,9 +146,3 @@ func (a *AuditLogger) GetAuditLogsForUser(userID string) []AuditLogEntry {
 	}
 	return logs
 }
-
-
-
-
-
-

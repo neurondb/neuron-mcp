@@ -64,12 +64,11 @@ func (r *WorkersResource) GetContent(ctx context.Context) (interface{}, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to check if workers table exists: %w", err)
 	}
-	
+
 	if tableExists, ok := exists["table_exists"].(bool); !ok || !tableExists {
 		return []map[string]interface{}{}, nil
 	}
-	
+
 	query := `SELECT * FROM neurondb.neurondb_workers`
 	return r.executeQuery(ctx, query, nil)
 }
-

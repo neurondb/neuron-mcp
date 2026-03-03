@@ -26,17 +26,17 @@ import (
 )
 
 const (
-	DefaultMaxIterations     = 5
-	DefaultLLMTimeout        = 120 * time.Second
-	DefaultMaxRetries        = 3
-	DefaultRetryBaseDelay    = 1 * time.Second
-	MaxTemperature           = 2.0
-	MinTemperature           = 0.0
-	MaxMaxTokens             = 100000
-	MinMaxTokens             = 1
-	MaxTopP                  = 1.0
-	MinTopP                  = 0.0
-	MaxMessageCount          = 100
+	DefaultMaxIterations  = 5
+	DefaultLLMTimeout     = 120 * time.Second
+	DefaultMaxRetries     = 3
+	DefaultRetryBaseDelay = 1 * time.Second
+	MaxTemperature        = 2.0
+	MinTemperature        = 0.0
+	MaxMaxTokens          = 100000
+	MinMaxTokens          = 1
+	MaxTopP               = 1.0
+	MinTopP               = 0.0
+	MaxMessageCount       = 100
 )
 
 /* Message represents a chat message */
@@ -58,10 +58,10 @@ type SamplingRequest struct {
 
 /* SamplingResponse represents a sampling response */
 type SamplingResponse struct {
-	Content   string                 `json:"content"`
-	Model     string                 `json:"model"`
-	StopReason string                `json:"stopReason,omitempty"`
-	Metadata  map[string]interface{} `json:"metadata,omitempty"`
+	Content    string                 `json:"content"`
+	Model      string                 `json:"model"`
+	StopReason string                 `json:"stopReason,omitempty"`
+	Metadata   map[string]interface{} `json:"metadata,omitempty"`
 }
 
 /* Manager manages sampling operations */
@@ -208,12 +208,12 @@ func (m *Manager) CreateMessage(ctx context.Context, req SamplingRequest) (*Samp
 				delay := DefaultRetryBaseDelay * time.Duration(1<<uint(retry))
 				if m.logger != nil {
 					m.logger.Warn("LLM call failed, retrying", map[string]interface{}{
-						"model":      modelName,
-						"iteration":  iteration + 1,
-						"retry":      retry + 1,
+						"model":       modelName,
+						"iteration":   iteration + 1,
+						"retry":       retry + 1,
 						"max_retries": DefaultMaxRetries,
-						"delay":      delay,
-						"error":      err.Error(),
+						"delay":       delay,
+						"error":       err.Error(),
 					})
 				}
 				time.Sleep(delay)
@@ -297,6 +297,7 @@ type ModelConfig struct {
 }
 
 /* getModelConfig gets model configuration */
+//nolint:unused
 func (m *Manager) getModelConfig(ctx context.Context, modelName string) (*ModelConfig, error) {
 	if m == nil || m.db == nil {
 		/* Fallback if db not available */

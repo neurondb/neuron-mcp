@@ -24,9 +24,9 @@ import (
 /* ClusterDataTool performs clustering on data */
 type ClusterDataTool struct {
 	*BaseTool
-	executor     *QueryExecutor
-	logger       *logging.Logger
-	configHelper *database.ConfigHelper
+	executor      *QueryExecutor
+	logger        *logging.Logger
+	_configHelper *database.ConfigHelper
 }
 
 /* NewClusterDataTool creates a new cluster data tool */
@@ -183,11 +183,11 @@ func (t *ClusterDataTool) Execute(ctx context.Context, params map[string]interfa
 	default:
 		validAlgorithms := []string{"kmeans", "gmm", "dbscan", "hierarchical", "minibatch_kmeans"}
 		return Error(fmt.Sprintf("Unsupported clustering algorithm '%s' for neurondb_cluster_data tool: table='%s', vector_column='%s'. Valid algorithms are: %v", algorithm, table, vectorColumn, validAlgorithms), "VALIDATION_ERROR", map[string]interface{}{
-			"algorithm":       algorithm,
-			"table":           table,
-			"vector_column":   vectorColumn,
+			"algorithm":        algorithm,
+			"table":            table,
+			"vector_column":    vectorColumn,
 			"valid_algorithms": validAlgorithms,
-			"params":          params,
+			"params":           params,
 		}), nil
 	}
 
@@ -195,11 +195,11 @@ func (t *ClusterDataTool) Execute(ctx context.Context, params map[string]interfa
 	if err != nil {
 		t.logger.Error("Clustering failed", err, params)
 		return Error(fmt.Sprintf("Clustering execution failed: algorithm='%s', table='%s', vector_column='%s', query_params_count=%d, error=%v", algorithm, table, vectorColumn, len(queryParams), err), "CLUSTERING_ERROR", map[string]interface{}{
-			"algorithm":        algorithm,
-			"table":            table,
-			"vector_column":    vectorColumn,
+			"algorithm":          algorithm,
+			"table":              table,
+			"vector_column":      vectorColumn,
 			"query_params_count": len(queryParams),
-			"error":            err.Error(),
+			"error":              err.Error(),
 		}), nil
 	}
 
@@ -288,17 +288,17 @@ func (t *DetectOutliersTool) Execute(ctx context.Context, params map[string]inte
 		}), nil
 	}
 
-  /* Use NeuronDB's outlier detection function: detect_outliers_zscore(table, column, threshold, method) */
+	/* Use NeuronDB's outlier detection function: detect_outliers_zscore(table, column, threshold, method) */
 	query := `SELECT detect_outliers_zscore($1, $2, $3, 'zscore') AS outliers`
 	result, err := t.executor.ExecuteQueryOne(ctx, query, []interface{}{table, vectorColumn, threshold})
 	if err != nil {
 		t.logger.Error("Outlier detection failed", err, params)
 		return Error(fmt.Sprintf("Outlier detection execution failed: table='%s', vector_column='%s', threshold=%g, method='zscore', error=%v", table, vectorColumn, threshold, err), "OUTLIER_ERROR", map[string]interface{}{
-			"table":          table,
+			"table":         table,
 			"vector_column": vectorColumn,
 			"threshold":     threshold,
-			"method":         "zscore",
-			"error":          err.Error(),
+			"method":        "zscore",
+			"error":         err.Error(),
 		}), nil
 	}
 
@@ -383,25 +383,25 @@ func (t *ReduceDimensionalityTool) Execute(ctx context.Context, params map[strin
 			"parameter":     "n_components",
 			"table":         table,
 			"vector_column": vectorColumn,
-			"n_components": nComponents,
+			"n_components":  nComponents,
 			"params":        params,
 		}), nil
 	}
 
-  /* PCA in NeuronDB is typically done through training a model */
-  /* Use neurondb.train with 'pca' algorithm or use dimensionality reduction functions */
-  /* For now, we'll use a direct approach - PCA might need to be implemented differently */
-  /* Check if there's a compute_pca function or use train with pca algorithm */
+	/* PCA in NeuronDB is typically done through training a model */
+	/* Use neurondb.train with 'pca' algorithm or use dimensionality reduction functions */
+	/* For now, we'll use a direct approach - PCA might need to be implemented differently */
+	/* Check if there's a compute_pca function or use train with pca algorithm */
 	query := `SELECT neurondb.train('default', 'pca', $1, NULL, ARRAY[$2], jsonb_build_object('n_components', $3::integer)) AS pca_model_id`
 	result, err := t.executor.ExecuteQueryOne(ctx, query, []interface{}{table, vectorColumn, nComponents})
 	if err != nil {
 		t.logger.Error("Dimensionality reduction failed", err, params)
 		return Error(fmt.Sprintf("Dimensionality reduction execution failed: table='%s', vector_column='%s', n_components=%d, method='pca', error=%v", table, vectorColumn, nComponents, err), "PCA_ERROR", map[string]interface{}{
-			"table":          table,
+			"table":         table,
 			"vector_column": vectorColumn,
 			"n_components":  nComponents,
-			"method":         "pca",
-			"error":          err.Error(),
+			"method":        "pca",
+			"error":         err.Error(),
 		}), nil
 	}
 
@@ -410,4 +410,3 @@ func (t *ReduceDimensionalityTool) Execute(ctx context.Context, params map[strin
 		"method":       "pca",
 	}), nil
 }
-

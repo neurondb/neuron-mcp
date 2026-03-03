@@ -78,6 +78,3 @@ func (tm *TimeoutManager) GetDefaultTimeout() time.Duration {
 	}
 	return tm.defaultTimeout
 }
-
-
-

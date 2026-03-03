@@ -37,13 +37,13 @@ func min(a, b int) int {
 
 /* setupToolHandlers sets up tool-related MCP handlers */
 func (s *Server) setupToolHandlers() {
-  /* List tools handler */
+	/* List tools handler */
 	s.mcpServer.SetHandler("tools/list", s.handleListTools)
 
-  /* Call tool handler */
+	/* Call tool handler */
 	s.mcpServer.SetHandler("tools/call", s.handleCallTool)
 
-  /* Search tools handler */
+	/* Search tools handler */
 	s.mcpServer.SetHandler("tools/search", s.handleSearchTools)
 }
 
@@ -61,24 +61,24 @@ func (s *Server) handleListTools(ctx context.Context, params json.RawMessage) (i
 
 	startTime := time.Now()
 	method := "tools/list"
-	
+
 	if s.metricsCollector != nil {
 		s.metricsCollector.IncrementRequest(method)
 		defer func() {
 			s.metricsCollector.AddDuration(time.Since(startTime))
 		}()
 	}
-	
+
 	definitions := s.toolRegistry.GetAllDefinitions()
 	filtered := s.filterToolsByFeatures(definitions)
-	
+
 	/* Log tool count for debugging */
 	s.logger.Info("Tools list requested", map[string]interface{}{
-		"total_tools":     len(definitions),
-		"filtered_tools":  len(filtered),
-		"filtered_out":    len(definitions) - len(filtered),
+		"total_tools":    len(definitions),
+		"filtered_tools": len(filtered),
+		"filtered_out":   len(definitions) - len(filtered),
 	})
-	
+
 	/* Validate and filter out any tools with invalid names or schemas */
 	validTools := make([]mcp.ToolDefinition, 0, len(filtered))
 	for _, def := range filtered {
@@ -89,16 +89,16 @@ func (s *Server) handleListTools(ctx context.Context, params json.RawMessage) (i
 			})
 			continue
 		}
-		
+
 		/* Validate tool name format (must be valid identifier) */
 		if len(def.Name) > 100 {
 			s.logger.Warn("Skipping tool with name too long", map[string]interface{}{
-				"tool_name": def.Name,
+				"tool_name":   def.Name,
 				"name_length": len(def.Name),
 			})
 			continue
 		}
-		
+
 		/* Ensure inputSchema is valid - Claude Desktop requires type: "object" */
 		if def.InputSchema == nil {
 			s.logger.Warn("Tool has nil inputSchema, using default", map[string]interface{}{
@@ -133,7 +133,7 @@ func (s *Server) handleListTools(ctx context.Context, params json.RawMessage) (i
 				def.InputSchema["properties"] = map[string]interface{}{}
 			}
 		}
-		
+
 		mcpTool := mcp.ToolDefinition{
 			Name:            def.Name,
 			Description:     def.Description,
@@ -148,12 +148,12 @@ func (s *Server) handleListTools(ctx context.Context, params json.RawMessage) (i
 		}
 		validTools = append(validTools, mcpTool)
 	}
-	
+
 	s.logger.Info("Tools list response prepared", map[string]interface{}{
-		"valid_tools": len(validTools),
+		"valid_tools":     len(validTools),
 		"total_requested": len(filtered),
 	})
-	
+
 	return mcp.ListToolsResponse{Tools: validTools}, nil
 }
 
@@ -174,12 +174,12 @@ func (s *Server) handleCallTool(ctx context.Context, params json.RawMessage) (in
 
 	startTime := time.Now()
 	method := "tools/call"
-	
+
 	/* Track request */
 	if s.metricsCollector != nil {
 		s.metricsCollector.IncrementRequest(method)
 	}
-	
+
 	var req mcp.CallToolRequest
 	if params == nil || len(params) == 0 {
 		return nil, fmt.Errorf("tools/call request parameters are required: received nil or empty params")
@@ -211,19 +211,19 @@ func (s *Server) handleCallTool(ctx context.Context, params json.RawMessage) (in
 	resp, err := s.middleware.Execute(ctx, mcpReq, func(ctx context.Context, _ *middleware.MCPRequest) (*middleware.MCPResponse, error) {
 		return s.executeTool(ctx, req.Name, req.Arguments, req.DryRun, req.IdempotencyKey, req.RequireConfirm)
 	})
-	
+
 	/* Track metrics */
 	if s.metricsCollector != nil {
 		duration := time.Since(startTime)
 		s.metricsCollector.AddDuration(duration)
-		
+
 		/* Record detailed tool execution metrics */
 		execErr := err
 		if resp != nil && resp.IsError {
 			execErr = fmt.Errorf("tool execution failed")
 		}
 		s.metricsCollector.RecordToolExecution(req.Name, duration, execErr)
-		
+
 		/* Also track method-level errors for backward compatibility */
 		if err != nil || (resp != nil && resp.IsError) {
 			errorType := "UNKNOWN_ERROR"
@@ -235,7 +235,7 @@ func (s *Server) handleCallTool(ctx context.Context, params json.RawMessage) (in
 			s.metricsCollector.IncrementError(method, errorType)
 		}
 	}
-	
+
 	return resp, err
 }
 
@@ -292,7 +292,7 @@ func (s *Server) executeTool(ctx context.Context, toolName string, arguments map
 		}, nil
 	}
 
-  /* Log tool execution start with request ID */
+	/* Log tool execution start with request ID */
 	logger := s.logger.WithContext(ctx)
 	logger.Info("Executing tool", map[string]interface{}{
 		"tool_name":       toolName,
@@ -351,34 +351,34 @@ func (s *Server) executeTool(ctx context.Context, toolName string, arguments map
 			})
 		} else {
 			s.logger.Debug(fmt.Sprintf("Tool execution with idempotency key: %s", idempotencyKey), nil)
-			
+
 			/* Check if we have a cached result for this idempotency key */
 			if cachedResult, found := s.idempotencyCache.Get(idempotencyKey); found {
-			s.logger.Info("Returning cached result for idempotency key", map[string]interface{}{
-				"idempotency_key": idempotencyKey,
-				"tool_name":       toolName,
-			})
-			
-			/* Convert cached mcp.ToolResult to middleware.MCPResponse */
-			content := []middleware.ContentBlock{}
-			if cachedResult.Content != nil {
-				for _, c := range cachedResult.Content {
-					content = append(content, middleware.ContentBlock{
-						Type: c.Type,
-						Text: c.Text,
-					})
-				}
-			}
-			
-			return &middleware.MCPResponse{
-				Content:  content,
-				IsError:  cachedResult.IsError,
-				Metadata: map[string]interface{}{
-					"cached":        true,
+				s.logger.Info("Returning cached result for idempotency key", map[string]interface{}{
 					"idempotency_key": idempotencyKey,
-					"tool":          toolName,
-				},
-			}, nil
+					"tool_name":       toolName,
+				})
+
+				/* Convert cached mcp.ToolResult to middleware.MCPResponse */
+				content := []middleware.ContentBlock{}
+				if cachedResult.Content != nil {
+					for _, c := range cachedResult.Content {
+						content = append(content, middleware.ContentBlock{
+							Type: c.Type,
+							Text: c.Text,
+						})
+					}
+				}
+
+				return &middleware.MCPResponse{
+					Content: content,
+					IsError: cachedResult.IsError,
+					Metadata: map[string]interface{}{
+						"cached":          true,
+						"idempotency_key": idempotencyKey,
+						"tool":            toolName,
+					},
+				}, nil
 			}
 		}
 	}
@@ -398,7 +398,7 @@ func (s *Server) executeTool(ctx context.Context, toolName string, arguments map
 	if formatErr != nil {
 		return response, formatErr
 	}
-	
+
 	/* Cache the result if idempotency key is provided */
 	if idempotencyKey != "" && s.idempotencyCache != nil {
 		/* Convert middleware.MCPResponse to mcp.ToolResult for caching */
@@ -412,7 +412,7 @@ func (s *Server) executeTool(ctx context.Context, toolName string, arguments map
 				Text: c.Text,
 			}
 		}
-		
+
 		s.idempotencyCache.Set(idempotencyKey, cachedResult)
 		s.logger.Debug("Cached result for idempotency key", map[string]interface{}{
 			"idempotency_key": idempotencyKey,
@@ -442,7 +442,7 @@ func (s *Server) formatToolResult(result *tools.ToolResult) (*middleware.MCPResp
 	 * against the tool's OutputSchema would require additional JSON schema validation.
 	 * This is a future enhancement for strict output validation.
 	 */
-	
+
 	resultJSON, _ := json.MarshalIndent(result.Data, "", "  ")
 	return &middleware.MCPResponse{
 		Content: []middleware.ContentBlock{
@@ -456,7 +456,7 @@ func (s *Server) formatToolResult(result *tools.ToolResult) (*middleware.MCPResp
 func (s *Server) formatToolError(result *tools.ToolResult) *middleware.MCPResponse {
 	errorText := "Unknown error"
 	errorMetadata := make(map[string]interface{})
-	
+
 	if result.Error != nil {
 		errorText = result.Error.Message
 		errorMetadata["message"] = result.Error.Message
@@ -467,12 +467,12 @@ func (s *Server) formatToolError(result *tools.ToolResult) *middleware.MCPRespon
 			errorMetadata["details"] = result.Error.Details
 		}
 	}
-	
+
 	return &middleware.MCPResponse{
 		Content: []middleware.ContentBlock{
 			{Type: "text", Text: fmt.Sprintf("Error: %s", errorText)},
 		},
-		IsError: true,
+		IsError:  true,
 		Metadata: errorMetadata,
 	}
 }
@@ -497,7 +497,7 @@ func (s *Server) handleSearchTools(ctx context.Context, params json.RawMessage) 
 	}
 
 	definitions := s.toolRegistry.Search(req.Query, req.Category)
-	
+
 	mcpTools := make([]mcp.ToolDefinition, len(definitions))
 	for i, def := range definitions {
 		mcpTools[i] = mcp.ToolDefinition{
@@ -513,7 +513,6 @@ func (s *Server) handleSearchTools(ctx context.Context, params json.RawMessage) 
 			IdempotentHint:  def.Annotations.Idempotent,
 		}
 	}
-	
+
 	return mcp.ListToolsResponse{Tools: mcpTools}, nil
 }
-

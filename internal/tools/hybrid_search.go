@@ -196,47 +196,47 @@ func (t *HybridSearchTool) Execute(ctx context.Context, params map[string]interf
 
 	if vectorColumn == "" {
 		return Error(fmt.Sprintf("vector_column parameter is required and cannot be empty for neurondb_hybrid_search tool: table='%s', query_text_length=%d", table, len(queryText)), "VALIDATION_ERROR", map[string]interface{}{
-			"parameter":      "vector_column",
-			"table":          table,
+			"parameter":         "vector_column",
+			"table":             table,
 			"query_text_length": len(queryText),
-			"params":         params,
+			"params":            params,
 		}), nil
 	}
 
 	if textColumn == "" {
 		return Error(fmt.Sprintf("text_column parameter is required and cannot be empty for neurondb_hybrid_search tool: table='%s', query_text_length=%d, vector_column='%s'", table, len(queryText), vectorColumn), "VALIDATION_ERROR", map[string]interface{}{
-			"parameter":      "text_column",
-			"table":          table,
+			"parameter":         "text_column",
+			"table":             table,
 			"query_text_length": len(queryText),
-			"vector_column": vectorColumn,
-			"params":         params,
+			"vector_column":     vectorColumn,
+			"params":            params,
 		}), nil
 	}
 
 	if len(queryVector) == 0 {
 		return Error(fmt.Sprintf("query_vector parameter is required and cannot be empty for neurondb_hybrid_search tool: table='%s', query_text_length=%d, vector_column='%s', text_column='%s'", table, len(queryText), vectorColumn, textColumn), "VALIDATION_ERROR", map[string]interface{}{
-			"parameter":      "query_vector",
-			"table":          table,
+			"parameter":         "query_vector",
+			"table":             table,
 			"query_text_length": len(queryText),
-			"vector_column": vectorColumn,
-			"text_column":   textColumn,
-			"params":        params,
+			"vector_column":     vectorColumn,
+			"text_column":       textColumn,
+			"params":            params,
 		}), nil
 	}
 
 	if vectorWeight < 0.0 || vectorWeight > 1.0 {
 		return Error(fmt.Sprintf("vector_weight must be between 0.0 and 1.0 for neurondb_hybrid_search tool: table='%s', received vector_weight=%g", table, vectorWeight), "VALIDATION_ERROR", map[string]interface{}{
-			"parameter":    "vector_weight",
-			"table":        table,
+			"parameter":     "vector_weight",
+			"table":         table,
 			"vector_weight": vectorWeight,
-			"params":       params,
+			"params":        params,
 		}), nil
 	}
 
-  /* Format query vector */
+	/* Format query vector */
 	vectorStr := formatVectorFromInterface(queryVector)
 
-  /* Format filters as JSON string */
+	/* Format filters as JSON string */
 	filtersJSON := "{}"
 	if len(filters) > 0 {
 		filtersBytes, err := json.Marshal(filters)
@@ -245,7 +245,7 @@ func (t *HybridSearchTool) Execute(ctx context.Context, params map[string]interf
 		}
 	}
 
-  /* Use NeuronDB's hybrid_search function: hybrid_search(table, query_vec, query_text, filters, vector_weight, limit, query_type) */
+	/* Use NeuronDB's hybrid_search function: hybrid_search(table, query_vec, query_text, filters, vector_weight, limit, query_type) */
 	query := `SELECT hybrid_search($1, $2::vector, $3, $4::text, $5, $6, $7) AS results`
 	executor := NewQueryExecutor(t.db)
 	result, err := executor.ExecuteQueryOne(ctx, query, []interface{}{
@@ -253,15 +253,15 @@ func (t *HybridSearchTool) Execute(ctx context.Context, params map[string]interf
 	})
 	if err != nil {
 		t.logger.Error("Hybrid search failed", err, params)
-		return Error(fmt.Sprintf("Hybrid search execution failed: table='%s', query_text_length=%d, vector_column='%s', text_column='%s', vector_weight=%g, limit=%d, error=%v", 
+		return Error(fmt.Sprintf("Hybrid search execution failed: table='%s', query_text_length=%d, vector_column='%s', text_column='%s', vector_weight=%g, limit=%d, error=%v",
 			table, len(queryText), vectorColumn, textColumn, vectorWeight, limit, err), "SEARCH_ERROR", map[string]interface{}{
-			"table":          table,
+			"table":             table,
 			"query_text_length": len(queryText),
-			"vector_column":  vectorColumn,
-			"text_column":    textColumn,
-			"vector_weight":  vectorWeight,
-			"limit":          limit,
-			"error":          err.Error(),
+			"vector_column":     vectorColumn,
+			"text_column":       textColumn,
+			"vector_weight":     vectorWeight,
+			"limit":             limit,
+			"error":             err.Error(),
 		}), nil
 	}
 
@@ -272,4 +272,3 @@ func (t *HybridSearchTool) Execute(ctx context.Context, params map[string]interf
 		"limit":         limit,
 	}), nil
 }
-

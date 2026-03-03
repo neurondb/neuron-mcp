@@ -127,6 +127,3 @@ func (sa *StatementAllowlist) GetAllowedPrefixes() []string {
 	}
 	return sa.allowedPrefixes
 }
-
-
-

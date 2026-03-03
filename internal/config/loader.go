@@ -61,32 +61,32 @@ func GetDefaultConfig() *ServerConfig {
 			Database: stringPtr("postgres"),
 			User:     stringPtr("postgres"),
 			Pool: &PoolConfig{
-				Min:                   &min,
-				Max:                   &max,
-				IdleTimeoutMillis:      &idleTimeout,
+				Min:                     &min,
+				Max:                     &max,
+				IdleTimeoutMillis:       &idleTimeout,
 				ConnectionTimeoutMillis: &connTimeout,
 			},
 			SSL: false,
 		},
 		Server: ServerSettings{
-			Name:            stringPtr("neurondb-mcp-server"),
-			Version:         stringPtr("2.0.0"),
-			Timeout:         &timeout,
-			MaxRequestSize:  &maxRequestSize,
-			EnableMetrics:   &enableMetrics,
+			Name:              stringPtr("neurondb-mcp-server"),
+			Version:           stringPtr("2.0.0"),
+			Timeout:           &timeout,
+			MaxRequestSize:    &maxRequestSize,
+			EnableMetrics:     &enableMetrics,
 			EnableHealthCheck: &enableHealthCheck,
 		},
 		Logging: LoggingConfig{
-			Level:              "info",
-			Format:             "text",
-			Output:             &output,
+			Level:                 "info",
+			Format:                "text",
+			Output:                &output,
 			EnableRequestLogging:  &enableReqLog,
 			EnableResponseLogging: &enableRespLog,
 			EnableErrorStack:      &enableErrorStack,
 		},
 		Features: FeaturesConfig{
 			Vector: &VectorFeatureConfig{
-				Enabled:             true,
+				Enabled:               true,
 				DefaultDistanceMetric: stringPtr("l2"),
 				MaxVectorDimension:    &maxVectorDim,
 				DefaultLimit:          &defaultLimit,
@@ -108,17 +108,17 @@ func GetDefaultConfig() *ServerConfig {
 				GPUEnabled:      &gpuEnabled,
 			},
 			Analytics: &AnalyticsFeatureConfig{
-				Enabled:      true,
-				MaxClusters:  &maxClusters,
+				Enabled:       true,
+				MaxClusters:   &maxClusters,
 				MaxIterations: &maxIterations,
 			},
 			RAG: &RAGFeatureConfig{
-				Enabled:        true,
+				Enabled:          true,
 				DefaultChunkSize: &defaultChunkSize,
 				DefaultOverlap:   &defaultOverlap,
 			},
 			Projects: &ProjectsFeatureConfig{
-				Enabled:    true,
+				Enabled:     true,
 				MaxProjects: &maxProjects,
 			},
 		},
@@ -145,11 +145,13 @@ func (l *ConfigLoader) LoadFromFile(configPath string) (*ServerConfig, error) {
 		possiblePaths = append(possiblePaths, envPath)
 	}
 
-	cwd, _ := os.Getwd()
-	possiblePaths = append(possiblePaths,
-		filepath.Join(cwd, "mcp-config.json"),
-		filepath.Join(cwd, "..", "..", "mcp-config.json"),
-	)
+	cwd, err := os.Getwd()
+	if err == nil {
+		possiblePaths = append(possiblePaths,
+			filepath.Join(cwd, "mcp-config.json"),
+			filepath.Join(cwd, "..", "..", "mcp-config.json"),
+		)
+	}
 
 	if home, err := os.UserHomeDir(); err == nil {
 		possiblePaths = append(possiblePaths,
@@ -172,7 +174,7 @@ func (l *ConfigLoader) LoadFromFile(configPath string) (*ServerConfig, error) {
 		}
 	}
 
- 	return nil, nil /* No config file found */
+	return nil, nil /* No config file found */
 }
 
 /* validateConfigPath validates a config path to prevent path traversal attacks */
@@ -180,23 +182,23 @@ func (l *ConfigLoader) validateConfigPath(path string) error {
 	if path == "" {
 		return fmt.Errorf("path cannot be empty")
 	}
-	
+
 	/* Check for path traversal patterns */
 	if strings.Contains(path, "..") {
 		return fmt.Errorf("path contains traversal pattern (..)")
 	}
-	
+
 	/* Get absolute path to check against whitelist */
 	absPath, err := filepath.Abs(path)
 	if err != nil {
 		return fmt.Errorf("failed to resolve absolute path: %w", err)
 	}
-	
+
 	/* Additional check: ensure no traversal in absolute path */
 	if strings.Contains(absPath, "..") {
 		return fmt.Errorf("resolved path contains traversal pattern")
 	}
-	
+
 	return nil
 }
 
@@ -206,11 +208,16 @@ func (l *ConfigLoader) validateResolvedPath(path string) error {
 	if err != nil {
 		return fmt.Errorf("failed to resolve path: %w", err)
 	}
-	
+
 	/* Get allowed base directories */
-	cwd, _ := os.Getwd()
-	home, _ := os.UserHomeDir()
-	
+	var cwd, home string
+	if wd, err := os.Getwd(); err == nil {
+		cwd = wd
+	}
+	if h, err := os.UserHomeDir(); err == nil {
+		home = h
+	}
+
 	allowedDirs := []string{
 		cwd,
 		filepath.Join(cwd, "..", ".."),
@@ -218,7 +225,7 @@ func (l *ConfigLoader) validateResolvedPath(path string) error {
 	if home != "" {
 		allowedDirs = append(allowedDirs, filepath.Join(home, ".neurondb"))
 	}
-	
+
 	/* Check if path is within any allowed directory */
 	for _, allowedDir := range allowedDirs {
 		allowedAbs, err := filepath.Abs(allowedDir)
@@ -231,7 +238,7 @@ func (l *ConfigLoader) validateResolvedPath(path string) error {
 			return nil /* Path is within allowed directory */
 		}
 	}
-	
+
 	/* Path not in allowed directories - reject */
 	return fmt.Errorf("path not in allowed directories: %s", absPath)
 }
@@ -240,7 +247,7 @@ func (l *ConfigLoader) validateResolvedPath(path string) error {
 func (l *ConfigLoader) MergeWithEnv(config *ServerConfig) *ServerConfig {
 	merged := *config
 
-  /* Database config from env */
+	/* Database config from env */
 	if connStr := os.Getenv("NEURONDB_CONNECTION_STRING"); connStr != "" {
 		merged.Database.ConnectionString = &connStr
 	}
@@ -262,7 +269,7 @@ func (l *ConfigLoader) MergeWithEnv(config *ServerConfig) *ServerConfig {
 		merged.Database.Password = &pass
 	}
 
-  /* Logging config from env */
+	/* Logging config from env */
 	if level := os.Getenv("NEURONDB_LOG_LEVEL"); level != "" {
 		merged.Logging.Level = level
 	}
@@ -273,7 +280,7 @@ func (l *ConfigLoader) MergeWithEnv(config *ServerConfig) *ServerConfig {
 		merged.Logging.Output = &output
 	}
 
-  /* Feature flags from env */
+	/* Feature flags from env */
 	if gpu := os.Getenv("NEURONDB_ENABLE_GPU"); gpu != "" {
 		gpuEnabled := gpu == "true"
 		if merged.Features.ML != nil {
@@ -281,7 +288,7 @@ func (l *ConfigLoader) MergeWithEnv(config *ServerConfig) *ServerConfig {
 		}
 	}
 
-  /* HTTP transport config from env */
+	/* HTTP transport config from env */
 	if httpEnabled := os.Getenv("NEURONMCP_HTTP_ENABLED"); httpEnabled != "" {
 		enabled := httpEnabled == "true" || httpEnabled == "1"
 		if merged.Server.HTTPTransport == nil {
@@ -335,4 +342,3 @@ func stringPtr(s string) *string {
 func intPtr(i int) *int {
 	return &i
 }
-

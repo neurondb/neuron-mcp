@@ -48,4 +48,3 @@ type Middleware interface {
 	Order() int
 	Enabled() bool
 }
-

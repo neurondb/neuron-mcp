@@ -28,8 +28,8 @@ import (
 /* PluginMarketplaceTool provides plugin marketplace access */
 type PluginMarketplaceTool struct {
 	*BaseTool
-	db         *database.Database
-	logger     *logging.Logger
+	db          *database.Database
+	logger      *logging.Logger
 	marketplace *Marketplace
 }
 
@@ -140,8 +140,8 @@ func NewPluginMarketplaceTool(db *database.Database, logger *logging.Logger) Too
 			"Plugin marketplace and discovery",
 			inputSchema,
 		),
-		db:         db,
-		logger:     logger,
+		db:          db,
+		logger:      logger,
 		marketplace: &Marketplace{plugins: make(map[string]*PluginMetadata)},
 	}
 }
@@ -177,7 +177,7 @@ func (t *PluginMarketplaceTool) listPlugins(ctx context.Context, params map[stri
 			"name":        p.Name,
 			"version":     p.Version,
 			"description": p.Description,
-			"author":     p.Author,
+			"author":      p.Author,
 			"category":    p.Category,
 			"tags":        p.Tags,
 			"downloads":   p.Downloads,
@@ -410,9 +410,9 @@ func (t *PluginVersioningTool) listVersions(ctx context.Context, pluginName stri
 /* checkUpdates checks for plugin updates */
 func (t *PluginVersioningTool) checkUpdates(ctx context.Context, pluginName string) (*ToolResult, error) {
 	return Success(map[string]interface{}{
-		"plugin_name": pluginName,
-		"current":     "1.0.0",
-		"latest":     "1.0.0",
+		"plugin_name":      pluginName,
+		"current":          "1.0.0",
+		"latest":           "1.0.0",
 		"update_available": false,
 	}, nil), nil
 }
@@ -477,27 +477,27 @@ func (t *PluginSandboxTool) Execute(ctx context.Context, params map[string]inter
 /* enableSandbox enables sandbox for plugin */
 func (t *PluginSandboxTool) enableSandbox(ctx context.Context, pluginName string) (*ToolResult, error) {
 	return Success(map[string]interface{}{
-		"plugin_name": pluginName,
+		"plugin_name":     pluginName,
 		"sandbox_enabled": true,
-		"message":     "Sandbox enabled for plugin",
+		"message":         "Sandbox enabled for plugin",
 	}, nil), nil
 }
 
 /* disableSandbox disables sandbox for plugin */
 func (t *PluginSandboxTool) disableSandbox(ctx context.Context, pluginName string) (*ToolResult, error) {
 	return Success(map[string]interface{}{
-		"plugin_name": pluginName,
+		"plugin_name":     pluginName,
 		"sandbox_enabled": false,
-		"message":     "Sandbox disabled for plugin",
+		"message":         "Sandbox disabled for plugin",
 	}, nil), nil
 }
 
 /* getSandboxStatus gets sandbox status */
 func (t *PluginSandboxTool) getSandboxStatus(ctx context.Context, pluginName string) (*ToolResult, error) {
 	return Success(map[string]interface{}{
-		"plugin_name": pluginName,
+		"plugin_name":     pluginName,
 		"sandbox_enabled": true,
-		"restrictions": []string{"file_system", "network"},
+		"restrictions":    []string{"file_system", "network"},
 	}, nil), nil
 }
 
@@ -551,8 +551,8 @@ func (t *PluginTestingTool) Execute(ctx context.Context, params map[string]inter
 	testResults := []map[string]interface{}{}
 	for i := range testSuiteRaw {
 		testResults = append(testResults, map[string]interface{}{
-			"test_id":   i + 1,
-			"status":    "passed",
+			"test_id":     i + 1,
+			"status":      "passed",
 			"duration_ms": 10,
 		})
 	}
@@ -561,9 +561,9 @@ func (t *PluginTestingTool) Execute(ctx context.Context, params map[string]inter
 		"plugin_name":  pluginName,
 		"test_results": testResults,
 		"summary": map[string]interface{}{
-			"total":   len(testResults),
-			"passed":  len(testResults),
-			"failed":  0,
+			"total":  len(testResults),
+			"passed": len(testResults),
+			"failed": 0,
 		},
 	}, nil), nil
 }
@@ -697,4 +697,3 @@ func (p *%sPlugin) Shutdown(ctx context.Context) error {
 		"code":        code,
 	}, nil), nil
 }
-

@@ -76,8 +76,8 @@ func ModelInfoOutputSchema() map[string]interface{} {
 /* ListOutputSchema returns a generic list output schema */
 func ListOutputSchema(itemSchema map[string]interface{}) map[string]interface{} {
 	return map[string]interface{}{
-		"type": "array",
-		"items": itemSchema,
+		"type":        "array",
+		"items":       itemSchema,
 		"description": "List of items",
 	}
 }
@@ -136,7 +136,7 @@ func QueryResultOutputSchema() map[string]interface{} {
 				"properties": map[string]interface{}{
 					"rows": map[string]interface{}{
 						"type":        "array",
-						"items":      map[string]interface{}{"type": "object"},
+						"items":       map[string]interface{}{"type": "object"},
 						"description": "Result rows as array of objects",
 					},
 					"row_count": map[string]interface{}{
@@ -145,7 +145,7 @@ func QueryResultOutputSchema() map[string]interface{} {
 					},
 					"columns": map[string]interface{}{
 						"type":        "array",
-						"items":      map[string]interface{}{"type": "string"},
+						"items":       map[string]interface{}{"type": "string"},
 						"description": "Column names",
 					},
 				},
@@ -189,15 +189,3 @@ func TableListOutputSchema() map[string]interface{} {
 		"required": []interface{}{"success", "data"},
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-

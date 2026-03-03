@@ -137,7 +137,7 @@ func (t *PostgreSQLGrantTool) Execute(ctx context.Context, params map[string]int
 			objectType = "TABLE"
 		}
 		parts = append(parts, fmt.Sprintf("ON ALL %sS IN SCHEMA", objectType))
-		
+
 		schema, _ := params["schema"].(string)
 		if schema == "" {
 			schema = "public"
@@ -146,7 +146,7 @@ func (t *PostgreSQLGrantTool) Execute(ctx context.Context, params map[string]int
 	} else if objectType != "" {
 		/* Specific object */
 		parts = append(parts, fmt.Sprintf("ON %s", objectType))
-		
+
 		objectName, ok := params["object_name"].(string)
 		if !ok || objectName == "" {
 			return Error("object_name parameter is required when not using grant_on_all", "INVALID_PARAMETER", nil), nil
@@ -187,7 +187,7 @@ func (t *PostgreSQLGrantTool) Execute(ctx context.Context, params map[string]int
 		if !ok || objectName == "" {
 			return Error("object_name parameter is required", "INVALID_PARAMETER", nil), nil
 		}
-		
+
 		schema, _ := params["schema"].(string)
 		if schema == "" {
 			schema = "public"
@@ -215,13 +215,13 @@ func (t *PostgreSQLGrantTool) Execute(ctx context.Context, params map[string]int
 
 	t.logger.Info("Privileges granted", map[string]interface{}{
 		"privileges": privilegesStr,
-		"grantees":  granteesStr,
+		"grantees":   granteesStr,
 	})
 
 	return Success(map[string]interface{}{
 		"privileges": privilegesStr,
-		"grantees":  granteesStr,
-		"query":     grantQuery,
+		"grantees":   granteesStr,
+		"query":      grantQuery,
 	}, map[string]interface{}{
 		"tool": "postgresql_grant",
 	}), nil
@@ -345,7 +345,7 @@ func (t *PostgreSQLRevokeTool) Execute(ctx context.Context, params map[string]in
 			objectType = "TABLE"
 		}
 		parts = append(parts, fmt.Sprintf("ON ALL %sS IN SCHEMA", objectType))
-		
+
 		schema, _ := params["schema"].(string)
 		if schema == "" {
 			schema = "public"
@@ -354,7 +354,7 @@ func (t *PostgreSQLRevokeTool) Execute(ctx context.Context, params map[string]in
 	} else if objectType != "" {
 		/* Specific object */
 		parts = append(parts, fmt.Sprintf("ON %s", objectType))
-		
+
 		objectName, ok := params["object_name"].(string)
 		if !ok || objectName == "" {
 			return Error("object_name parameter is required when not using revoke_on_all", "INVALID_PARAMETER", nil), nil
@@ -395,7 +395,7 @@ func (t *PostgreSQLRevokeTool) Execute(ctx context.Context, params map[string]in
 		if !ok || objectName == "" {
 			return Error("object_name parameter is required", "INVALID_PARAMETER", nil), nil
 		}
-		
+
 		schema, _ := params["schema"].(string)
 		if schema == "" {
 			schema = "public"
@@ -425,13 +425,13 @@ func (t *PostgreSQLRevokeTool) Execute(ctx context.Context, params map[string]in
 
 	t.logger.Info("Privileges revoked", map[string]interface{}{
 		"privileges": privilegesStr,
-		"revokees":  revokeesStr,
+		"revokees":   revokeesStr,
 	})
 
 	return Success(map[string]interface{}{
 		"privileges": privilegesStr,
-		"revokees":  revokeesStr,
-		"query":     revokeQuery,
+		"revokees":   revokeesStr,
+		"query":      revokeQuery,
 	}, map[string]interface{}{
 		"tool": "postgresql_revoke",
 	}), nil
@@ -637,7 +637,3 @@ func (t *PostgreSQLRevokeRoleTool) Execute(ctx context.Context, params map[strin
 		"tool": "postgresql_revoke_role",
 	}), nil
 }
-
-
-
-

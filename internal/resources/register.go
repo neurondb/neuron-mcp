@@ -43,5 +43,3 @@ func RegisterAllResources(manager *Manager, db *database.Database) {
 	/* Register embedding configs resource */
 	manager.Register(NewEmbeddingConfigsResource(db))
 }
-
-

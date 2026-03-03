@@ -128,23 +128,14 @@ func (c *MemoryCache) cleanup() {
 /* GenerateCacheKey generates a cache key from parameters */
 func GenerateCacheKey(prefix string, params map[string]interface{}) string {
 	/* Serialize params to JSON */
-	paramsJSON, _ := json.Marshal(params)
-	
+	paramsJSON, err := json.Marshal(params)
+	if err != nil {
+		return prefix
+	}
+
 	/* Create hash */
 	hash := sha256.Sum256(append([]byte(prefix), paramsJSON...))
 	hashStr := hex.EncodeToString(hash[:])
-	
+
 	return fmt.Sprintf("%s:%s", prefix, hashStr[:16])
 }
-
-
-
-
-
-
-
-
-
-
-
-

@@ -27,9 +27,9 @@ import (
 
 /* SafetyMiddleware enforces safety modes */
 type SafetyMiddleware struct {
-	safetyManager    *safety.SafetyManager
-	logger           *logging.Logger
-	toolSafetyCheck  ToolSafetyCheckFunc /* optional: returns readOnly, destructive for a tool name */
+	safetyManager   *safety.SafetyManager
+	logger          *logging.Logger
+	toolSafetyCheck ToolSafetyCheckFunc /* optional: returns readOnly, destructive for a tool name */
 }
 
 /* ToolSafetyCheckFunc returns whether a tool is read-only and/or destructive (for safety enforcement) */
@@ -38,8 +38,8 @@ type ToolSafetyCheckFunc func(toolName string) (readOnly, destructive bool)
 /* NewSafetyMiddleware creates a new safety middleware */
 func NewSafetyMiddleware(safetyManager *safety.SafetyManager, logger *logging.Logger) *SafetyMiddleware {
 	return &SafetyMiddleware{
-		safetyManager: safetyManager,
-		logger:        logger,
+		safetyManager:   safetyManager,
+		logger:          logger,
 		toolSafetyCheck: nil,
 	}
 }
@@ -177,24 +177,24 @@ func (m *SafetyMiddleware) Execute(ctx context.Context, req *middleware.MCPReque
 /* isWriteTool checks if a tool performs write operations */
 func isWriteTool(toolName string) bool {
 	writeTools := map[string]bool{
-		"postgresql_insert":           true,
-		"postgresql_update":           true,
-		"postgresql_delete":           true,
-		"postgresql_create_table":     true,
+		"postgresql_insert":          true,
+		"postgresql_update":          true,
+		"postgresql_delete":          true,
+		"postgresql_create_table":    true,
 		"postgresql_alter_table":     true,
 		"postgresql_drop_table":      true,
-		"postgresql_create_index":     true,
+		"postgresql_create_index":    true,
 		"postgresql_drop_index":      true,
-		"postgresql_create_database":  true,
+		"postgresql_create_database": true,
 		"postgresql_drop_database":   true,
-		"postgresql_create_schema":    true,
+		"postgresql_create_schema":   true,
 		"postgresql_drop_schema":     true,
 		"train_model":                true,
-		"delete_model":                true,
-		"process_document":            true,
+		"delete_model":               true,
+		"process_document":           true,
 		"create_hnsw_index":          true,
-		"create_ivf_index":            true,
-		"drop_index":                  true,
+		"create_ivf_index":           true,
+		"drop_index":                 true,
 	}
 	return writeTools[toolName]
 }
@@ -210,6 +210,3 @@ func getQueryPreview(query string) string {
 	}
 	return query[:previewLen]
 }
-
-
-

@@ -51,10 +51,10 @@ func (t *ClientTransport) Start() error {
 		return fmt.Errorf("transport already started")
 	}
 
-  /* Build command */
+	/* Build command */
 	cmd := exec.Command(t.command, t.args...)
 
-  /* Set environment */
+	/* Set environment */
 	var env []string
 	for _, e := range os.Environ() {
 		env = append(env, e)
@@ -64,7 +64,7 @@ func (t *ClientTransport) Start() error {
 	}
 	cmd.Env = env
 
-  /* Setup stdio */
+	/* Setup stdio */
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		return fmt.Errorf("failed to create stdin pipe: %w", err)
@@ -83,7 +83,7 @@ func (t *ClientTransport) Start() error {
 	}
 	t.stderr = stderr
 
-  /* Start process */
+	/* Start process */
 	if err := cmd.Start(); err != nil {
 		return fmt.Errorf("failed to start process: %w", err)
 	}
@@ -99,8 +99,8 @@ func (t *ClientTransport) Stop() {
 			t.stdin.Close()
 		}
 		if t.process.Process != nil {
-			t.process.Process.Kill()
-			t.process.Wait()
+			_ = t.process.Process.Kill()
+			_ = t.process.Wait()
 		}
 		t.process = nil
 	}
@@ -112,13 +112,13 @@ func (t *ClientTransport) SendRequest(request *mcp.JSONRPCRequest) (*mcp.JSONRPC
 		return nil, fmt.Errorf("transport not started")
 	}
 
-  /* Serialize request */
+	/* Serialize request */
 	requestJSON, err := json.Marshal(request)
 	if err != nil {
 		return nil, fmt.Errorf("failed to serialize request: %w", err)
 	}
 
-  /* Send Content-Length header + body (standard MCP format) */
+	/* Send Content-Length header + body (standard MCP format) */
 	header := fmt.Sprintf("Content-Length: %d\r\n\r\n", len(requestJSON))
 	if _, err := t.stdin.Write([]byte(header)); err != nil {
 		return nil, fmt.Errorf("failed to write header: %w", err)
@@ -127,7 +127,7 @@ func (t *ClientTransport) SendRequest(request *mcp.JSONRPCRequest) (*mcp.JSONRPC
 		return nil, fmt.Errorf("failed to write request: %w", err)
 	}
 
-  /* Read response */
+	/* Read response */
 	return t.readResponse(request.ID)
 }
 
@@ -137,13 +137,13 @@ func (t *ClientTransport) SendNotification(notification map[string]interface{}) 
 		return fmt.Errorf("transport not started")
 	}
 
-  /* Serialize notification */
+	/* Serialize notification */
 	notificationJSON, err := json.Marshal(notification)
 	if err != nil {
 		return fmt.Errorf("failed to serialize notification: %w", err)
 	}
 
-  /* Send Content-Length header + body */
+	/* Send Content-Length header + body */
 	header := fmt.Sprintf("Content-Length: %d\r\n\r\n", len(notificationJSON))
 	if _, err := t.stdin.Write([]byte(header)); err != nil {
 		return fmt.Errorf("failed to write header: %w", err)
@@ -163,10 +163,10 @@ func (t *ClientTransport) readResponse(expectedID json.RawMessage) (*mcp.JSONRPC
 		return nil, fmt.Errorf("transport not started")
 	}
 
-  /* Match response ID with request ID (skip notifications) */
+	/* Match response ID with request ID (skip notifications) */
 	maxAttempts := 10
 	for attempt := 0; attempt < maxAttempts; attempt++ {
-   /* Read first line to determine format */
+		/* Read first line to determine format */
 		firstLine, err := t.stdout.ReadString('\n')
 		if err != nil {
 			return nil, fmt.Errorf("failed to read response: %w", err)
@@ -176,15 +176,15 @@ func (t *ClientTransport) readResponse(expectedID json.RawMessage) (*mcp.JSONRPC
 
 		var response mcp.JSONRPCResponse
 
-   /* Backward compatibility: Check for direct JSON (non-standard format) */
-   /* Standard MCP protocol always uses Content-Length headers */
+		/* Backward compatibility: Check for direct JSON (non-standard format) */
+		/* Standard MCP protocol always uses Content-Length headers */
 		if strings.HasPrefix(firstLine, "{") {
 			if err := json.Unmarshal([]byte(firstLine), &response); err != nil {
 				return nil, fmt.Errorf("failed to parse JSON response: %w", err)
 			}
 		} else {
-    /* Standard MCP format: Content-Length headers */
-    /* First line is a header, continue reading headers */
+			/* Standard MCP format: Content-Length headers */
+			/* First line is a header, continue reading headers */
 			headerLines := []string{firstLine}
 
 			for {
@@ -199,7 +199,7 @@ func (t *ClientTransport) readResponse(expectedID json.RawMessage) (*mcp.JSONRPC
 				headerLines = append(headerLines, line)
 			}
 
-    /* Parse Content-Length */
+			/* Parse Content-Length */
 			var contentLength int
 			for _, line := range headerLines {
 				lineLower := strings.ToLower(line)
@@ -217,39 +217,38 @@ func (t *ClientTransport) readResponse(expectedID json.RawMessage) (*mcp.JSONRPC
 				return nil, fmt.Errorf("missing or invalid Content-Length header")
 			}
 
-    /* Read body */
+			/* Read body */
 			body := make([]byte, contentLength)
 			if _, err := io.ReadFull(t.stdout, body); err != nil {
 				return nil, fmt.Errorf("failed to read response body: %w", err)
 			}
 
-    /* Parse JSON response */
+			/* Parse JSON response */
 			if err := json.Unmarshal(body, &response); err != nil {
 				return nil, fmt.Errorf("failed to parse JSON response: %w", err)
 			}
 		}
 
-   /* Check if this is a notification (no ID) - skip it and continue */
+		/* Check if this is a notification (no ID) - skip it and continue */
 		if len(response.ID) == 0 {
 			if attempt < maxAttempts-1 {
 				continue
 			}
-    /* If this is the last attempt and it's a notification, return it */
+			/* If this is the last attempt and it's a notification, return it */
 			return &response, nil
 		}
 
-   /* Check if ID matches */
+		/* Check if ID matches */
 		if string(response.ID) == string(expectedID) {
 			return &response, nil
 		}
 
-   /* ID doesn't match - try reading more responses */
+		/* ID doesn't match - try reading more responses */
 		if attempt < maxAttempts-1 {
 			continue
 		}
 	}
 
-  /* Should not reach here, but return error if we do */
+	/* Should not reach here, but return error if we do */
 	return nil, fmt.Errorf("failed to find matching response after %d attempts", maxAttempts)
 }
-

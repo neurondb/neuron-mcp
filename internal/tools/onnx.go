@@ -115,7 +115,7 @@ func (t *ONNXTool) Execute(ctx context.Context, params map[string]interface{}) (
 		t.logger.Error("ONNX operation failed", err, params)
 		return Error(fmt.Sprintf("ONNX operation failed: operation='%s', error=%v", operation, err), "EXECUTION_ERROR", map[string]interface{}{
 			"operation": operation,
-			"error":    err.Error(),
+			"error":     err.Error(),
 		}), nil
 	}
 
@@ -123,12 +123,3 @@ func (t *ONNXTool) Execute(ctx context.Context, params map[string]interface{}) (
 		"operation": operation,
 	}), nil
 }
-
-
-
-
-
-
-
-
-

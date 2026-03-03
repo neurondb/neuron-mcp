@@ -82,21 +82,21 @@ func (t *TuneHNSWIndexTool) Execute(ctx context.Context, params map[string]inter
 		}), nil
 	}
 
-  /* Use NeuronDB's index_tune_hnsw function: index_tune_hnsw(table, vector_col) */
+	/* Use NeuronDB's index_tune_hnsw function: index_tune_hnsw(table, vector_col) */
 	query := `SELECT index_tune_hnsw($1, $2) AS tuning_result`
 	executor := NewQueryExecutor(t.db)
 	result, err := executor.ExecuteQueryOne(ctx, query, []interface{}{table, vectorColumn})
 	if err != nil {
 		t.logger.Error("HNSW index tuning failed", err, params)
 		return Error(fmt.Sprintf("HNSW index tuning execution failed: table='%s', vector_column='%s', error=%v", table, vectorColumn, err), "TUNING_ERROR", map[string]interface{}{
-			"table":          table,
+			"table":         table,
 			"vector_column": vectorColumn,
-			"error":          err.Error(),
+			"error":         err.Error(),
 		}), nil
 	}
 
 	return Success(result, map[string]interface{}{
-		"table":          table,
+		"table":         table,
 		"vector_column": vectorColumn,
 		"index_type":    "hnsw",
 	}), nil
@@ -163,32 +163,22 @@ func (t *TuneIVFIndexTool) Execute(ctx context.Context, params map[string]interf
 		}), nil
 	}
 
-  /* Use NeuronDB's index_tune_ivf function: index_tune_ivf(table, vector_col) */
+	/* Use NeuronDB's index_tune_ivf function: index_tune_ivf(table, vector_col) */
 	query := `SELECT index_tune_ivf($1, $2) AS tuning_result`
 	executor := NewQueryExecutor(t.db)
 	result, err := executor.ExecuteQueryOne(ctx, query, []interface{}{table, vectorColumn})
 	if err != nil {
 		t.logger.Error("IVF index tuning failed", err, params)
 		return Error(fmt.Sprintf("IVF index tuning execution failed: table='%s', vector_column='%s', error=%v", table, vectorColumn, err), "TUNING_ERROR", map[string]interface{}{
-			"table":          table,
+			"table":         table,
 			"vector_column": vectorColumn,
-			"error":          err.Error(),
+			"error":         err.Error(),
 		}), nil
 	}
 
 	return Success(result, map[string]interface{}{
-		"table":          table,
+		"table":         table,
 		"vector_column": vectorColumn,
 		"index_type":    "ivf",
 	}), nil
 }
-
-
-
-
-
-
-
-
-
-

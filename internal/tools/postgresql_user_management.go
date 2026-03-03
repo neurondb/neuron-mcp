@@ -262,7 +262,7 @@ func (t *PostgreSQLCreateUserTool) Execute(ctx context.Context, params map[strin
 
 	return Success(map[string]interface{}{
 		"username": username,
-		"query":     createQuery,
+		"query":    createQuery,
 	}, map[string]interface{}{
 		"tool": "postgresql_create_user",
 	}), nil
@@ -462,7 +462,7 @@ func (t *PostgreSQLAlterUserTool) Execute(ctx context.Context, params map[string
 	for _, alt := range alterations {
 		query := parts[0] + " " + parts[1] + " " + alt
 		queries = append(queries, query)
-		
+
 		err := t.executor.Exec(ctx, query, nil)
 		if err != nil {
 			return Error(
@@ -474,13 +474,13 @@ func (t *PostgreSQLAlterUserTool) Execute(ctx context.Context, params map[string
 	}
 
 	t.logger.Info("User altered", map[string]interface{}{
-		"username":   username,
+		"username":    username,
 		"alterations": len(alterations),
 	})
 
 	return Success(map[string]interface{}{
 		"username": username,
-		"queries":   queries,
+		"queries":  queries,
 	}, map[string]interface{}{
 		"tool": "postgresql_alter_user",
 	}), nil
@@ -529,11 +529,11 @@ func (t *PostgreSQLDropUserTool) Execute(ctx context.Context, params map[string]
 
 	/* Build DROP USER statement */
 	parts := []string{"DROP USER"}
-	
+
 	if ifExists, ok := params["if_exists"].(bool); ok && ifExists {
 		parts = append(parts, "IF EXISTS")
 	}
-	
+
 	parts = append(parts, quoteIdentifier(username))
 
 	dropQuery := strings.Join(parts, " ")
@@ -756,9 +756,9 @@ func (t *PostgreSQLCreateRoleTool) Execute(ctx context.Context, params map[strin
 				grantQuery := fmt.Sprintf("GRANT %s TO %s", quoteIdentifier(roleNameStr), quoteIdentifier(roleName))
 				if err := t.executor.Exec(ctx, grantQuery, nil); err != nil {
 					t.logger.Warn("Failed to grant role membership", map[string]interface{}{
-						"role":  roleName,
+						"role":    roleName,
 						"in_role": roleNameStr,
-						"error": err.Error(),
+						"error":   err.Error(),
 					})
 				}
 			}
@@ -772,9 +772,9 @@ func (t *PostgreSQLCreateRoleTool) Execute(ctx context.Context, params map[strin
 				grantQuery := fmt.Sprintf("GRANT %s TO %s", quoteIdentifier(roleStr), quoteIdentifier(roleName))
 				if err := t.executor.Exec(ctx, grantQuery, nil); err != nil {
 					t.logger.Warn("Failed to grant role", map[string]interface{}{
-						"role":  roleName,
+						"role":         roleName,
 						"granted_role": roleStr,
-						"error": err.Error(),
+						"error":        err.Error(),
 					})
 				}
 			}
@@ -977,7 +977,7 @@ func (t *PostgreSQLAlterRoleTool) Execute(ctx context.Context, params map[string
 	for _, alt := range alterations {
 		query := parts[0] + " " + parts[1] + " " + alt
 		queries = append(queries, query)
-		
+
 		err := t.executor.Exec(ctx, query, nil)
 		if err != nil {
 			return Error(
@@ -989,7 +989,7 @@ func (t *PostgreSQLAlterRoleTool) Execute(ctx context.Context, params map[string
 	}
 
 	t.logger.Info("Role altered", map[string]interface{}{
-		"role_name":  roleName,
+		"role_name":   roleName,
 		"alterations": len(alterations),
 	})
 
@@ -1044,11 +1044,11 @@ func (t *PostgreSQLDropRoleTool) Execute(ctx context.Context, params map[string]
 
 	/* Build DROP ROLE statement */
 	parts := []string{"DROP ROLE"}
-	
+
 	if ifExists, ok := params["if_exists"].(bool); ok && ifExists {
 		parts = append(parts, "IF EXISTS")
 	}
-	
+
 	parts = append(parts, quoteIdentifier(roleName))
 
 	dropQuery := strings.Join(parts, " ")
@@ -1074,7 +1074,3 @@ func (t *PostgreSQLDropRoleTool) Execute(ctx context.Context, params map[string]
 		"tool": "postgresql_drop_role",
 	}), nil
 }
-
-
-
-

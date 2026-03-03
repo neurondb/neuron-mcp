@@ -26,12 +26,12 @@ import (
 
 /* RetryConfig holds retry configuration */
 type RetryConfig struct {
-	Enabled         bool
-	MaxRetries      int
-	InitialBackoff  time.Duration
-	MaxBackoff      time.Duration
+	Enabled           bool
+	MaxRetries        int
+	InitialBackoff    time.Duration
+	MaxBackoff        time.Duration
 	BackoffMultiplier float64
-	CircuitBreaker  *CircuitBreakerConfig
+	CircuitBreaker    *CircuitBreakerConfig
 }
 
 /* CircuitBreakerConfig holds circuit breaker configuration */
@@ -295,4 +295,3 @@ func (m *RetryMiddleware) getCircuitBreaker(key string) *CircuitBreaker {
 
 	return cb
 }
-

@@ -72,11 +72,17 @@ func (t *DBTimingTracker) TrackQueryWithResult(ctx context.Context, query string
 		}
 		if err != nil {
 			attributes["error"] = err.Error()
-			if span != nil { span.SetStatus("error") }
+			if span != nil {
+				span.SetStatus("error")
+			}
 		} else {
-			if span != nil { span.SetStatus("ok") }
+			if span != nil {
+				span.SetStatus("ok")
+			}
 		}
-		if span != nil { span.AddEvent("db.query.result", attributes) }
+		if span != nil {
+			span.AddEvent("db.query.result", attributes)
+		}
 	}
 }
 
@@ -91,6 +97,3 @@ func getQueryPreview(query string) string {
 	}
 	return query[:previewLen]
 }
-
-
-

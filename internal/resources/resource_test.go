@@ -6,10 +6,10 @@ import (
 
 func TestMatchURITemplate(t *testing.T) {
 	tests := []struct {
-		template   string
-		uri        string
-		wantOK     bool
-		wantParam  string
+		template  string
+		uri       string
+		wantOK    bool
+		wantParam string
 	}{
 		{"neurondb://table/{name}/schema", "neurondb://table/my_table/schema", true, "my_table"},
 		{"neurondb://table/{name}/schema", "neurondb://table/public.users/schema", true, "public.users"},

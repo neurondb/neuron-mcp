@@ -37,11 +37,11 @@ func setupBuiltInMiddleware(mgr *middleware.Manager, cfgMgr *config.ConfigManage
 	/* Correlation ID middleware (order: -1, runs first) */
 	mgr.Register(builtin.NewCorrelationMiddleware(logger))
 
-  /* Audit middleware (order: 0, runs early to capture all requests) */
+	/* Audit middleware (order: 0, runs early to capture all requests) */
 	auditLogger := audit.NewLogger(logger)
 	mgr.Register(builtin.NewAuditMiddleware(auditLogger))
 
-  /* Authentication middleware (order: 0) - enabled by default for security */
+	/* Authentication middleware (order: 0) - enabled by default for security */
 	authDisabled := strings.ToLower(strings.TrimSpace(os.Getenv("NEURONMCP_AUTH_DISABLED"))) == "true" || os.Getenv("NEURONMCP_AUTH_DISABLED") == "1"
 	authConfig := &builtin.AuthConfig{
 		Enabled: !authDisabled,
@@ -51,12 +51,12 @@ func setupBuiltInMiddleware(mgr *middleware.Manager, cfgMgr *config.ConfigManage
 	}
 	mgr.Register(builtin.NewAuthMiddleware(authConfig, logger))
 
-  /* Scoped authentication middleware (order: 1, runs after auth) */
+	/* Scoped authentication middleware (order: 1, runs after auth) */
 	/* Use default scope checker - can be replaced with custom implementation */
 	scopeChecker := builtin.NewDefaultScopeChecker()
 	mgr.Register(builtin.NewScopedAuthMiddleware(scopeChecker))
 
-  /* Rate limiting middleware (order: 10) - enabled by default for security */
+	/* Rate limiting middleware (order: 10) - enabled by default for security */
 	/* Can be disabled via NEURONMCP_RATE_LIMIT_DISABLED=true environment variable */
 	rateLimitDisabled := strings.ToLower(strings.TrimSpace(os.Getenv("NEURONMCP_RATE_LIMIT_DISABLED"))) == "true" || os.Getenv("NEURONMCP_RATE_LIMIT_DISABLED") == "1"
 	rateLimitConfig := &builtin.RateLimitConfig{
@@ -71,10 +71,10 @@ func setupBuiltInMiddleware(mgr *middleware.Manager, cfgMgr *config.ConfigManage
 	}
 	mgr.Register(builtin.NewRateLimitMiddleware(rateLimitConfig, logger))
 
-  /* Validation middleware (order: 1) */
+	/* Validation middleware (order: 1) */
 	mgr.Register(builtin.NewValidationMiddleware())
 
-  /* Safety middleware (order: 5) - enforce safety modes */
+	/* Safety middleware (order: 5) - enforce safety modes */
 	safetyCfg := cfgMgr.GetSafetyConfig()
 	safetyMode := safety.SafetyMode(safetyCfg.DefaultMode)
 	if safetyMode == "" {
@@ -98,10 +98,10 @@ func setupBuiltInMiddleware(mgr *middleware.Manager, cfgMgr *config.ConfigManage
 	}
 	mgr.Register(safetyMw)
 
-  /* Idempotency middleware (order: 18, after validation, before logging) */
+	/* Idempotency middleware (order: 18, after validation, before logging) */
 	mgr.Register(builtin.NewIdempotencyMiddleware(logger, true))
 
-  /* Tracing middleware (order: 2) - before logging */
+	/* Tracing middleware (order: 2) - before logging */
 	observabilityCfg := cfgMgr.GetObservabilityConfig()
 	enableTracing := observabilityCfg.EnableTracing
 	var tracer *observability.Tracer
@@ -112,14 +112,14 @@ func setupBuiltInMiddleware(mgr *middleware.Manager, cfgMgr *config.ConfigManage
 	}
 	mgr.Register(builtin.NewTracingMiddleware(tracer, dbTiming, logger, enableTracing))
 
-  /* Logging middleware (order: 2) */
+	/* Logging middleware (order: 2) */
 	mgr.Register(builtin.NewLoggingMiddleware(
 		logger,
 		loggingCfg.EnableRequestLogging != nil && *loggingCfg.EnableRequestLogging,
 		loggingCfg.EnableResponseLogging != nil && *loggingCfg.EnableResponseLogging,
 	))
 
-  /* Timeout middleware (order: 3) - with per-tool timeout support */
+	/* Timeout middleware (order: 3) - with per-tool timeout support */
 	reliabilityCfg := cfgMgr.GetReliabilityConfig()
 	var timeoutManager *reliability.TimeoutManager
 	if serverCfg.Timeout != nil || reliabilityCfg.DefaultTimeout > 0 {
@@ -134,12 +134,12 @@ func setupBuiltInMiddleware(mgr *middleware.Manager, cfgMgr *config.ConfigManage
 		mgr.Register(builtin.NewTimeoutMiddleware(60*time.Second, logger))
 	}
 
-  /* Retry middleware (order: 4) - with exponential backoff and circuit breaker */
+	/* Retry middleware (order: 4) - with exponential backoff and circuit breaker */
 	retryConfig := &builtin.RetryConfig{
-		Enabled:         false, /* Disabled by default */
-		MaxRetries:      3,
-		InitialBackoff:  100 * time.Millisecond,
-		MaxBackoff:      5 * time.Second,
+		Enabled:           false, /* Disabled by default */
+		MaxRetries:        3,
+		InitialBackoff:    100 * time.Millisecond,
+		MaxBackoff:        5 * time.Second,
 		BackoffMultiplier: 2.0,
 		CircuitBreaker: &builtin.CircuitBreakerConfig{
 			Enabled:          false, /* Disabled by default */
@@ -150,7 +150,7 @@ func setupBuiltInMiddleware(mgr *middleware.Manager, cfgMgr *config.ConfigManage
 	}
 	mgr.Register(builtin.NewRetryMiddleware(retryConfig, logger))
 
-  /* Circuit breaker middleware (order: 6) - for fault tolerance */
+	/* Circuit breaker middleware (order: 6) - for fault tolerance */
 	circuitBreakerConfig := middleware.CircuitBreakerConfig{
 		FailureThreshold:     5,
 		SuccessThreshold:     2,
@@ -159,9 +159,9 @@ func setupBuiltInMiddleware(mgr *middleware.Manager, cfgMgr *config.ConfigManage
 	}
 	mgr.Register(builtin.NewCircuitBreakerAdapter(logger, circuitBreakerConfig))
 
-  /* Resource quota middleware (order: 7) - for resource limits */
+	/* Resource quota middleware (order: 7) - for resource limits */
 	resourceQuotaConfig := middleware.ResourceQuotaConfig{
-		MaxMemoryMB:      1024,  /* 1GB default */
+		MaxMemoryMB:      1024, /* 1GB default */
 		MaxVectorDim:     10000,
 		MaxBatchSize:     10000,
 		MaxConcurrent:    100,
@@ -169,10 +169,9 @@ func setupBuiltInMiddleware(mgr *middleware.Manager, cfgMgr *config.ConfigManage
 	}
 	mgr.Register(builtin.NewResourceQuotaAdapter(logger, resourceQuotaConfig))
 
-  /* Error handling middleware (order: 100) - always last */
+	/* Error handling middleware (order: 100) - always last */
 	mgr.Register(builtin.NewErrorHandlingMiddleware(
 		logger,
 		loggingCfg.EnableErrorStack != nil && *loggingCfg.EnableErrorStack,
 	))
 }
-

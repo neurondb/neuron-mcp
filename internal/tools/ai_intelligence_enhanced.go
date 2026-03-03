@@ -103,7 +103,7 @@ func (t *EnhancedAIModelOrchestrationTool) Execute(ctx context.Context, params m
 
 	t.logger.Debug("Starting model orchestration", map[string]interface{}{
 		"operation_id": operationID,
-		"params":      sanitizeParams(params),
+		"params":       sanitizeParams(params),
 	})
 
 	/* Comprehensive input validation */
@@ -114,15 +114,15 @@ func (t *EnhancedAIModelOrchestrationTool) Execute(ctx context.Context, params m
 			"query_type":   fmt.Sprintf("%T", params["query"]),
 		})
 		return Error("query parameter is required and must be a non-empty string", "INVALID_PARAMS", map[string]interface{}{
-			"field": "query",
+			"field":    "query",
 			"expected": "non-empty string",
 		}), nil
 	}
 
 	if len(query) > 100000 {
 		return Error("query parameter exceeds maximum length of 100,000 characters", "INVALID_PARAMS", map[string]interface{}{
-			"field": "query",
-			"length": len(query),
+			"field":      "query",
+			"length":     len(query),
 			"max_length": 100000,
 		}), nil
 	}
@@ -134,15 +134,15 @@ func (t *EnhancedAIModelOrchestrationTool) Execute(ctx context.Context, params m
 			"models_type":  fmt.Sprintf("%T", params["models"]),
 		})
 		return Error("models parameter is required and must be a non-empty array of strings", "INVALID_PARAMS", map[string]interface{}{
-			"field": "models",
+			"field":    "models",
 			"expected": "non-empty array of strings",
 		}), nil
 	}
 
 	if len(modelsRaw) > 50 {
 		return Error("models array exceeds maximum size of 50", "INVALID_PARAMS", map[string]interface{}{
-			"field": "models",
-			"size": len(modelsRaw),
+			"field":    "models",
+			"size":     len(modelsRaw),
 			"max_size": 50,
 		}), nil
 	}
@@ -154,9 +154,9 @@ func (t *EnhancedAIModelOrchestrationTool) Execute(ctx context.Context, params m
 		modelStr, ok := m.(string)
 		if !ok {
 			return Error(fmt.Sprintf("models[%d] must be a string, got %T", i, m), "INVALID_PARAMS", map[string]interface{}{
-				"field": fmt.Sprintf("models[%d]", i),
+				"field":    fmt.Sprintf("models[%d]", i),
 				"expected": "string",
-				"got": fmt.Sprintf("%T", m),
+				"got":      fmt.Sprintf("%T", m),
 			}), nil
 		}
 
@@ -169,8 +169,8 @@ func (t *EnhancedAIModelOrchestrationTool) Execute(ctx context.Context, params m
 
 		if len(modelStr) > 200 {
 			return Error(fmt.Sprintf("models[%d] exceeds maximum length of 200 characters", i), "INVALID_PARAMS", map[string]interface{}{
-				"field": fmt.Sprintf("models[%d]", i),
-				"length": len(modelStr),
+				"field":      fmt.Sprintf("models[%d]", i),
+				"length":     len(modelStr),
 				"max_length": 200,
 			}), nil
 		}
@@ -206,7 +206,7 @@ func (t *EnhancedAIModelOrchestrationTool) Execute(ctx context.Context, params m
 	} else if !validStrategies[strategy] {
 		return Error(fmt.Sprintf("invalid strategy '%s', must be one of: round_robin, least_cost, best_performance, load_balanced", strategy), "INVALID_PARAMS", map[string]interface{}{
 			"field": "strategy",
-			"got": strategy,
+			"got":   strategy,
 			"valid": []string{"round_robin", "least_cost", "best_performance", "load_balanced"},
 		}), nil
 	}
@@ -218,9 +218,9 @@ func (t *EnhancedAIModelOrchestrationTool) Execute(ctx context.Context, params m
 		if timeoutSeconds < 1 || timeoutSeconds > 300 {
 			return Error("timeout_seconds must be between 1 and 300", "INVALID_PARAMS", map[string]interface{}{
 				"field": "timeout_seconds",
-				"got": timeoutSeconds,
-				"min": 1,
-				"max": 300,
+				"got":   timeoutSeconds,
+				"min":   1,
+				"max":   300,
 			}), nil
 		}
 	}
@@ -232,9 +232,9 @@ func (t *EnhancedAIModelOrchestrationTool) Execute(ctx context.Context, params m
 		if retryCount < 0 || retryCount > 5 {
 			return Error("retry_count must be between 0 and 5", "INVALID_PARAMS", map[string]interface{}{
 				"field": "retry_count",
-				"got": retryCount,
-				"min": 0,
-				"max": 5,
+				"got":   retryCount,
+				"min":   0,
+				"max":   5,
 			}), nil
 		}
 	}
@@ -340,25 +340,25 @@ func (t *EnhancedAIModelOrchestrationTool) Execute(ctx context.Context, params m
 
 	duration := time.Since(startTime)
 	t.logger.Info("Model orchestration completed successfully", map[string]interface{}{
-		"operation_id":    operationID,
-		"selected_model":  selectedModel,
-		"strategy":        strategy,
-		"duration_ms":     duration.Milliseconds(),
+		"operation_id":     operationID,
+		"selected_model":   selectedModel,
+		"strategy":         strategy,
+		"duration_ms":      duration.Milliseconds(),
 		"models_available": len(models),
 	})
 
 	return Success(map[string]interface{}{
-		"operation_id":    operationID,
-		"selected_model":  selectedModel,
-		"selection_reason": reason,
-		"result":          result,
-		"available_models": models,
-		"strategy":        strategy,
+		"operation_id":      operationID,
+		"selected_model":    selectedModel,
+		"selection_reason":  reason,
+		"result":            result,
+		"available_models":  models,
+		"strategy":          strategy,
 		"execution_time_ms": duration.Milliseconds(),
 	}, map[string]interface{}{
 		"model_metrics": modelMetrics,
-		"timestamp":      time.Now().Unix(),
-		"retries_used":   retryCount,
+		"timestamp":     time.Now().Unix(),
+		"retries_used":  retryCount,
 	}), nil
 }
 
@@ -656,7 +656,7 @@ func (t *EnhancedAIModelOrchestrationTool) executeWithModelWithRetry(ctx context
 
 	/* In production, this would integrate with the actual sampling/LLM system */
 	/* For now, simulate execution with proper error handling */
-	
+
 	/* Validate model name to prevent injection */
 	if !isValidModelName(model) {
 		return nil, fmt.Errorf("invalid model name: %s", model)
@@ -676,7 +676,7 @@ func (t *EnhancedAIModelOrchestrationTool) executeWithModelWithRetry(ctx context
 	return map[string]interface{}{
 		"model":         model,
 		"query_preview": truncateStringForLogging(query, 100),
-		"status":         "executed",
+		"status":        "executed",
 		"message":       "Model orchestration executed successfully",
 		"operation_id":  operationID,
 	}, nil
@@ -746,4 +746,3 @@ func truncateStringForLogging(s string, maxLen int) string {
 	}
 	return s[:maxLen] + "..."
 }
-

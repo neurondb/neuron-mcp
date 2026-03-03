@@ -334,9 +334,14 @@ func (t *WorkflowStatusTool) Execute(ctx context.Context, params map[string]inte
 	}
 
 	/* Convert to JSON-serializable format */
-	execJSON, _ := json.Marshal(exec)
+	execJSON, err := json.Marshal(exec)
+	if err != nil {
+		return errorResult(fmt.Sprintf("marshal execution: %v", err), "INTERNAL", nil), nil
+	}
 	var execMap map[string]interface{}
-	json.Unmarshal(execJSON, &execMap)
+	if err := json.Unmarshal(execJSON, &execMap); err != nil {
+		return errorResult(fmt.Sprintf("unmarshal execution: %v", err), "INTERNAL", nil), nil
+	}
 
 	return successResult(execMap), nil
 }

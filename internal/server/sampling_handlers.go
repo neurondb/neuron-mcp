@@ -23,7 +23,7 @@ import (
 
 /* setupSamplingHandlers sets up sampling-related MCP handlers */
 func (s *Server) setupSamplingHandlers() {
-  /* Create message handler */
+	/* Create message handler */
 	s.mcpServer.SetHandler("sampling/createMessage", s.handleCreateMessage)
 }
 
@@ -38,7 +38,7 @@ func (s *Server) handleCreateMessage(ctx context.Context, params json.RawMessage
 	if s.sampling == nil {
 		return nil, fmt.Errorf("sampling manager is not initialized")
 	}
-	
+
 	mcpReq := &middleware.MCPRequest{
 		Method:   "sampling/createMessage",
 		Params:   make(map[string]interface{}),
@@ -64,15 +64,3 @@ func (s *Server) handleCreateMessage(ctx context.Context, params json.RawMessage
 		}, nil
 	})
 }
-
-
-
-
-
-
-
-
-
-
-
-

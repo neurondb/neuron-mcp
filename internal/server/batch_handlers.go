@@ -23,7 +23,7 @@ import (
 
 /* setupBatchHandlers sets up batch MCP handlers */
 func (s *Server) setupBatchHandlers() {
-  /* Batch tool calls handler */
+	/* Batch tool calls handler */
 	s.mcpServer.SetHandler("tools/call_batch", s.handleCallBatch)
 }
 
@@ -38,7 +38,7 @@ func (s *Server) handleCallBatch(ctx context.Context, params json.RawMessage) (i
 	if s.batch == nil {
 		return nil, fmt.Errorf("batch processor is not initialized")
 	}
-	
+
 	mcpReq := &middleware.MCPRequest{
 		Method:   "tools/call_batch",
 		Params:   make(map[string]interface{}),
@@ -64,15 +64,3 @@ func (s *Server) handleCallBatch(ctx context.Context, params json.RawMessage) (i
 		}, nil
 	})
 }
-
-
-
-
-
-
-
-
-
-
-
-

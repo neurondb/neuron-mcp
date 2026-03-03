@@ -152,7 +152,7 @@ func (t *QueryResultCacheTool) invalidateCache(ctx context.Context, params map[s
 
 	return Success(map[string]interface{}{
 		"invalidated": true,
-		"pattern":    pattern,
+		"pattern":     pattern,
 	}, nil), nil
 }
 
@@ -246,10 +246,10 @@ func (t *CacheOptimizerTool) analyzeAccessPatterns(ctx context.Context) (*ToolRe
 
 		if err := rows.Scan(&queryText, &calls, &totalTime, &meanTime); err == nil {
 			patterns = append(patterns, map[string]interface{}{
-				"query":          queryText[:min(100, len(queryText))],
-				"calls":          getInt(calls, 0),
-				"total_time":     getFloat(totalTime, 0),
-				"mean_time":      getFloat(meanTime, 0),
+				"query":           queryText[:min(100, len(queryText))],
+				"calls":           getInt(calls, 0),
+				"total_time":      getFloat(totalTime, 0),
+				"mean_time":       getFloat(meanTime, 0),
 				"cache_candidate": getFloat(meanTime, 0) > 100, /* Cache if mean time > 100ms */
 			})
 		}
@@ -270,9 +270,9 @@ func (t *CacheOptimizerTool) recommendStrategy(ctx context.Context) (*ToolResult
 	for _, pattern := range patterns {
 		if candidate, ok := pattern["cache_candidate"].(bool); ok && candidate {
 			recommendations = append(recommendations, map[string]interface{}{
-				"query":      pattern["query"],
+				"query":       pattern["query"],
 				"ttl_seconds": 300,
-				"priority":   "high",
+				"priority":    "high",
 			})
 		}
 	}
@@ -367,11 +367,11 @@ func (t *PerformanceBenchmarkTool) Execute(ctx context.Context, params map[strin
 	avgTime := total / time.Duration(len(times))
 
 	return Success(map[string]interface{}{
-		"query":      query,
-		"iterations": int(iterations),
-		"min_time_ms": minTime.Milliseconds(),
-		"max_time_ms": maxTime.Milliseconds(),
-		"avg_time_ms": avgTime.Milliseconds(),
+		"query":         query,
+		"iterations":    int(iterations),
+		"min_time_ms":   minTime.Milliseconds(),
+		"max_time_ms":   maxTime.Milliseconds(),
+		"avg_time_ms":   avgTime.Milliseconds(),
 		"total_time_ms": total.Milliseconds(),
 	}, nil), nil
 }
@@ -418,7 +418,7 @@ func (t *AutoScalingAdvisorTool) Execute(ctx context.Context, params map[string]
 	recommendations := t.analyzeScaling(ctx, metric)
 
 	return Success(map[string]interface{}{
-		"metric":        metric,
+		"metric":          metric,
 		"recommendations": recommendations,
 	}, nil), nil
 }
@@ -441,8 +441,8 @@ func (t *AutoScalingAdvisorTool) analyzeScaling(ctx context.Context, metric stri
 					activeCount := getInt(active, 0)
 					if activeCount > 80 {
 						return map[string]interface{}{
-							"action":      "scale_up",
-							"reason":      fmt.Sprintf("High connection count: %d", activeCount),
+							"action":         "scale_up",
+							"reason":         fmt.Sprintf("High connection count: %d", activeCount),
 							"recommendation": "Increase max_connections or add read replicas",
 						}
 					}
@@ -525,11 +525,11 @@ func (t *SlowQueryAnalyzerTool) Execute(ctx context.Context, params map[string]i
 
 		if err := rows.Scan(&queryText, &calls, &totalTime, &meanTime, &maxTime); err == nil {
 			slowQueries = append(slowQueries, map[string]interface{}{
-				"query":          queryText[:min(200, len(queryText))],
-				"calls":          getInt(calls, 0),
-				"total_time_ms":  getFloat(totalTime, 0),
-				"mean_time_ms":   getFloat(meanTime, 0),
-				"max_time_ms":    getFloat(maxTime, 0),
+				"query":         queryText[:min(200, len(queryText))],
+				"calls":         getInt(calls, 0),
+				"total_time_ms": getFloat(totalTime, 0),
+				"mean_time_ms":  getFloat(meanTime, 0),
+				"max_time_ms":   getFloat(maxTime, 0),
 			})
 		}
 	}
@@ -539,7 +539,3 @@ func (t *SlowQueryAnalyzerTool) Execute(ctx context.Context, params map[string]i
 		"slow_queries": slowQueries,
 	}, nil), nil
 }
-
-
-
-

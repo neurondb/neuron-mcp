@@ -135,13 +135,13 @@ func (r *TablesResource) GetContent(ctx context.Context) (interface{}, error) {
 		key := fmt.Sprintf("%s.%s", schema, tableName)
 
 		tablesMap[key] = map[string]interface{}{
-			"schema":       schema,
-			"name":         tableName,
-			"type":         table["table_type"],
-			"comment":      table["table_comment"],
-			"columns":      []interface{}{},
-			"constraints":  []interface{}{},
-			"row_count":    nil, /* Will be filled later */
+			"schema":      schema,
+			"name":        tableName,
+			"type":        table["table_type"],
+			"comment":     table["table_comment"],
+			"columns":     []interface{}{},
+			"constraints": []interface{}{},
+			"row_count":   nil, /* Will be filled later */
 		}
 	}
 
@@ -152,18 +152,18 @@ func (r *TablesResource) GetContent(ctx context.Context) (interface{}, error) {
 		key := fmt.Sprintf("%s.%s", schema, tableName)
 
 		if table, exists := tablesMap[key]; exists {
-			columnsList := table["columns"].([]interface{})
+			columnsList, _ := table["columns"].([]interface{})
 			columnsList = append(columnsList, map[string]interface{}{
-				"name":         col["column_name"],
-				"position":     col["ordinal_position"],
-				"default":      col["column_default"],
-				"nullable":     col["is_nullable"] == "YES",
-				"data_type":    col["data_type"],
-				"udt_name":     col["udt_name"],
-				"max_length":   col["character_maximum_length"],
-				"precision":    col["numeric_precision"],
-				"scale":        col["numeric_scale"],
-				"comment":      col["column_comment"],
+				"name":       col["column_name"],
+				"position":   col["ordinal_position"],
+				"default":    col["column_default"],
+				"nullable":   col["is_nullable"] == "YES",
+				"data_type":  col["data_type"],
+				"udt_name":   col["udt_name"],
+				"max_length": col["character_maximum_length"],
+				"precision":  col["numeric_precision"],
+				"scale":      col["numeric_scale"],
+				"comment":    col["column_comment"],
 			})
 			table["columns"] = columnsList
 		}
@@ -176,7 +176,7 @@ func (r *TablesResource) GetContent(ctx context.Context) (interface{}, error) {
 		key := fmt.Sprintf("%s.%s", schema, tableName)
 
 		if table, exists := tablesMap[key]; exists {
-			constraintsList := table["constraints"].([]interface{})
+			constraintsList, _ := table["constraints"].([]interface{})
 			constraintData := map[string]interface{}{
 				"name": constraint["constraint_name"],
 				"type": constraint["constraint_type"],
@@ -194,9 +194,15 @@ func (r *TablesResource) GetContent(ctx context.Context) (interface{}, error) {
 
 	/* Get row counts for each table (this might be slow for large databases) */
 	for _, table := range tablesMap {
-		schema := table["schema"].(string)
-		tableName := table["name"].(string)
-		
+		schema, ok := table["schema"].(string)
+		if !ok {
+			continue
+		}
+		tableName, ok := table["name"].(string)
+		if !ok {
+			continue
+		}
+
 		/* Use pg_class for faster row count estimation */
 		rowCountQuery := fmt.Sprintf(`
 			SELECT 
@@ -303,4 +309,3 @@ func isValidIdentifier(s string) bool {
 	}
 	return true
 }
-

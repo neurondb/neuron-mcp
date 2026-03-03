@@ -27,12 +27,12 @@ func ValidateContextTimeout(ctx context.Context, minTimeRemaining time.Duration)
 	if !ok {
 		return nil // No deadline set, assume infinite time
 	}
-	
+
 	remaining := time.Until(deadline)
 	if remaining < minTimeRemaining {
 		return fmt.Errorf("context deadline too soon: %v remaining, minimum %v required", remaining, minTimeRemaining)
 	}
-	
+
 	return nil
 }
 
@@ -61,4 +61,3 @@ func CheckContextDeadline(ctx context.Context) error {
 func ValidateContextDeadline(ctx context.Context) error {
 	return CheckContextDeadline(ctx)
 }
-

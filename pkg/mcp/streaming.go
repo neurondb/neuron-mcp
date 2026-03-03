@@ -66,10 +66,10 @@ func (sw *streamWriter) WriteJSON(v interface{}) error {
 /* WriteProgress writes a progress update */
 func (sw *streamWriter) WriteProgress(progressID string, progress float64, message string) error {
 	data := map[string]interface{}{
-		"type":      "progress",
-		"id":        progressID,
-		"progress":  progress,
-		"message":   message,
+		"type":     "progress",
+		"id":       progressID,
+		"progress": progress,
+		"message":  message,
 	}
 	return sw.WriteJSON(data)
 }
@@ -101,7 +101,7 @@ func StreamToolExecution(ctx context.Context, toolName string, handler StreamHan
 	/* Send start event */
 	startData := map[string]interface{}{
 		"type": "tool_start",
-		"tool":  toolName,
+		"tool": toolName,
 	}
 	if err := writer.WriteJSON(startData); err != nil {
 		return err
@@ -110,14 +110,14 @@ func StreamToolExecution(ctx context.Context, toolName string, handler StreamHan
 
 	/* Execute handler */
 	if err := handler(ctx, writer); err != nil {
-		writer.WriteError(err)
+		_ = writer.WriteError(err)
 		return err
 	}
 
 	/* Send complete event */
 	completeData := map[string]interface{}{
 		"type": "tool_complete",
-		"tool":  toolName,
+		"tool": toolName,
 	}
 	if err := writer.WriteJSON(completeData); err != nil {
 		return err
@@ -130,15 +130,3 @@ func StreamToolExecution(ctx context.Context, toolName string, handler StreamHan
 func StreamCompletion(ctx context.Context, handler StreamHandler, writer StreamWriter) error {
 	return handler(ctx, writer)
 }
-
-
-
-
-
-
-
-
-
-
-
-

@@ -80,7 +80,7 @@ func (t *PostgreSQLValidateSQLTool) Execute(ctx context.Context, params map[stri
 
 	/* Execute EXPLAIN to validate syntax */
 	_, err := t.executor.ExecuteQuery(ctx, validateQuery, nil)
-	
+
 	isValid := err == nil
 	errorMsg := ""
 	if err != nil {
@@ -95,15 +95,15 @@ func (t *PostgreSQLValidateSQLTool) Execute(ctx context.Context, params map[stri
 	}
 
 	t.logger.Info("SQL validated", map[string]interface{}{
-		"is_valid": isValid,
+		"is_valid":          isValid,
 		"check_permissions": checkPermissions,
 	})
 
 	return Success(map[string]interface{}{
-		"is_valid":         isValid,
-		"error":            errorMsg,
-		"permission_info":  permissionInfo,
-		"sql_preview":      truncateString(sql, 100),
+		"is_valid":        isValid,
+		"error":           errorMsg,
+		"permission_info": permissionInfo,
+		"sql_preview":     truncateString(sql, 100),
 	}, map[string]interface{}{
 		"tool": "postgresql_validate_sql",
 	}), nil
@@ -705,10 +705,10 @@ func (t *PostgreSQLComplianceCheckTool) Execute(ctx context.Context, params map[
 				sslEnabled = true
 			}
 			checks = append(checks, map[string]interface{}{
-				"standard":      "PCI-DSS",
-				"check":         "SSL/TLS encryption",
-				"status":        map[string]interface{}{"passed": sslEnabled, "required": true},
-				"description":   "PCI-DSS requires encrypted connections",
+				"standard":       "PCI-DSS",
+				"check":          "SSL/TLS encryption",
+				"status":         map[string]interface{}{"passed": sslEnabled, "required": true},
+				"description":    "PCI-DSS requires encrypted connections",
 				"recommendation": "Enable SSL/TLS for all connections",
 			})
 		}
@@ -722,10 +722,10 @@ func (t *PostgreSQLComplianceCheckTool) Execute(ctx context.Context, params map[
 				hasAudit = audit
 			}
 			checks = append(checks, map[string]interface{}{
-				"standard":      "PCI-DSS",
-				"check":         "Audit logging",
-				"status":        map[string]interface{}{"passed": hasAudit, "required": true},
-				"description":   "PCI-DSS requires comprehensive audit logging",
+				"standard":       "PCI-DSS",
+				"check":          "Audit logging",
+				"status":         map[string]interface{}{"passed": hasAudit, "required": true},
+				"description":    "PCI-DSS requires comprehensive audit logging",
 				"recommendation": "Enable pg_stat_statements extension",
 			})
 		}
@@ -742,10 +742,10 @@ func (t *PostgreSQLComplianceCheckTool) Execute(ctx context.Context, params map[
 				superuserCount = int(count)
 			}
 			checks = append(checks, map[string]interface{}{
-				"standard":      "HIPAA",
-				"check":         "Access controls",
-				"status":        map[string]interface{}{"passed": superuserCount <= 1, "required": true},
-				"description":   "HIPAA requires limited superuser access",
+				"standard":       "HIPAA",
+				"check":          "Access controls",
+				"status":         map[string]interface{}{"passed": superuserCount <= 1, "required": true},
+				"description":    "HIPAA requires limited superuser access",
 				"recommendation": "Minimize superuser accounts",
 			})
 		}
@@ -755,10 +755,10 @@ func (t *PostgreSQLComplianceCheckTool) Execute(ctx context.Context, params map[
 	if standard == "all" || standard == "GDPR" {
 		/* Check for data retention policies */
 		checks = append(checks, map[string]interface{}{
-			"standard":      "GDPR",
-			"check":         "Data retention",
-			"status":        map[string]interface{}{"passed": false, "required": true},
-			"description":   "GDPR requires data retention policies",
+			"standard":       "GDPR",
+			"check":          "Data retention",
+			"status":         map[string]interface{}{"passed": false, "required": true},
+			"description":    "GDPR requires data retention policies",
 			"recommendation": "Implement data retention and deletion policies",
 		})
 	}
@@ -776,8 +776,8 @@ func (t *PostgreSQLComplianceCheckTool) Execute(ctx context.Context, params map[
 	}
 
 	return Success(map[string]interface{}{
-		"standard":  standard,
-		"checks":    checks,
+		"standard": standard,
+		"checks":   checks,
 		"summary": map[string]interface{}{
 			"total":  len(checks),
 			"passed": passed,
@@ -893,4 +893,3 @@ func truncateString(s string, maxLen int) string {
 	}
 	return s[:maxLen] + "..."
 }
-

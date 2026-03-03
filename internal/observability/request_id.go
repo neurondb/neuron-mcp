@@ -69,6 +69,3 @@ func (r RequestID) IsValid() bool {
 func (r RequestID) Format() string {
 	return fmt.Sprintf("req_id=%s", r.String())
 }
-
-
-

@@ -224,15 +224,3 @@ func generateUserCode() (string, error) {
 	}
 	return code, nil
 }
-
-
-
-
-
-
-
-
-
-
-
-

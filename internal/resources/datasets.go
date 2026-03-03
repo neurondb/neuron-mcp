@@ -202,4 +202,3 @@ func (r *DatasetResource) GetContent(ctx context.Context) (interface{}, error) {
 		"row_count": rowCount,
 	}, nil
 }
-

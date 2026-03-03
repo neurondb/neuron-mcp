@@ -22,16 +22,16 @@ import (
 
 /* Metrics holds collected metrics */
 type Metrics struct {
-	RequestCount      int64                  `json:"requestCount"`
-	ErrorCount        int64                  `json:"errorCount"`
-	TotalDuration     time.Duration           `json:"totalDuration"`
-	AverageDuration   time.Duration           `json:"averageDuration"`
-	MethodCounts      map[string]int64        `json:"methodCounts"`
-	ToolCounts        map[string]int64        `json:"toolCounts"`
-	ErrorCounts       map[string]int64        `json:"errorCounts"`
-	ToolMetrics       map[string]*ToolMetrics `json:"toolMetrics,omitempty"`
-	CustomMetrics     map[string]interface{}  `json:"customMetrics,omitempty"`
-	PoolStats         *PoolMetrics           `json:"poolStats,omitempty"`
+	RequestCount    int64                   `json:"requestCount"`
+	ErrorCount      int64                   `json:"errorCount"`
+	TotalDuration   time.Duration           `json:"totalDuration"`
+	AverageDuration time.Duration           `json:"averageDuration"`
+	MethodCounts    map[string]int64        `json:"methodCounts"`
+	ToolCounts      map[string]int64        `json:"toolCounts"`
+	ErrorCounts     map[string]int64        `json:"errorCounts"`
+	ToolMetrics     map[string]*ToolMetrics `json:"toolMetrics,omitempty"`
+	CustomMetrics   map[string]interface{}  `json:"customMetrics,omitempty"`
+	PoolStats       *PoolMetrics            `json:"poolStats,omitempty"`
 }
 
 /* ToolMetrics holds per-tool metrics */
@@ -47,11 +47,11 @@ type ToolMetrics struct {
 
 /* PoolMetrics holds connection pool metrics */
 type PoolMetrics struct {
-	TotalConnections   int     `json:"totalConnections"`
-	ActiveConnections  int     `json:"activeConnections"`
-	IdleConnections    int     `json:"idleConnections"`
-	MaxConnections     int     `json:"maxConnections"`
-	Utilization        float64 `json:"utilization"`
+	TotalConnections  int     `json:"totalConnections"`
+	ActiveConnections int     `json:"activeConnections"`
+	IdleConnections   int     `json:"idleConnections"`
+	MaxConnections    int     `json:"maxConnections"`
+	Utilization       float64 `json:"utilization"`
 }
 
 /* Collector collects metrics */
@@ -115,7 +115,7 @@ func (c *Collector) IncrementTool(toolName string) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.toolCounts[toolName]++
-	
+
 	/* Initialize tool metrics if not exists */
 	if c.toolMetrics[toolName] == nil {
 		c.toolMetrics[toolName] = &ToolMetrics{
@@ -130,21 +130,21 @@ func (c *Collector) IncrementTool(toolName string) {
 func (c *Collector) RecordToolExecution(toolName string, duration time.Duration, err error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	/* Initialize tool metrics if not exists */
 	if c.toolMetrics[toolName] == nil {
 		c.toolMetrics[toolName] = &ToolMetrics{
 			MinDuration: time.Hour, /* Initialize with large value */
 		}
 	}
-	
+
 	tm := c.toolMetrics[toolName]
 	tm.Count++
 	tm.TotalDuration += duration
 	if tm.Count > 0 {
 		tm.AverageDuration = tm.TotalDuration / time.Duration(tm.Count)
 	}
-	
+
 	/* Update min/max duration */
 	if duration < tm.MinDuration {
 		tm.MinDuration = duration
@@ -152,14 +152,14 @@ func (c *Collector) RecordToolExecution(toolName string, duration time.Duration,
 	if duration > tm.MaxDuration {
 		tm.MaxDuration = duration
 	}
-	
+
 	tm.LastUsed = time.Now()
-	
+
 	if err != nil {
 		tm.ErrorCount++
 		c.errorCount++
 	}
-	
+
 	/* Also update tool counts for backward compatibility */
 	c.toolCounts[toolName]++
 }
@@ -168,7 +168,7 @@ func (c *Collector) RecordToolExecution(toolName string, duration time.Duration,
 func (c *Collector) IncrementToolError(toolName string) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	if c.toolMetrics[toolName] == nil {
 		c.toolMetrics[toolName] = &ToolMetrics{
 			MinDuration: time.Hour,
@@ -189,7 +189,7 @@ func (c *Collector) SetCustomMetric(name string, value interface{}) {
 func (c *Collector) IncrementCustomMetric(name string, delta int64) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	if val, ok := c.customMetrics[name].(int64); ok {
 		c.customMetrics[name] = val + delta
 	} else {
@@ -215,7 +215,7 @@ func (c *Collector) GetMetrics() Metrics {
 			toolMetricsCopy[k] = &tmCopy
 		}
 	}
-	
+
 	/* Copy custom metrics */
 	customMetricsCopy := make(map[string]interface{})
 	for k, v := range c.customMetrics {
@@ -278,4 +278,3 @@ func copyMap(m map[string]int64) map[string]int64 {
 	}
 	return result
 }
-

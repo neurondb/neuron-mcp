@@ -51,7 +51,7 @@ func (gql *GraphQLEndpoint) HandleRequest(w http.ResponseWriter, r *http.Request
 	result := gql.executeQuery(r.Context(), request.Query, request.Variables)
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(result)
+	_ = json.NewEncoder(w).Encode(result)
 }
 
 /* executeQuery executes GraphQL query */
@@ -90,7 +90,3 @@ func (gql *GraphQLEndpoint) RegisterRoutes(mux *http.ServeMux, path string) {
 		}
 	})
 }
-
-
-
-

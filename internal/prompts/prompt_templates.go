@@ -141,4 +141,3 @@ func isValidVariableName(name string) bool {
 
 	return true
 }
-

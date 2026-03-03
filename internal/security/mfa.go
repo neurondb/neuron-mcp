@@ -27,8 +27,8 @@ import (
 type MFAMethod string
 
 const (
-	MFAMethodTOTP MFAMethod = "totp"
-	MFAMethodSMS  MFAMethod = "sms"
+	MFAMethodTOTP  MFAMethod = "totp"
+	MFAMethodSMS   MFAMethod = "sms"
 	MFAMethodEmail MFAMethod = "email"
 )
 
@@ -182,4 +182,3 @@ func (m *MFAManager) VerifyCode(userID, code string) (bool, error) {
 
 	return false, fmt.Errorf("invalid MFA method")
 }
-

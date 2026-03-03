@@ -86,6 +86,3 @@ func (m *RequestValidationMiddleware) Execute(ctx context.Context, params map[st
 func (m *RequestValidationMiddleware) Name() string {
 	return "request_validation"
 }
-
-
-

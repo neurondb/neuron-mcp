@@ -165,9 +165,3 @@ func (m *APIKeyManager) GetExpiringKeys(days int) []*APIKey {
 
 	return keys
 }
-
-
-
-
-
-

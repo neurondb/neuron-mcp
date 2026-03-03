@@ -91,7 +91,7 @@ func (t *PostgreSQLExecuteQueryTool) Execute(ctx context.Context, params map[str
 
 	/* Safety checks */
 	queryUpper := strings.ToUpper(strings.TrimSpace(query))
-	
+
 	/* Check for dangerous operations */
 	dangerousOps := []string{"DROP DATABASE", "DROP SCHEMA", "TRUNCATE", "DELETE FROM", "UPDATE", "INSERT INTO"}
 	readOnly := false
@@ -111,7 +111,7 @@ func (t *PostgreSQLExecuteQueryTool) Execute(ctx context.Context, params map[str
 					previewLen = len(query)
 				}
 				t.logger.Warn("Potentially dangerous query detected", map[string]interface{}{
-					"operation": op,
+					"operation":     op,
 					"query_preview": query[:previewLen],
 				})
 			}
@@ -214,6 +214,7 @@ func (t *PostgreSQLExecuteQueryTool) Execute(ctx context.Context, params map[str
 }
 
 /* minInt returns the minimum of two integers */
+//nolint:unused
 func minInt(a, b int) int {
 	if a < b {
 		return a
@@ -349,7 +350,7 @@ func (t *PostgreSQLCancelQueryTool) Execute(ctx context.Context, params map[stri
 	})
 
 	return Success(map[string]interface{}{
-		"pid":      int(pid),
+		"pid":       int(pid),
 		"cancelled": result,
 	}, map[string]interface{}{
 		"tool": "postgresql_cancel_query",
@@ -531,7 +532,7 @@ func (t *PostgreSQLQueryOptimizationTool) Execute(ctx context.Context, params ma
 	suggestions := []string{}
 
 	queryUpper := strings.ToUpper(query)
-	
+
 	/* Check for missing indexes on WHERE clauses */
 	if strings.Contains(queryUpper, "WHERE") {
 		suggestions = append(suggestions, "Consider adding indexes on columns used in WHERE clauses")
@@ -553,12 +554,10 @@ func (t *PostgreSQLQueryOptimizationTool) Execute(ctx context.Context, params ma
 	}
 
 	return Success(map[string]interface{}{
-		"query_plan":   planResult,
-		"suggestions":  suggestions,
+		"query_plan":       planResult,
+		"suggestions":      suggestions,
 		"suggestion_count": len(suggestions),
 	}, map[string]interface{}{
 		"tool": "postgresql_query_optimization",
 	}), nil
 }
-
-

@@ -109,4 +109,3 @@ func (m *Marketplace) SearchPlugins(ctx context.Context, query string) []*Plugin
 
 	return results
 }
-

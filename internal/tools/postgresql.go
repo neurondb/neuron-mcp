@@ -35,9 +35,9 @@ func NewPostgreSQLVersionTool(db *database.Database, logger *logging.Logger) *Po
 			"postgresql_version",
 			"Get PostgreSQL server version and build information",
 			map[string]interface{}{
-				"type": "object",
+				"type":       "object",
 				"properties": map[string]interface{}{},
-				"required": []interface{}{},
+				"required":   []interface{}{},
 			},
 		),
 		executor: NewQueryExecutor(db),
@@ -47,7 +47,7 @@ func NewPostgreSQLVersionTool(db *database.Database, logger *logging.Logger) *Po
 
 /* Execute executes the PostgreSQL version query */
 func (t *PostgreSQLVersionTool) Execute(ctx context.Context, params map[string]interface{}) (*ToolResult, error) {
-  /* Query PostgreSQL version information */
+	/* Query PostgreSQL version information */
 	versionQuery := `
 		SELECT 
 			version() AS version,
@@ -147,7 +147,7 @@ func (t *PostgreSQLStatsTool) Execute(ctx context.Context, params map[string]int
 
 	stats := make(map[string]interface{})
 
-  /* Database statistics */
+	/* Database statistics */
 	if includeDBStats {
 		dbStatsQuery := `
 			SELECT 
@@ -167,7 +167,7 @@ func (t *PostgreSQLStatsTool) Execute(ctx context.Context, params map[string]int
 		}
 	}
 
-  /* Connection statistics */
+	/* Connection statistics */
 	if includeConnStats {
 		connStatsQuery := `
 			SELECT 
@@ -188,7 +188,7 @@ func (t *PostgreSQLStatsTool) Execute(ctx context.Context, params map[string]int
 		}
 	}
 
-  /* Table statistics */
+	/* Table statistics */
 	if includeTableStats {
 		tableStatsQuery := `
 			SELECT 
@@ -209,7 +209,7 @@ func (t *PostgreSQLStatsTool) Execute(ctx context.Context, params map[string]int
 		}
 	}
 
-  /* Performance statistics */
+	/* Performance statistics */
 	if includePerfStats {
 		perfStatsQuery := `
 			SELECT 
@@ -233,7 +233,7 @@ func (t *PostgreSQLStatsTool) Execute(ctx context.Context, params map[string]int
 			stats["performance"] = perfStats
 		}
 
-   /* Cache hit ratio */
+		/* Cache hit ratio */
 		cacheQuery := `
 			SELECT 
 				sum(heap_blks_hit)::float / NULLIF(sum(heap_blks_hit) + sum(heap_blks_read), 0) * 100 AS heap_cache_hit_ratio,
@@ -253,7 +253,7 @@ func (t *PostgreSQLStatsTool) Execute(ctx context.Context, params map[string]int
 		}
 	}
 
-  /* Server information */
+	/* Server information */
 	serverInfoQuery := `
 		SELECT 
 			current_setting('server_version') AS server_version,
@@ -377,4 +377,3 @@ func (t *PostgreSQLDatabaseListTool) Execute(ctx context.Context, params map[str
 		"tool": "postgresql_databases",
 	}), nil
 }
-

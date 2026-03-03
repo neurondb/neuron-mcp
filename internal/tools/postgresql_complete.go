@@ -1221,7 +1221,7 @@ func (t *PostgreSQLIndexStatsTool) Execute(ctx context.Context, params map[strin
 
 	return Success(map[string]interface{}{
 		"index_stats": results,
-		"count":        len(results),
+		"count":       len(results),
 	}, map[string]interface{}{
 		"tool": "postgresql_index_stats",
 	}), nil
@@ -1404,7 +1404,7 @@ func (t *PostgreSQLWaitEventsTool) Execute(ctx context.Context, params map[strin
 
 	return Success(map[string]interface{}{
 		"wait_events": results,
-		"count":      len(results),
+		"count":       len(results),
 	}, map[string]interface{}{
 		"tool": "postgresql_wait_events",
 	}), nil
@@ -1864,4 +1864,3 @@ func (t *PostgreSQLVacuumStatsTool) Execute(ctx context.Context, params map[stri
 		"tool": "postgresql_vacuum_stats",
 	}), nil
 }
-

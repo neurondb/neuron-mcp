@@ -37,7 +37,7 @@ func TestParseRequest(t *testing.T) {
 		{
 			name:    "missing method",
 			data:    []byte(`{"jsonrpc":"2.0","id":1}`),
-   			wantErr: false, /* Method validation happens in ValidateRequest */
+			wantErr: false, /* Method validation happens in ValidateRequest */
 		},
 		{
 			name:    "notification (no id)",
@@ -52,7 +52,7 @@ func TestParseRequest(t *testing.T) {
 		{
 			name:    "empty JSON",
 			data:    []byte(`{}`),
-   			wantErr: true, /* Missing jsonrpc version */
+			wantErr: true, /* Missing jsonrpc version */
 		},
 		{
 			name:    "nil data",
@@ -156,7 +156,7 @@ func TestValidateRequest(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-    /* Should not panic */
+			/* Should not panic */
 			func() {
 				defer func() {
 					if r := recover(); r != nil {
@@ -207,7 +207,7 @@ func TestIsNotification(t *testing.T) {
 		{
 			name: "nil request",
 			req:  nil,
-   			want: true, /* nil is treated as notification */
+			want: true, /* nil is treated as notification */
 		},
 		{
 			name: "empty id",
@@ -222,7 +222,7 @@ func TestIsNotification(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-    /* Should not panic */
+			/* Should not panic */
 			func() {
 				defer func() {
 					if r := recover(); r != nil {
@@ -256,7 +256,7 @@ func TestCreateResponse(t *testing.T) {
 		t.Error("CreateResponse() should not have error")
 	}
 
-  /* Test with nil result - should not crash */
+	/* Test with nil result - should not crash */
 	resp = CreateResponse(id, nil)
 	if resp == nil {
 		t.Fatal("CreateResponse() returned nil")
@@ -265,7 +265,7 @@ func TestCreateResponse(t *testing.T) {
 		t.Error("CreateResponse() should allow nil result")
 	}
 
-  /* Test with empty id */
+	/* Test with empty id */
 	emptyID := json.RawMessage("")
 	resp = CreateResponse(emptyID, result)
 	if resp == nil {
@@ -299,7 +299,7 @@ func TestCreateErrorResponse(t *testing.T) {
 		t.Errorf("CreateErrorResponse() error message = %v, want %v", resp.Error.Message, message)
 	}
 
-  /* Test with empty message - should not crash */
+	/* Test with empty message - should not crash */
 	resp = CreateErrorResponse(id, code, "", nil)
 	if resp == nil {
 		t.Fatal("CreateErrorResponse() returned nil")
@@ -308,7 +308,7 @@ func TestCreateErrorResponse(t *testing.T) {
 		t.Fatal("CreateErrorResponse() should have error even with empty message")
 	}
 
-  /* Test with data */
+	/* Test with data */
 	data := map[string]interface{}{"field": "value"}
 	resp = CreateErrorResponse(id, code, message, data)
 	if resp == nil {
@@ -333,17 +333,15 @@ func TestSerializeResponse(t *testing.T) {
 		t.Fatal("SerializeResponse() returned empty data")
 	}
 
-  /* Should be valid JSON */
+	/* Should be valid JSON */
 	var parsed map[string]interface{}
 	if err := json.Unmarshal(data, &parsed); err != nil {
 		t.Fatalf("SerializeResponse() produced invalid JSON: %v", err)
 	}
 
-  /* Test with nil response - should return error */
+	/* Test with nil response - should return error */
 	_, err = SerializeResponse(nil)
 	if err == nil {
 		t.Error("SerializeResponse() should return error for nil response")
 	}
 }
-
-

@@ -44,4 +44,3 @@ func (s *Server) setupExperimentalHandlers() {
 func IsExperimentalMethod(method string) bool {
 	return len(method) > 11 && method[:11] == "x-neurondb/"
 }
-

@@ -62,4 +62,3 @@ func (r *ModelsResource) GetContent(ctx context.Context) (interface{}, error) {
 	`
 	return r.executeQuery(ctx, query, nil)
 }
-

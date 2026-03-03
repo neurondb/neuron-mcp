@@ -142,6 +142,3 @@ func getQueryPreview(query string) string {
 	}
 	return query[:previewLen]
 }
-
-
-

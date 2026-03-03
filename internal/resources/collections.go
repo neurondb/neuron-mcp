@@ -114,4 +114,3 @@ func (r *CollectionsResource) GetContent(ctx context.Context) (interface{}, erro
 		"count":       len(collections),
 	}, nil
 }
-

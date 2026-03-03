@@ -27,7 +27,7 @@ type Permission string
 
 const (
 	PermissionRead    Permission = "read"
-	PermissionWrite  Permission = "write"
+	PermissionWrite   Permission = "write"
 	PermissionExecute Permission = "execute"
 	PermissionAdmin   Permission = "admin"
 )
@@ -154,9 +154,3 @@ func GetRequiredPermission(toolName, operation string) Permission {
 	/* Execute operations (default for most tools) */
 	return PermissionExecute
 }
-
-
-
-
-
-

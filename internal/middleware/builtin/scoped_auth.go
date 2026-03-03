@@ -57,14 +57,14 @@ func (m *ScopedAuthMiddleware) Enabled() bool {
 func GetRequiredScope(toolName string) string {
 	/* Map tool names to required scopes */
 	/* Read operations */
-	if strings.HasPrefix(toolName, "list_") || strings.HasPrefix(toolName, "get_") || 
-	   strings.HasPrefix(toolName, "vector_search") || strings.HasPrefix(toolName, "retrieve_") {
+	if strings.HasPrefix(toolName, "list_") || strings.HasPrefix(toolName, "get_") ||
+		strings.HasPrefix(toolName, "vector_search") || strings.HasPrefix(toolName, "retrieve_") {
 		return "read"
 	}
 
 	/* Write operations */
 	if strings.HasPrefix(toolName, "create_") || strings.HasPrefix(toolName, "insert_") ||
-	   strings.HasPrefix(toolName, "update_") || strings.HasPrefix(toolName, "process_") {
+		strings.HasPrefix(toolName, "update_") || strings.HasPrefix(toolName, "process_") {
 		return "write"
 	}
 
@@ -122,9 +122,9 @@ func (m *ScopedAuthMiddleware) Execute(ctx context.Context, req *middleware.MCPR
 			},
 			IsError: true,
 			Metadata: map[string]interface{}{
-				"error_code": "INSUFFICIENT_SCOPE",
-				"tool":       toolName,
-				"required":   requiredScope,
+				"error_code":  "INSUFFICIENT_SCOPE",
+				"tool":        toolName,
+				"required":    requiredScope,
 				"user_scopes": userScopes,
 			},
 		}, nil
@@ -137,7 +137,3 @@ func (m *ScopedAuthMiddleware) Execute(ctx context.Context, req *middleware.MCPR
 
 	return next(ctx, req)
 }
-
-
-
-

@@ -25,6 +25,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
+
 	"github.com/neurondb/NeuronMCP/internal/config"
 	"github.com/neurondb/NeuronMCP/internal/security"
 	"github.com/neurondb/NeuronMCP/internal/validation"
@@ -83,7 +84,7 @@ func (d *Database) ConnectWithRetry(cfg *config.DatabaseConfig, maxRetries int, 
 	/* This prevents SQL injection and properly handles special characters in passwords */
 	var poolConfig *pgxpool.Config
 	var err error
-	
+
 	if cfg.ConnectionString != nil && *cfg.ConnectionString != "" {
 		/* If connection string is provided, parse it */
 		poolConfig, err = pgxpool.ParseConfig(*cfg.ConnectionString)
@@ -93,11 +94,11 @@ func (d *Database) ConnectWithRetry(cfg *config.DatabaseConfig, maxRetries int, 
 		port := cfg.GetPort()
 		db := cfg.GetDatabase()
 		user := cfg.GetUser()
-		
+
 		/* Create connection string without password first */
 		connStr := fmt.Sprintf("host=%s port=%d user=%s dbname=%s",
 			host, port, user, db)
-		
+
 		/* Add SSL mode */
 		if cfg.SSL != nil {
 			if sslBool, ok := cfg.SSL.(bool); ok {
@@ -112,7 +113,7 @@ func (d *Database) ConnectWithRetry(cfg *config.DatabaseConfig, maxRetries int, 
 		} else {
 			connStr += " sslmode=prefer"
 		}
-		
+
 		/* Parse config - this handles password escaping properly */
 		poolConfig, err = pgxpool.ParseConfig(connStr)
 		if err == nil && cfg.Password != nil && *cfg.Password != "" {
@@ -180,19 +181,19 @@ func (d *Database) ConnectWithRetry(cfg *config.DatabaseConfig, maxRetries int, 
 	var pool *pgxpool.Pool
 	var lastErr error
 	baseDelay := retryDelay
-	
+
 	d.mu.Lock()
 	d.state = StateConnecting
 	d.lastError = nil
 	d.mu.Unlock()
-	
+
 	for attempt := 0; attempt < maxRetries; attempt++ {
 		pool, err = pgxpool.NewWithConfig(context.Background(), poolConfig)
 		if err == nil {
 			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 			pingErr := pool.Ping(ctx)
 			cancel()
-			
+
 			if pingErr == nil {
 				d.mu.Lock()
 				d.pool = pool
@@ -351,26 +352,26 @@ func (d *Database) Close() {
 	if d == nil {
 		return
 	}
-	
+
 	d.mu.Lock()
-	
+
 	/* Check if already closed */
 	if d.pool == nil {
 		d.state = StateDisconnected
 		d.mu.Unlock()
 		return
 	}
-	
+
 	/* Get reference to pool and clear it */
 	pool := d.pool
 	d.pool = nil
 	d.state = StateDisconnected
 	d.lastError = nil
-	
+
 	/* Unlock before closing to avoid holding lock during I/O */
 	/* pool.Close() may take time and we don't want to block other operations */
 	d.mu.Unlock()
-	
+
 	/* Close the pool (this may take time) */
 	pool.Close()
 }
@@ -399,18 +400,18 @@ func (d *Database) GetPoolStats() *PoolStats {
 		return nil
 	}
 	return &PoolStats{
-		TotalConns:       stats.TotalConns(),
-		AcquiredConns:    stats.AcquiredConns(),
-		IdleConns:        stats.IdleConns(),
+		TotalConns:        stats.TotalConns(),
+		AcquiredConns:     stats.AcquiredConns(),
+		IdleConns:         stats.IdleConns(),
 		ConstructingConns: stats.ConstructingConns(),
 	}
 }
 
 /* PoolStats holds connection pool statistics */
 type PoolStats struct {
-	TotalConns      int32
-	AcquiredConns   int32
-	IdleConns       int32
+	TotalConns        int32
+	AcquiredConns     int32
+	IdleConns         int32
 	ConstructingConns int32
 }
 
@@ -428,4 +429,3 @@ type errorRow struct {
 func (r *errorRow) Scan(dest ...interface{}) error {
 	return r.err
 }
-

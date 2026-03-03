@@ -33,11 +33,11 @@ import (
 
 /* AuthConfig holds authentication configuration */
 type AuthConfig struct {
-	Enabled       bool
-	APIKeyHashes  map[string]string /* SHA256 hex hash of API key -> user mapping */
-	JWTSecret     string
-	JWTPublicKey  *rsa.PublicKey
-	OAuth2Config  *OAuth2Config
+	Enabled      bool
+	APIKeyHashes map[string]string /* SHA256 hex hash of API key -> user mapping */
+	JWTSecret    string
+	JWTPublicKey *rsa.PublicKey
+	OAuth2Config *OAuth2Config
 }
 
 /* HashAPIKey returns SHA256 hex hash of an API key for secure storage */
@@ -308,4 +308,3 @@ func LoadRSAPublicKey(keyData string) (*rsa.PublicKey, error) {
 
 	return nil, fmt.Errorf("invalid key format")
 }
-

@@ -320,22 +320,22 @@ func (t *ComplianceReporterTool) generateComplianceReport(ctx context.Context, c
 /* generateGDPRReport generates GDPR compliance report */
 func (t *ComplianceReporterTool) generateGDPRReport(ctx context.Context, startDate, endDate string) map[string]interface{} {
 	return map[string]interface{}{
-		"data_subject_requests": 0,
-		"data_breaches":         0,
+		"data_subject_requests":   0,
+		"data_breaches":           0,
 		"data_retention_policies": "Compliant",
-		"right_to_be_forgotten": "Implemented",
-		"data_portability":      "Available",
+		"right_to_be_forgotten":   "Implemented",
+		"data_portability":        "Available",
 	}
 }
 
 /* generateSOC2Report generates SOC2 compliance report */
 func (t *ComplianceReporterTool) generateSOC2Report(ctx context.Context, startDate, endDate string) map[string]interface{} {
 	return map[string]interface{}{
-		"security_controls":    "Implemented",
-		"access_controls":      "Enforced",
-		"monitoring":           "Active",
-		"incident_response":    "Documented",
-		"change_management":    "Tracked",
+		"security_controls": "Implemented",
+		"access_controls":   "Enforced",
+		"monitoring":        "Active",
+		"incident_response": "Documented",
+		"change_management": "Tracked",
 	}
 }
 
@@ -344,8 +344,8 @@ func (t *ComplianceReporterTool) generateHIPAAReport(ctx context.Context, startD
 	return map[string]interface{}{
 		"phi_access_logs":      "Maintained",
 		"encryption":           "Enabled",
-		"access_controls":     "Enforced",
-		"audit_trails":        "Complete",
+		"access_controls":      "Enforced",
+		"audit_trails":         "Complete",
 		"breach_notifications": 0,
 	}
 }
@@ -464,10 +464,11 @@ func (t *AuditAnalyzerTool) analyzeAuditLogs(ctx context.Context, params map[str
 		var firstOccurrence, lastOccurrence *time.Time
 
 		if err := rows.Scan(&userID, &action, &count, &firstOccurrence, &lastOccurrence); err == nil {
-			analysis["by_user"] = append(analysis["by_user"].([]map[string]interface{}), map[string]interface{}{
-				"user_id":         getString(userID, "unknown"),
-				"action":          getString(action, "unknown"),
-				"count":           getInt(count, 0),
+			byUser, _ := analysis["by_user"].([]map[string]interface{})
+			analysis["by_user"] = append(byUser, map[string]interface{}{
+				"user_id":          getString(userID, "unknown"),
+				"action":           getString(action, "unknown"),
+				"count":            getInt(count, 0),
 				"first_occurrence": getTime(firstOccurrence, time.Time{}),
 				"last_occurrence":  getTime(lastOccurrence, time.Time{}),
 			})
@@ -559,7 +560,7 @@ func (t *AuditAnalyzerTool) generateAuditReport(ctx context.Context, params map[
 	analysisData, _ := analysis.Data.(map[string]interface{})
 
 	report := map[string]interface{}{
-		"summary":     analysisData["analysis"],
+		"summary":      analysisData["analysis"],
 		"generated_at": time.Now(),
 		"period": map[string]interface{}{
 			"start": params["start_date"],
@@ -713,12 +714,12 @@ func (t *BackupAutomationTool) listSchedules(ctx context.Context, params map[str
 
 		if err := rows.Scan(&scheduleID, &scheduleName, &cronExpression, &backupType, &enabled, &createdAt); err == nil {
 			schedules = append(schedules, map[string]interface{}{
-				"schedule_id":    scheduleID,
-				"schedule_name":  scheduleName,
+				"schedule_id":     scheduleID,
+				"schedule_name":   scheduleName,
 				"cron_expression": cronExpression,
-				"backup_type":    backupType,
-				"enabled":        enabled,
-				"created_at":     createdAt,
+				"backup_type":     backupType,
+				"enabled":         enabled,
+				"created_at":      createdAt,
 			})
 		}
 	}
@@ -822,4 +823,3 @@ func (t *BackupAutomationTool) listBackups(ctx context.Context, params map[strin
 		"backups": backups,
 	}, nil), nil
 }
-

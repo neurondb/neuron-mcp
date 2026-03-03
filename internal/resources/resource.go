@@ -75,9 +75,9 @@ func (r *BaseResource) executeQueryOne(ctx context.Context, query string, params
 
 /* Manager manages all resources */
 type Manager struct {
-	resources          map[string]Resource
-	templateResources  []templateResourceEntry
-	db                 *database.Database
+	resources           map[string]Resource
+	templateResources   []templateResourceEntry
+	db                  *database.Database
 	subscriptionManager *SubscriptionManager
 }
 
@@ -96,12 +96,12 @@ var templateParamRegex = regexp.MustCompile(`^\{([a-zA-Z][a-zA-Z0-9_]*)\}$`)
 /* NewManager creates a new resource manager */
 func NewManager(db *database.Database) *Manager {
 	m := &Manager{
-		resources:          make(map[string]Resource),
-		db:                 db,
+		resources:           make(map[string]Resource),
+		db:                  db,
 		subscriptionManager: NewSubscriptionManager(),
 	}
 
-  /* Register built-in resources */
+	/* Register built-in resources */
 	m.Register(NewSchemaResource(db))
 	m.Register(NewModelsResource(db))
 	m.Register(NewIndexesResource(db))
@@ -261,5 +261,3 @@ type ResourceNotFoundError struct {
 func (e *ResourceNotFoundError) Error() string {
 	return "resource not found: " + e.URI
 }
-
-

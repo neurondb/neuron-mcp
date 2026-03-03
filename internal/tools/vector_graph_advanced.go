@@ -260,4 +260,3 @@ func (t *VectorGraphAnalysisTool) Execute(ctx context.Context, params map[string
 		"tool": "vector_graph_analysis",
 	}), nil
 }
-

@@ -78,6 +78,3 @@ func (r *ExtensionsResource) GetContent(ctx context.Context) (interface{}, error
 
 	return result, nil
 }
-
-
-

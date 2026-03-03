@@ -88,7 +88,7 @@ func (t *CreateHNSWIndexTool) Execute(ctx context.Context, params map[string]int
 	table, _ := params["table"].(string)
 	vectorColumn, _ := params["vector_column"].(string)
 	indexName, _ := params["index_name"].(string)
-	
+
 	/* Get index config defaults from database */
 	m := 16
 	efConstruction := 200
@@ -100,13 +100,13 @@ func (t *CreateHNSWIndexTool) Execute(ctx context.Context, params map[string]int
 			efConstruction = *indexConfig.HNSWEFConstruction
 		}
 		t.logger.Info("Using index config from database", map[string]interface{}{
-			"table": table,
-			"vector_column": vectorColumn,
-			"m": m,
+			"table":           table,
+			"vector_column":   vectorColumn,
+			"m":               m,
 			"ef_construction": efConstruction,
 		})
 	}
-	
+
 	/* Override with provided parameters */
 	if mVal, ok := params["m"].(float64); ok {
 		m = int(mVal)
@@ -169,20 +169,20 @@ func (t *CreateHNSWIndexTool) Execute(ctx context.Context, params map[string]int
 
 	if efConstruction < 4 || efConstruction > 2000 {
 		return Error(fmt.Sprintf("ef_construction parameter must be between 4 and 2000 for neurondb_create_hnsw_index tool: table='%s', vector_column='%s', index_name='%s', m=%d, received ef_construction=%d", table, vectorColumn, indexName, m, efConstruction), "VALIDATION_ERROR", map[string]interface{}{
-			"parameter":      "ef_construction",
-			"table":          table,
-			"vector_column":  vectorColumn,
-			"index_name":     indexName,
-			"m":              m,
+			"parameter":       "ef_construction",
+			"table":           table,
+			"vector_column":   vectorColumn,
+			"index_name":      indexName,
+			"m":               m,
 			"ef_construction": efConstruction,
-			"min":            4,
-			"max":            2000,
-			"params":         params,
+			"min":             4,
+			"max":             2000,
+			"params":          params,
 		}), nil
 	}
 
-  /* Use NeuronDB's unified index creation function */
-  /* neurondb.create_index(table_name, vector_col, index_type, params) */
+	/* Use NeuronDB's unified index creation function */
+	/* neurondb.create_index(table_name, vector_col, index_type, params) */
 	paramsJSON := fmt.Sprintf(`{"m": %d, "ef_construction": %d}`, m, efConstruction)
 	query := `SELECT neurondb.create_index($1, $2, $3, $4::jsonb) AS result`
 	result, err := t.executor.ExecuteQueryOne(ctx, query, []interface{}{
@@ -201,8 +201,8 @@ func (t *CreateHNSWIndexTool) Execute(ctx context.Context, params map[string]int
 	}
 
 	return Success(result, map[string]interface{}{
-		"index_name":     indexName,
-		"m":              m,
+		"index_name":      indexName,
+		"m":               m,
 		"ef_construction": efConstruction,
 	}), nil
 }
@@ -264,7 +264,7 @@ func (t *CreateIVFIndexTool) Execute(ctx context.Context, params map[string]inte
 	table, _ := params["table"].(string)
 	vectorColumn, _ := params["vector_column"].(string)
 	indexName, _ := params["index_name"].(string)
-	
+
 	/* Get index config defaults from database */
 	numLists := 100
 	if indexConfig, err := t.configHelper.GetIndexConfig(ctx, table, vectorColumn); err == nil && indexConfig != nil {
@@ -272,12 +272,12 @@ func (t *CreateIVFIndexTool) Execute(ctx context.Context, params map[string]inte
 			numLists = *indexConfig.IVFLists
 		}
 		t.logger.Info("Using index config from database", map[string]interface{}{
-			"table": table,
+			"table":         table,
 			"vector_column": vectorColumn,
-			"num_lists": numLists,
+			"num_lists":     numLists,
 		})
 	}
-	
+
 	/* Override with provided parameters */
 	if n, ok := params["num_lists"].(float64); ok {
 		numLists = int(n)
@@ -319,8 +319,8 @@ func (t *CreateIVFIndexTool) Execute(ctx context.Context, params map[string]inte
 		}), nil
 	}
 
-  /* Use NeuronDB's unified index creation function */
-  /* neurondb.create_index(table_name, vector_col, index_type, params) */
+	/* Use NeuronDB's unified index creation function */
+	/* neurondb.create_index(table_name, vector_col, index_type, params) */
 	paramsJSON := fmt.Sprintf(`{"num_lists": %d}`, numLists)
 	query := `SELECT neurondb.create_index($1, $2, $3, $4::jsonb) AS result`
 	result, err := t.executor.ExecuteQueryOne(ctx, query, []interface{}{
@@ -329,11 +329,11 @@ func (t *CreateIVFIndexTool) Execute(ctx context.Context, params map[string]inte
 	if err != nil {
 		t.logger.Error("IVF index creation failed", err, params)
 		return Error(fmt.Sprintf("IVF index creation execution failed: table='%s', vector_column='%s', index_name='%s', num_lists=%d, error=%v", table, vectorColumn, indexName, numLists, err), "INDEX_ERROR", map[string]interface{}{
-			"table":          table,
-			"vector_column":  vectorColumn,
-			"index_name":     indexName,
-			"num_lists":      numLists,
-			"error":          err.Error(),
+			"table":         table,
+			"vector_column": vectorColumn,
+			"index_name":    indexName,
+			"num_lists":     numLists,
+			"error":         err.Error(),
 		}), nil
 	}
 
@@ -407,8 +407,8 @@ func (t *IndexStatusTool) Execute(ctx context.Context, params map[string]interfa
 		if strings.Contains(err.Error(), "no rows returned") {
 			return Success(map[string]interface{}{
 				"index_name": indexName,
-				"exists":      false,
-				"message":     fmt.Sprintf("Index '%s' does not exist", indexName),
+				"exists":     false,
+				"message":    fmt.Sprintf("Index '%s' does not exist", indexName),
 			}, map[string]interface{}{
 				"tool": "index_status",
 			}), nil
@@ -481,7 +481,7 @@ func (t *DropIndexTool) Execute(ctx context.Context, params map[string]interface
 		}), nil
 	}
 
-  /* Escape identifier for safety */
+	/* Escape identifier for safety */
 	escapedName := database.EscapeIdentifier(indexName)
 	query := fmt.Sprintf("DROP INDEX IF EXISTS %s", escapedName)
 
@@ -501,4 +501,3 @@ func (t *DropIndexTool) Execute(ctx context.Context, params map[string]interface
 		"index_name": indexName,
 	}, nil), nil
 }
-

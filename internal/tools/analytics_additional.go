@@ -78,7 +78,7 @@ func (t *AnalyzeDataTool) Execute(ctx context.Context, params map[string]interfa
 
 	table, _ := params["table"].(string)
 	columns, _ := params["columns"].([]interface{})
-	
+
 	/* Handle string array format from command parser */
 	if columns == nil {
 		if colsStr, ok := params["columns"].(string); ok && colsStr != "" {
@@ -89,7 +89,7 @@ func (t *AnalyzeDataTool) Execute(ctx context.Context, params map[string]interfa
 			}
 		}
 	}
-	
+
 	includeStats, _ := params["include_stats"].(bool)
 	includeDistribution, _ := params["include_distribution"].(bool)
 
@@ -100,18 +100,20 @@ func (t *AnalyzeDataTool) Execute(ctx context.Context, params map[string]interfa
 		}), nil
 	}
 
-  /* Build comprehensive analysis query */
+	/* Build comprehensive analysis query */
 	var query string
 	var queryParams []interface{}
 
 	if len(columns) > 0 {
-   /* Analyze specific columns */
+		/* Analyze specific columns */
 		colNames := make([]string, len(columns))
 		for i, col := range columns {
-			colNames[i] = col.(string)
+			if s, ok := col.(string); ok {
+				colNames[i] = s
+			}
 		}
 
-   /* Build statistics query for each column */
+		/* Build statistics query for each column */
 		statsQueries := []string{}
 		for _, col := range colNames {
 			statsQueries = append(statsQueries, fmt.Sprintf(`
@@ -144,7 +146,7 @@ func (t *AnalyzeDataTool) Execute(ctx context.Context, params map[string]interfa
 		query = "SELECT json_agg(row_to_json(t)) AS analysis FROM (" + unionQuery + ") t"
 		queryParams = []interface{}{}
 	} else {
-   /* Analyze all columns - get column list first */
+		/* Analyze all columns - get column list first */
 		colQuery := `
 			SELECT column_name, data_type 
 			FROM information_schema.columns 
@@ -166,15 +168,15 @@ func (t *AnalyzeDataTool) Execute(ctx context.Context, params map[string]interfa
 			}), nil
 		}
 
-   /* Build analysis for all numeric columns */
+		/* Build analysis for all numeric columns */
 		statsParts := []string{}
 		for _, colRow := range colResults {
 			colName, _ := colRow["column_name"].(string)
 			dataType, _ := colRow["data_type"].(string)
-			
-    /* Only analyze numeric types */
-			if dataType == "real" || dataType == "double precision" || dataType == "integer" || 
-			   dataType == "bigint" || dataType == "numeric" || dataType == "smallint" {
+
+			/* Only analyze numeric types */
+			if dataType == "real" || dataType == "double precision" || dataType == "integer" ||
+				dataType == "bigint" || dataType == "numeric" || dataType == "smallint" {
 				statsParts = append(statsParts, fmt.Sprintf(`
 					SELECT 
 						'%s' AS column_name,
@@ -212,21 +214,20 @@ func (t *AnalyzeDataTool) Execute(ctx context.Context, params map[string]interfa
 	result, err := executor.ExecuteQueryOne(ctx, query, queryParams)
 	if err != nil {
 		t.logger.Error("Data analysis failed", err, params)
-		return Error(fmt.Sprintf("Data analysis execution failed: table='%s', columns_count=%d, include_stats=%v, include_distribution=%v, error=%v", 
+		return Error(fmt.Sprintf("Data analysis execution failed: table='%s', columns_count=%d, include_stats=%v, include_distribution=%v, error=%v",
 			table, len(columns), includeStats, includeDistribution, err), "ANALYSIS_ERROR", map[string]interface{}{
-			"table":               table,
-			"columns_count":       len(columns),
-			"include_stats":       includeStats,
+			"table":                table,
+			"columns_count":        len(columns),
+			"include_stats":        includeStats,
 			"include_distribution": includeDistribution,
-			"error":               err.Error(),
+			"error":                err.Error(),
 		}), nil
 	}
 
 	return Success(result, map[string]interface{}{
-		"table":               table,
-		"columns_count":       len(columns),
-		"include_stats":       includeStats,
+		"table":                table,
+		"columns_count":        len(columns),
+		"include_stats":        includeStats,
 		"include_distribution": includeDistribution,
 	}), nil
 }
-

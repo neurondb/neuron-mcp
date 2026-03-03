@@ -125,7 +125,7 @@ func (qb *QueryBuilder) VectorSearch(table, vectorColumn string, queryVector []f
 		subquerySelect = append(subquerySelect, "*")
 		/* Note: This creates a duplicate, but we'll handle it by selecting explicitly in outer query */
 	}
-	
+
 	subquery := fmt.Sprintf("(SELECT %s FROM %s) AS %s",
 		strings.Join(subquerySelect, ", "),
 		EscapeIdentifier(table),
@@ -189,4 +189,3 @@ func formatVector(vec []float32) string {
 	}
 	return "[" + strings.Join(parts, ",") + "]"
 }
-

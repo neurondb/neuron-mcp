@@ -325,6 +325,7 @@ func (t *ExportModelTool) Execute(ctx context.Context, params map[string]interfa
 }
 
 /* Helper function to format vector array for PostgreSQL */
+//nolint:unused
 func formatVectorArray(vectorStrings []string) string {
 	if len(vectorStrings) == 0 {
 		return ""

@@ -32,9 +32,9 @@ type GetPromptRequest struct {
 
 /* PromptDefinition represents a prompt in MCP format */
 type PromptDefinition struct {
-	Name        string                 `json:"name"`
-	Description string                 `json:"description,omitempty"`
-	Arguments   []PromptArgument       `json:"arguments,omitempty"`
+	Name        string           `json:"name"`
+	Description string           `json:"description,omitempty"`
+	Arguments   []PromptArgument `json:"arguments,omitempty"`
 }
 
 /* PromptArgument represents a prompt argument */
@@ -51,14 +51,14 @@ type ListPromptsResponse struct {
 
 /* GetPromptResponse represents a prompts/get response */
 type GetPromptResponse struct {
-	Description string                 `json:"description,omitempty"`
-	Messages    []PromptMessage        `json:"messages"`
+	Description string          `json:"description,omitempty"`
+	Messages    []PromptMessage `json:"messages"`
 }
 
 /* PromptMessage represents a message in a prompt */
 type PromptMessage struct {
-	Role    string                 `json:"role"`
-	Content PromptMessageContent   `json:"content"`
+	Role    string               `json:"role"`
+	Content PromptMessageContent `json:"content"`
 }
 
 /* PromptMessageContent represents message content */
@@ -149,4 +149,3 @@ func (m *Manager) HandleGetPrompt(ctx context.Context, params json.RawMessage) (
 
 	return response, nil
 }
-

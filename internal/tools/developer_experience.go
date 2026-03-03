@@ -401,7 +401,7 @@ func (t *QueryBuilderTool) buildQuery(ctx context.Context, params map[string]int
 	selectClause := "SELECT "
 	var queryParams []interface{}
 	paramIndex := 1
-	
+
 	if len(columnsRaw) == 0 {
 		selectClause += "*"
 	} else {
@@ -436,7 +436,7 @@ func (t *QueryBuilderTool) buildQuery(ctx context.Context, params map[string]int
 						return Error(fmt.Sprintf("Invalid column name '%s': %v", column, err), "INVALID_PARAMS", nil), nil
 					}
 					escapedColumn := database.EscapeIdentifier(column)
-					
+
 					/* Validate operator to prevent SQL injection */
 					validOperators := map[string]bool{
 						"=": true, "!=": true, "<>": true, "<": true, ">": true, "<=": true, ">=": true,
@@ -446,7 +446,7 @@ func (t *QueryBuilderTool) buildQuery(ctx context.Context, params map[string]int
 					if !validOperators[operatorUpper] {
 						return Error(fmt.Sprintf("Invalid operator: %s", operator), "INVALID_PARAMS", nil), nil
 					}
-					
+
 					/* Use parameterized query for values to prevent SQL injection */
 					if operatorUpper == "IS NULL" || operatorUpper == "IS NOT NULL" {
 						conditions = append(conditions, fmt.Sprintf("%s %s", escapedColumn, operatorUpper))
@@ -509,14 +509,14 @@ func (t *QueryBuilderTool) suggestQuery(ctx context.Context, params map[string]i
 
 	suggestions := []map[string]interface{}{
 		{
-			"type":        "index",
-			"message":     "Consider adding indexes on frequently filtered columns",
-			"columns":     columns[:min(3, len(columns))],
+			"type":    "index",
+			"message": "Consider adding indexes on frequently filtered columns",
+			"columns": columns[:min(3, len(columns))],
 		},
 		{
-			"type":        "performance",
-			"message":     "Use specific columns instead of SELECT * for better performance",
-			"columns":     columns,
+			"type":    "performance",
+			"message": "Use specific columns instead of SELECT * for better performance",
+			"columns": columns,
 		},
 	}
 
@@ -721,4 +721,3 @@ public class %sExample {
     }
 }`, strings.Title(table), strings.Title(operation), strings.Title(table), table)
 }
-

@@ -101,7 +101,7 @@ func (t *DriftDetectionTool) Execute(ctx context.Context, params map[string]inte
 		}), nil
 	}
 
-  /* Build query based on method */
+	/* Build query based on method */
 	var query string
 	var queryParams []interface{}
 
@@ -159,12 +159,3 @@ func (t *DriftDetectionTool) Execute(ctx context.Context, params map[string]inte
 		"method": method,
 	}), nil
 }
-
-
-
-
-
-
-
-
-

@@ -26,11 +26,11 @@ import (
 type PluginType string
 
 const (
-	PluginTypeTool         PluginType = "tool"
-	PluginTypeResource     PluginType = "resource"
-	PluginTypeMiddleware   PluginType = "middleware"
-	PluginTypeAuth         PluginType = "auth"
-	PluginTypeExporter     PluginType = "exporter"
+	PluginTypeTool       PluginType = "tool"
+	PluginTypeResource   PluginType = "resource"
+	PluginTypeMiddleware PluginType = "middleware"
+	PluginTypeAuth       PluginType = "auth"
+	PluginTypeExporter   PluginType = "exporter"
 )
 
 /* Plugin represents a plugin */
@@ -122,4 +122,3 @@ func (pm *PluginManager) ShutdownAll(ctx context.Context) error {
 	}
 	return nil
 }
-

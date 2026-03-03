@@ -154,7 +154,7 @@ func (t *AutoMLTool) Execute(ctx context.Context, params map[string]interface{})
 		t.logger.Error("AutoML operation failed", err, params)
 		return Error(fmt.Sprintf("AutoML operation failed: operation='%s', error=%v", operation, err), "EXECUTION_ERROR", map[string]interface{}{
 			"operation": operation,
-			"error":    err.Error(),
+			"error":     err.Error(),
 		}), nil
 	}
 
@@ -167,12 +167,3 @@ func (t *AutoMLTool) Execute(ctx context.Context, params map[string]interface{})
 		"count":     len(results),
 	}), nil
 }
-
-
-
-
-
-
-
-
-

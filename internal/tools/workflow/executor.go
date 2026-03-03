@@ -88,8 +88,8 @@ func (e *Executor) ExecuteWorkflow(ctx context.Context, executionID string) erro
 		}
 
 		/* Check if cancelled */
-		exec, _ = e.manager.GetExecution(executionID)
-		if exec.Status == "cancelled" {
+		exec, err = e.manager.GetExecution(executionID)
+		if err != nil || exec.Status == "cancelled" {
 			return nil
 		}
 

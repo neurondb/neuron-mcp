@@ -25,7 +25,7 @@ import (
 func TestCompletePromptArgument(t *testing.T) {
 	/* Create a mock prompts manager */
 	/* In a real test, you would use a mock or test database */
-	
+
 	/* This is a basic structure test - full integration tests would require database setup */
 	manager := &Manager{
 		promptsManager:   nil, /* Would be mocked in real test */

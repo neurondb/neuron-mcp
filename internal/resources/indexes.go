@@ -88,4 +88,3 @@ func (r *IndexesResource) GetContent(ctx context.Context) (interface{}, error) {
 
 	return result, nil
 }
-

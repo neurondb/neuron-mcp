@@ -99,13 +99,3 @@ func (a *CircuitBreakerAdapter) Execute(ctx context.Context, req *middleware.MCP
 
 	return next(ctx, req)
 }
-
-
-
-
-
-
-
-
-
-

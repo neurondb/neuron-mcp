@@ -22,9 +22,10 @@ import (
 	"os"
 	"time"
 
+	"github.com/rs/zerolog"
+
 	"github.com/neurondb/NeuronMCP/internal/config"
 	"github.com/neurondb/NeuronMCP/internal/observability"
-	"github.com/rs/zerolog"
 )
 
 /* Logger provides structured logging */
@@ -146,14 +147,14 @@ func (l *Logger) WithContext(ctx context.Context) *Logger {
 	if ctx == nil {
 		return l
 	}
-	
+
 	/* Try to get request ID from context */
 	if reqID, ok := observability.GetRequestIDFromContext(ctx); ok {
 		return l.Child(map[string]interface{}{
 			"request_id": reqID.String(),
 		})
 	}
-	
+
 	return l
 }
 
