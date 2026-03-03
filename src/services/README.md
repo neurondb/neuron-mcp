@@ -25,8 +25,8 @@ services/
 
 2. Install binary to system path:
    ```bash
-   sudo cp bin/neurondb-mcp /usr/local/bin/neurondb-mcp
-   sudo chmod +x /usr/local/bin/neurondb-mcp
+   sudo cp bin/neuron-mcp /usr/local/bin/neuron-mcp
+   sudo chmod +x /usr/local/bin/neuron-mcp
    ```
 
 3. Create service user (if not exists):
@@ -95,8 +95,8 @@ services/
 
 2. Install binary to system path:
    ```bash
-   sudo cp bin/neurondb-mcp /usr/local/bin/neurondb-mcp
-   sudo chmod +x /usr/local/bin/neurondb-mcp
+   sudo cp bin/neuron-mcp /usr/local/bin/neuron-mcp
+   sudo chmod +x /usr/local/bin/neuron-mcp
    ```
 
 3. Create directories:
@@ -190,12 +190,12 @@ NeuronMCP supports the following environment variables:
 
 2. Verify binary exists and is executable:
    ```bash
-   ls -l /usr/local/bin/neurondb-mcp
+   ls -l /usr/local/bin/neuron-mcp
    ```
 
 3. Test running the binary manually:
    ```bash
-   /usr/local/bin/neurondb-mcp
+   /usr/local/bin/neuron-mcp
    ```
 
 ### Database connection errors

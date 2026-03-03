@@ -7,7 +7,7 @@
     
     <key>ProgramArguments</key>
     <array>
-        <string>/usr/local/bin/neurondb-mcp</string>
+        <string>/usr/local/bin/neuron-mcp</string>
     </array>
     
     <key>WorkingDirectory</key>
