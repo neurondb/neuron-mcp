@@ -8,7 +8,7 @@ Thumbs.db
 *~
 
 # Go
-neurondb-mcp
+/neurondb-mcp
 bin/
 src/cmd/*/neurondb-mcp
 src/bin/
