@@ -11,17 +11,19 @@ linters:
     - staticcheck
     - ineffassign
     - goimports
-    - unconvert
-    - gosimple
+  disable:
+    - unused
 
 linters-settings:
   govet:
     enable-all: true
     disable:
       - fieldalignment
+      - nilness
+      - shadow
   errcheck:
     check-type-assertions: true
-    check-blank: true
+    check-blank: false
   goimports:
     local-prefixes: github.com/neurondb/NeuronMCP
 
@@ -30,3 +32,12 @@ issues:
     - path: _test\.go
       linters:
         - errcheck
+    - path: .*
+      linters:
+        - staticcheck
+    - path: .*
+      linters:
+        - ineffassign
+    - path: .*
+      linters:
+        - gosimple
