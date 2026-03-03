@@ -9,6 +9,11 @@ Thank you for your interest in contributing.
 
 For questions, open an issue or contact the maintainers.
 
+## Where are the tests?
+
+- **Go**: `*_test.go` files live next to the source they test (under `pkg/` and `internal/`). Run with `make test` or `go test ./...`.
+- **Python**: Integration tests are in `src/tests/`. Run with `make test-python`.
+
 ## Commit Message Guidelines
 
 Commit messages must contain relevant information and follow these rules:

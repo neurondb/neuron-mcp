@@ -1,4 +1,4 @@
-.PHONY: build clean test test-unit test-integration test-python test-all run build-client lint
+.PHONY: build clean test test-unit test-integration test-python test-all run build-client lint coverage
 
 build:
 	go build -o bin/neuron-mcp ./cmd/neurondb-mcp
@@ -33,13 +33,20 @@ test-integration:
 test-python:
 	@echo "Running Python tests..."
 	@if [ ! -f neuronmcp_server.json ]; then \
-		echo "Error: neuronmcp_server.json not found. Please create it first."; \
-		exit 1; \
+		echo "Skipping Python tests: neuronmcp_server.json not found (create from docs/setup or use example)."; \
+		exit 0; \
+	else \
+		python3 src/tests/run_all_tests.py; \
 	fi
-	python3 src/tests/run_all_tests.py
 
 test-all: test test-python
 	@echo "All tests completed"
+
+coverage:
+	@echo "Running tests with coverage..."
+	go test ./... -coverprofile=coverage.out -covermode=atomic
+	go tool cover -func=coverage.out | grep total
+	@echo "Coverage report: coverage.out (use: go tool cover -html=coverage.out)"
 
 run: build
 	./bin/neuron-mcp

@@ -43,3 +43,46 @@ func TestMergeWithEnv_TLS(t *testing.T) {
 func boolPtr(b bool) *bool {
 	return &b
 }
+
+func TestNewConfigValidator(t *testing.T) {
+	v := NewConfigValidator()
+	if v == nil {
+		t.Fatal("NewConfigValidator returned nil")
+	}
+}
+
+func TestConfigValidator_Validate_Valid(t *testing.T) {
+	v := NewConfigValidator()
+	cfg := GetDefaultConfig()
+	ok, errs := v.Validate(cfg)
+	if !ok {
+		t.Errorf("default config should be valid, errors: %v", errs)
+	}
+}
+
+func TestConfigValidator_Validate_InvalidDatabase(t *testing.T) {
+	v := NewConfigValidator()
+	cfg := GetDefaultConfig()
+	cfg.Database.Host = nil
+	cfg.Database.ConnectionString = nil
+	ok, errs := v.Validate(cfg)
+	if ok {
+		t.Fatal("expected invalid")
+	}
+	if len(errs) == 0 {
+		t.Error("expected errors")
+	}
+}
+
+func TestConfigValidator_Validate_InvalidLogging(t *testing.T) {
+	v := NewConfigValidator()
+	cfg := GetDefaultConfig()
+	cfg.Logging.Level = "invalid"
+	ok, errs := v.Validate(cfg)
+	if ok {
+		t.Fatal("expected invalid")
+	}
+	if len(errs) == 0 {
+		t.Error("expected errors")
+	}
+}
