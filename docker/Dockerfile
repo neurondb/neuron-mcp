@@ -22,7 +22,7 @@ ARG BUILD_DATE
 ARG VCS_REF
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo \
     -ldflags="-w -s -X main.version=${VERSION} -X main.buildDate=${BUILD_DATE} -X main.vcsRef=${VCS_REF}" \
-    -o neuronmcp ./cmd/neurondb-mcp
+    -o neuron-mcp ./cmd/neurondb-mcp
 
 # Final stage - use Debian slim for better compatibility
 FROM debian:bookworm-slim
@@ -68,7 +68,7 @@ RUN groupadd -r neuronmcp && useradd -r -g neuronmcp -u 1000 -m -d /home/neuronm
 WORKDIR /app
 
 # Copy binary from builder
-COPY --from=builder /build/neuronmcp .
+COPY --from=builder /build/neuron-mcp .
 
 # Copy optional entrypoint script (can be overridden)
 # Copy as root first, then set permissions
@@ -88,5 +88,5 @@ USER neuronmcp
 # Set entrypoint (can be overridden in docker-compose or runtime)
 # The entrypoint script performs validation and then executes the binary
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-CMD ["./neuronmcp"]
+CMD ["./neuron-mcp"]
 

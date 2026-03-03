@@ -1,29 +1,34 @@
-.PHONY: build clean test test-unit test-integration test-python test-all run build-client
+.PHONY: build clean test test-unit test-integration test-python test-all run build-client lint
 
 build:
-	cd src && go build -o ../bin/neuronmcp ./cmd/neurondb-mcp
+	go build -o bin/neuron-mcp ./cmd/neurondb-mcp
+	go build -o bin/neuron-mcp-client ./cmd/neurondb-mcp-client
 
 build-client:
-	cd src && go build -o ../bin/neurondb-mcp-client ./cmd/neurondb-mcp-client
+	go build -o bin/neuron-mcp-client ./cmd/neurondb-mcp-client
 
 clean:
 	rm -rf bin/
 
 test:
 	@echo "Running all Go tests with race detector..."
-	cd src && go test -race ./...
+	go test -race ./...
 
 test-fast:
 	@echo "Running all Go tests (fast mode, no race detector)..."
-	cd src && go test ./...
+	go test ./...
+
+lint:
+	@echo "Running golangci-lint..."
+	golangci-lint run ./...
 
 test-unit:
 	@echo "Running unit tests..."
-	cd src && go test -race ./test/unit/...
+	go test -short -race ./...
 
 test-integration:
 	@echo "Running integration tests..."
-	cd src && go test -race ./test/integration/...
+	go test -race ./...
 
 test-python:
 	@echo "Running Python tests..."
@@ -37,5 +42,5 @@ test-all: test test-python
 	@echo "All tests completed"
 
 run: build
-	./bin/neuronmcp
+	./bin/neuron-mcp
 

@@ -24,14 +24,14 @@ log_error() {
 
 # Check if binary exists (check both package and source build locations)
 BINARY=""
-if [ -f "/usr/bin/neuronmcp" ]; then
-    BINARY="/usr/bin/neuronmcp"
-elif [ -f "/app/neuronmcp" ]; then
-    BINARY="/app/neuronmcp"
+if [ -f "/usr/bin/neuron-mcp" ]; then
+    BINARY="/usr/bin/neuron-mcp"
+elif [ -f "/app/neuron-mcp" ]; then
+    BINARY="/app/neuron-mcp"
 fi
 
 if [ -z "$BINARY" ]; then
-    log_error "Binary not found in /usr/bin/neuronmcp or /app/neuronmcp!"
+    log_error "Binary not found in /usr/bin/neuron-mcp or /app/neuron-mcp!"
     exit 1
 fi
 
@@ -173,12 +173,12 @@ else
 fi
 
 # Determine binary path (package installs to /usr/bin, source build to /app)
-if [ -f "/usr/bin/neuronmcp" ]; then
-    BINARY="/usr/bin/neuronmcp"
-elif [ -f "/app/neuronmcp" ]; then
-    BINARY="/app/neuronmcp"
+if [ -f "/usr/bin/neuron-mcp" ]; then
+    BINARY="/usr/bin/neuron-mcp"
+elif [ -f "/app/neuron-mcp" ]; then
+    BINARY="/app/neuron-mcp"
 else
-    log_error "Binary not found in /usr/bin/neuronmcp or /app/neuronmcp"
+    log_error "Binary not found in /usr/bin/neuron-mcp or /app/neuron-mcp"
     exit 1
 fi
 

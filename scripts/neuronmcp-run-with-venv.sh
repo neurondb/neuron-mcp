@@ -101,7 +101,9 @@ main() {
         exec ./scripts/neuronmcp-run-server.sh "$@"
     else
         # Try to find the binary
-        if [ -f "neurondb-mcp" ]; then
+        if [ -f "bin/neuron-mcp" ]; then
+            exec ./bin/neuron-mcp "$@"
+        elif [ -f "neurondb-mcp" ]; then
             exec ./neurondb-mcp "$@"
         elif [ -f "bin/neuronmcp" ]; then
             exec ./bin/neuronmcp "$@"

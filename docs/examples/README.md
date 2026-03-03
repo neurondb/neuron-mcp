@@ -25,8 +25,8 @@ Each transcript includes:
 
 For working client code examples, see:
 
-- [Python Client](../client/README.md) - Python CLI client with examples
-- [Go Client](../cmd/neurondb-mcp-client/) - Go-based MCP client
+- [Python Client](../../src/client/README.md) - Python CLI client with examples
+- [Go Client](../../src/cmd/neurondb-mcp-client/) - Go-based MCP client
 
 ## Related Documentation
 

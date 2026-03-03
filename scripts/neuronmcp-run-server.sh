@@ -75,15 +75,17 @@ EOF
 
 main() {
     parse_args "$@"
-    # Try neurondb-mcp first, fall back to neuronmcp
-    if [ -f "${PROJECT_ROOT}/bin/neurondb-mcp" ]; then
+    # Prefer neuron-mcp, then legacy names
+    if [ -f "${PROJECT_ROOT}/bin/neuron-mcp" ]; then
+        BINARY_PATH="${PROJECT_ROOT}/bin/neuron-mcp"
+    elif [ -f "${PROJECT_ROOT}/bin/neurondb-mcp" ]; then
         BINARY_PATH="${PROJECT_ROOT}/bin/neurondb-mcp"
     elif [ -f "${PROJECT_ROOT}/bin/neuronmcp" ]; then
         BINARY_PATH="${PROJECT_ROOT}/bin/neuronmcp"
     elif [ -f "${PROJECT_ROOT}/neurondb-mcp" ]; then
         BINARY_PATH="${PROJECT_ROOT}/neurondb-mcp"
     else
-        BINARY_PATH="${PROJECT_ROOT}/bin/neurondb-mcp"
+        BINARY_PATH="${PROJECT_ROOT}/bin/neuron-mcp"
     fi
     
     # Check if binary exists

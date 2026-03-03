@@ -72,7 +72,7 @@ Before configuring Claude Desktop, you must install Python dependencies. Claude 
 
 ```bash
 cd NeuronMCP
-./scripts/neuronmcp_setup_claude_desktop.sh
+./scripts/neuronmcp-setup-claude-desktop.sh
 ```
 
 This script will:
@@ -201,7 +201,7 @@ If you see errors like "No module named 'datasets'" when using dataset loading:
 1. **Run the setup script:**
    ```bash
    cd NeuronMCP
-   ./scripts/neuronmcp_setup_claude_desktop.sh
+   ./scripts/neuronmcp-setup-claude-desktop.sh
    ```
 
 2. **Or install manually:**

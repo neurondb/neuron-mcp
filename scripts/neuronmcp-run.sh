@@ -125,9 +125,11 @@ main() {
         print_warning "go is not installed, cannot build from source"
     fi
 
-    # Try to find the binary
+    # Try to find the binary (prefer neuron-mcp, then legacy names)
     BINARY_PATH=""
-    if [ -f "${PROJECT_ROOT}/bin/neurondb-mcp" ]; then
+    if [ -f "${PROJECT_ROOT}/bin/neuron-mcp" ]; then
+        BINARY_PATH="${PROJECT_ROOT}/bin/neuron-mcp"
+    elif [ -f "${PROJECT_ROOT}/bin/neurondb-mcp" ]; then
         BINARY_PATH="${PROJECT_ROOT}/bin/neurondb-mcp"
     elif [ -f "${PROJECT_ROOT}/bin/neuronmcp" ]; then
         BINARY_PATH="${PROJECT_ROOT}/bin/neuronmcp"
@@ -142,7 +144,9 @@ main() {
         if command -v go &> /dev/null && [ -f "Makefile" ]; then
             log_info "Binary not found, building from source..."
             if make build 2>/dev/null; then
-                if [ -f "${PROJECT_ROOT}/bin/neurondb-mcp" ]; then
+                if [ -f "${PROJECT_ROOT}/bin/neuron-mcp" ]; then
+                    BINARY_PATH="${PROJECT_ROOT}/bin/neuron-mcp"
+                elif [ -f "${PROJECT_ROOT}/bin/neurondb-mcp" ]; then
                     BINARY_PATH="${PROJECT_ROOT}/bin/neurondb-mcp"
                 elif [ -f "${PROJECT_ROOT}/bin/neuronmcp" ]; then
                     BINARY_PATH="${PROJECT_ROOT}/bin/neuronmcp"
