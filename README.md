@@ -763,7 +763,7 @@ NeuronMCP requires:
 - Database user with appropriate permissions
 - Access to NeuronDB vector search, ML, and embedding functions
 
-See [NeuronDB documentation](../neurondb/README.md) for installation instructions.
+See [NeuronDB documentation](../neurondb/README.md) for installation instructions. For full-stack deployment with NeuronDB, NeuronAgent, and NeuronHub, see the [NeuronDB integration docs](../neurondb/docs/integration/) (architecture, deploy script, runbook, compatibility).
 
 ## Troubleshooting
 
