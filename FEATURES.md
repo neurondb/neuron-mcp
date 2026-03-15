@@ -1,314 +1,125 @@
 # NeuronMCP Features
 
-NeuronMCP is a Model Context Protocol (MCP) server that provides access to NeuronDB capabilities through the MCP protocol.
+Capability matrix and feature reference for NeuronMCP.
 
-## Core Features
+| Status | Meaning |
+|--------|--------|
+| **Supported** | Feature is implemented and supported. |
+| **Partial** | Feature has known limitations or dependencies (see section). |
+| **Not supported** | Feature is out of scope. |
 
-### MCP Protocol Support
-- **JSON-RPC 2.0**: Full JSON-RPC 2.0 protocol support
-- **Stdio Communication**: Communication via stdin/stdout
-- **Tool Discovery**: Dynamic tool discovery
-- **Resource Catalog**: Comprehensive resource catalog
-- **Claude Desktop Compatible**: Optimized for Claude Desktop
+---
 
-### Tool Registration Modes
-- **PostgreSQL-Only Mode**: Default mode with 5 essential PostgreSQL tools
-- **Category-Based Selection**: Select tools by category
-- **Full Tool Set**: Access to all 600+ tools
-- **Custom Tool Registration**: Register custom tools
+## Scope
 
-## Tool Categories
+NeuronMCP is an MCP (Model Context Protocol) server that exposes PostgreSQL and extension capabilities as MCP tools. This document lists its capabilities and support level by area.
 
-### Vector Operations (12+ tools)
-- Vector similarity search with multiple distance metrics
-- L2, cosine, inner product, L1, Hamming, Chebyshev, and Minkowski search
-- Vector arithmetic operations
-- Vector distance calculations
-- Unified vector similarity
+---
 
-### Vector Quantization (7 tools)
-- Multiple quantization types (int8, fp16, binary, uint8, ternary, int4)
-- Quantization analysis
-- Quantize/dequantize operations
+## Summary
 
-### Embeddings (8 tools)
-- Text embedding generation
-- Batch embedding generation
-- Image embeddings
-- Multimodal embeddings (text + image)
-- Cached embeddings
-- Model configuration management
+| Area | Capability | Status |
+|------|------------|--------|
+| MCP protocol | JSON-RPC 2.0, stdio transport, tool discovery, resources, tool execution | Supported |
+| Tool count | 650+ tools when using full registration (`RegisterAllTools`) | Supported |
+| Essential mode | 6 tools (PostgreSQL: version, execute_query, tables; vector: generate_embedding, vector_search; RAG: retrieve_context) for Claude Desktop 5-tool limit compatibility | Supported |
+| PostgreSQL-only mode | 100+ PostgreSQL tools (no extension-specific tools) | Supported |
+| Category-based selection | Register tools by category (e.g. vector, ml, rag, postgresql) | Supported |
+| Vector tools | Search (L2, cosine, inner product, L1, Hamming, Chebyshev, Minkowski), similarity, index create, quantization, aggregates, batch distance, etc. | Supported |
+| Embedding tools | Text, batch, image, multimodal, cached embeddings; model config CRUD | Supported |
+| RAG tools | Process document, retrieve context, generate response; ingest, answer with citations, chunk; RAG evaluate, chat, hybrid, rerank, HyDE, graph, corrective, agentic, contextual, modular | Supported |
+| ML tools | Train, predict, evaluate, list/get/delete models; batch predict; export; clustering, outliers, dimensionality reduction | Supported |
+| Hybrid search tools | Hybrid search, text search, RRF, semantic+keyword, multi-vector, faceted, temporal, diverse | Supported |
+| Rerank tools | Cross-encoder, LLM, Cohere, ColBERT, LTR, ensemble | Supported |
+| Index tools | HNSW/IVF create, status, drop, tune | Supported |
+| PostgreSQL tools | Version, stats, databases, connections, locks, replication, settings, extensions; tables, indexes, schemas, views, sequences, functions, triggers, constraints; users, roles, permissions; stats, sizes, vacuum, explain, query execution/cancel/kill, DDL/DML, backup, security/compliance, maintenance, HA; 100+ tools | Supported |
+| Analytics tools | Analyze data, clustering, outliers, dimensionality reduction, quality metrics, drift detection, topic discovery | Supported |
+| Time series / AutoML / ONNX | Time series tool, AutoML tool, ONNX tool | Supported |
+| Debugging tools | Debug tool call, query plan, monitor connections, monitor performance, trace request | Supported |
+| Composition tools | Tool chain, parallel, conditional, retry | Supported |
+| Workflow tools | Create, execute, status, list workflows | Supported |
+| Plugin tools | Marketplace, hot reload, versioning, sandbox, testing, builder | Supported |
+| Resources | Schema (tables, indexes, etc.), models, indexes, config, workers, statistics | Supported |
+| Config | Environment variables, config file, feature toggles, logging | Supported |
+| Security | DB auth, input validation, SQL injection protection, output validation | Supported |
 
-### Hybrid Search (7 tools)
-- Semantic + lexical search
-- Reciprocal rank fusion (RRF)
-- Semantic + keyword search
-- Multi-vector search
-- Faceted vector search
-- Temporal vector search
-- Diverse vector search
+---
 
-### Reranking (6 tools)
-- Cross-encoder reranking
-- LLM-powered reranking
-- Cohere reranking
-- ColBERT reranking
-- Learning-to-rank reranking
-- Ensemble reranking
+## Supported
 
-### Machine Learning (8 tools)
-- Model training (classification, regression, clustering)
-- Single and batch predictions
-- Model evaluation
-- Model management
-- Model export
+**MCP protocol:** JSON-RPC 2.0 over stdio (and optional transports); tool list and tool call; resource catalog (schema, models, indexes, config, workers, stats). Compatible with Claude Desktop and other MCP clients.
 
-**Supported Algorithms:**
-- Classification: logistic, random_forest, svm, knn, decision_tree, naive_bayes
-- Regression: linear_regression, ridge, lasso
-- Clustering: kmeans, gmm, dbscan, hierarchical
+**Registration modes:**
+- **Essential:** 6 tools (fits Claude Desktop’s small tool limit).
+- **PostgreSQL-only:** 100+ PostgreSQL tools, no NeuronDB-specific tools.
+- **By category:** Register only selected categories (e.g. vector, ml, rag, postgresql).
+- **Full:** 650+ tools (all vector, embedding, RAG, ML, hybrid, rerank, index, analytics, time series, AutoML, ONNX, graph, vecmap, dataset loading, workers, GPU, enterprise, PostgreSQL, debugging, composition, workflow, plugin tools).
 
-### Analytics (7 tools)
-- General data analysis
-- Clustering analysis
-- Dimensionality reduction (PCA)
-- Outlier detection
-- Quality metrics (Recall@K, Precision@K)
-- Data drift detection
-- Topic modeling
+**Vector:** Search (L2, cosine, inner product, L1, Hamming, Chebyshev, Minkowski), similarity, index creation, quantization (and analysis), aggregates, batch distance, normalize batch, similarity matrix, index statistics, dimension reduction, cluster analysis, anomaly detection, cache management.
 
-### Time Series (1 tool)
-- Time series analysis
-- ARIMA, forecasting, seasonal decomposition
+**Embeddings:** Generate embedding, batch embedding, image embed, multimodal embed, cached embed; configure embedding model, get/list/delete model configs.
 
-### AutoML (1 tool)
-- Automated ML pipeline
-- Task type detection
-- Constraint handling
+**RAG:** Process document, retrieve context, generate response; ingest documents, answer with citations, chunk document; RAG evaluate, chat, hybrid, rerank, HyDE, graph, corrective, agentic, contextual, modular.
 
-### ONNX (4 tools)
-- ONNX model import
-- ONNX model export
-- ONNX model info
-- ONNX predictions
+**ML:** Train model, predict, evaluate, list models, get model info, delete model, predict batch, export model; cluster data, detect outliers, reduce dimensionality. Algorithm support depends on NeuronDB (e.g. classification, regression, clustering).
 
-### Index Management (6 tools)
-- HNSW index creation
-- IVF index creation
-- Index status monitoring
-- Index dropping
-- Auto-tuning for HNSW
-- Auto-tuning for IVF
+**Hybrid search:** Hybrid search, text search, reciprocal rank fusion, semantic+keyword, multi-vector, faceted, temporal, diverse.
 
-### RAG Operations (4 tools)
-- Document processing
-- Context retrieval
-- Response generation
-- Document chunking
+**Rerank:** Cross-encoder, LLM, Cohere, ColBERT, LTR, ensemble.
 
-### Workers & GPU (2 tools)
-- Background worker management
-- GPU information retrieval
+**Index management:** Create HNSW/IVF index, index status, drop index, tune HNSW/IVF.
 
-### Vector Graph (1 tool)
-- Graph operations (BFS, DFS, PageRank, community detection)
-- Graph-based vector operations
+**PostgreSQL:** Large set of tools for server info, object listing, users/roles/permissions, performance/size/vacuum, administration, query execution and planning, database/schema/user/role management, DDL/DML, backup/restore, security/compliance, maintenance, high availability. Exact count in `internal/tools/register.go` (RegisterPostgreSQLOnlyTools and RegisterAllTools).
 
-### Vecmap Operations (1 tool)
-- Sparse vector operations
-- Multiple distance metrics
-- Vector arithmetic
+**Analytics:** Analyze data, cluster, outliers, dimensionality reduction, quality metrics, drift detection, topic discovery.
 
-### Dataset Loading
-- Load from HuggingFace
-- Load from URLs (CSV, JSON, Parquet)
-- Load from GitHub repositories
-- Load from S3 buckets
-- Load from local files
-- Automatic schema detection
-- Auto-embedding generation
-- Index creation
+**Time series, AutoML, ONNX:** One tool each for time series, AutoML, and ONNX operations (backed by NeuronDB).
 
-### Debugging Tools (5+ tools)
-- Debug tool calls
-- Query plan analysis
-- Monitor active connections
-- Monitor query performance
-- Trace requests
+**Debugging:** Debug tool call, query plan, monitor connections, monitor performance, trace request.
 
-### Composition Tools (4+ tools)
-- Tool chaining
-- Parallel execution
-- Conditional execution
-- Retry logic
+**Composition:** Chain, parallel, conditional, retry.
 
-### Workflow Tools (4+ tools)
-- Create workflows
-- Execute workflows
-- Monitor workflow status
-- List workflows
+**Workflow:** Create workflow, execute, status, list.
 
-### Plugin Tools (6+ tools)
-- Plugin marketplace
-- Hot reload
-- Versioning
-- Sandbox
-- Testing
-- Builder (1 tool)
-- Load from HuggingFace
-- Load from URL
-- Load from GitHub
-- Load from S3
-- Load from local filesystem
-- Auto-embedding
-- Auto-index creation
+**Plugin:** Marketplace, hot reload, versioning, sandbox, testing, builder.
 
-### PostgreSQL (8 tools)
-- Version information
-- Server statistics
-- Database listing
-- Connection information
-- Lock information
-- Replication status
-- Configuration settings
-- Extension listing
+**Resources:** Table/schema/index listings and details, model listings and metadata, index listings and stats, configuration (current, GPU, LLM), worker listings and status, overview/performance/usage statistics.
 
-## Resource Catalog
+**Configuration:** Environment variables, JSON config file, feature toggles, log level. Connection pooling to PostgreSQL.
 
-### Schema Resources
-- Table listings
-- Table schema details
-- Column definitions
-- Index listings
-- Index details
+**Safety:** Input validation, SQL injection protection, output validation; database authentication.
 
-### Model Resources
-- Model listings
-- Model metadata
-- Model metrics
-- Prediction history
+---
 
-### Index Resources
-- Index listings
-- Index statistics
-- Index build status
+## Partial support
 
-### Configuration Resources
-- Current configuration
-- GPU configuration
-- LLM provider configuration
+**Claude Desktop:** Default “5-tool limit” is addressed by essential mode (6 tools); for more tools, use category-based or full registration and note client limits.
 
-### Worker Resources
-- Worker listings
-- Worker status
-- Worker queue status
+**Database dependency:** All vector/ML/RAG/embedding/index tools require a running PostgreSQL instance with a compatible extension; behavior and algorithm set depend on that extension's version.
 
-### Statistics Resources
-- Overview statistics
-- Performance metrics
-- Usage statistics
+---
 
-## Advanced Features
+## Out of scope
 
-### Server Capabilities
-- **Version Negotiation**: Server version and capability negotiation
-- **Tool Versioning**: Version information for tools
-- **Model Versioning**: Version information for models
-- **Feature Flags**: Feature flag support
-- **Pagination**: Pagination support
-- **Streaming**: Streaming support
-- **Dry Run**: Dry run mode
-- **Idempotency**: Idempotent operations
-- **Audit Logging**: Audit logging
-- **Scoped Auth**: Scoped authentication
-- **Rate Limiting**: Rate limiting
-- **Output Validation**: Output validation
-- **Tool Versioning**: Tool version management
-- **Deprecation**: Deprecation support
-- **Composite Tools**: Composite tool support
-- **Resource Catalog**: Resource catalog support
+- **Built-in LLM/embedding models:** Model execution is delegated to the database and external providers; NeuronMCP does not ship models.
 
-### Configuration
-- **Environment Variables**: Configuration via environment variables
-- **Config File**: JSON configuration file support
-- **Feature Toggles**: Enable/disable features
-- **Logging Configuration**: Configurable logging
+---
 
-### Performance
-- **Connection Pooling**: Efficient database connection pooling
-- **Query Optimization**: Optimized queries
-- **Caching**: Response caching
-- **Batch Operations**: Batch processing support
+## Counts (reference)
 
-## Integration Features
+- **Total tools in RegisterAllTools:** 666 (see `internal/tools/register.go`). Documented as “650+ tools.”
+- **Essential mode:** 6 tools.
+- **PostgreSQL-only mode:** 100+ tools (exact count in register.go).
 
-### Claude Desktop
-- **Optimized Compatibility**: Optimized for Claude Desktop
-- **Tool Limit Handling**: Handles Claude Desktop's 5-tool limit
-- **Category Selection**: Category-based tool selection
+---
 
-### MCP Clients
-- **Standard MCP**: Works with any MCP-compatible client
-- **JSON-RPC 2.0**: Standard JSON-RPC 2.0 protocol
-- **Error Handling**: Comprehensive error handling
+## Documentation
 
-## Use Cases
+- [README](README.md)
+- [Setup guide](docs/setup-guide.md)
+- [Tool and resource catalog](docs/tool-resource-catalog.md)
+- [Overview](docs/overview.md)
 
-### Vector Search
-- Semantic search across documents
-- Similarity search
-- Multi-vector search
+---
 
-### RAG Applications
-- Document processing
-- Context retrieval
-- Response generation
-
-### Machine Learning
-- Model training
-- Predictions
-- Model evaluation
-
-### Data Analysis
-- Statistical analysis
-- Clustering
-- Outlier detection
-
-### Database Management
-- Schema inspection
-- Index management
-- Performance monitoring
-
-## Security Features
-
-### Authentication
-- **Database Authentication**: Uses PostgreSQL authentication
-- **Connection Security**: Secure database connections
-
-### Validation
-- **Input Validation**: Comprehensive input validation
-- **SQL Injection Protection**: Protection against SQL injection
-- **Output Validation**: Output validation
-
-## Operational Features
-
-### Logging
-- **Structured Logging**: Structured logging support
-- **Configurable Levels**: Configurable log levels
-- **Error Stack Traces**: Detailed error information
-
-### Monitoring
-- **Health Checks**: Health check support
-- **Performance Metrics**: Performance tracking
-- **Resource Usage**: Resource usage monitoring
-
-### Error Handling
-- **Graceful Errors**: Graceful error handling
-- **Error Codes**: Standard error codes
-- **Error Messages**: Clear error messages
-
-## Related
-
-- **[NeuronDB](../neurondb/FEATURES.md)** — Extension capabilities exposed via MCP tools
-- **[NeuronAgent](../neuron-agent/FEATURES.md)** — Agent runtime with NeuronDB tools
-- **[NeuronDesktop](../neuron-desktop/FEATURES.md)** — UI that connects to NeuronMCP
+[Back to top](#neuronmcp-features) · [README](README.md)

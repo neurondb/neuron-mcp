@@ -33,7 +33,7 @@ Commit messages must contain relevant information and follow these rules:
 
 **Module Prefix**
 
-Prefix the first line of the commit message with `NeuronMCP:` for this repository.
+Prefix the first line of the commit message with `NeuronMCP:` when contributing to this project.
 
 **Example**
 

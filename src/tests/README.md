@@ -141,10 +141,10 @@ Create `neuronmcp_server.json` in the NeuronMCP root directory:
 
 Tests report results in the following format:
 
-- ✅ **Passed**: Test completed successfully
-- ❌ **Failed**: Test failed with an error
-- ⚠️ **Configuration Needed**: Test requires database connection or configuration
-- ⏭️ **Skipped**: Test was skipped (not available or not applicable)
+- **Passed**: Test completed successfully
+- **Failed**: Test failed with an error
+- **Configuration Needed**: Test requires database connection or configuration
+- **Skipped**: Test was skipped (not available or not applicable)
 
 ## Test Coverage
 

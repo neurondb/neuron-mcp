@@ -2,10 +2,10 @@
 
 <div align="center">
 
-**Model Context Protocol (MCP) server with 600+ tools for NeuronDB**
+**Model Context Protocol (MCP) server with 650+ tools for NeuronDB**
 
 [![Status](https://img.shields.io/badge/status-stable-brightgreen)](.)
-[![Tools](https://img.shields.io/badge/tools-600+-green)](.)
+[![Tools](https://img.shields.io/badge/tools-650+-green)](.)
 [![Protocol](https://img.shields.io/badge/protocol-MCP-blue)](.)
 
 </div>
@@ -13,7 +13,7 @@
 ---
 
 > [!TIP]
-> NeuronMCP provides a complete MCP protocol implementation. It includes 600+ tools for vector operations, ML, RAG, PostgreSQL administration, debugging, composition, workflow, plugins, and more.
+> NeuronMCP provides a complete MCP protocol implementation. It includes 650+ tools for vector operations, ML, RAG, PostgreSQL administration, debugging, composition, workflow, plugins, and more.
 
 ---
 
@@ -24,7 +24,7 @@ NeuronMCP is a Model Context Protocol (MCP) server providing comprehensive tools
 | Feature | Description | Status |
 |---------|-------------|--------|
 | **MCP Protocol Server** | Full JSON-RPC 2.0 implementation with stdio, HTTP, and SSE transport | ✅ Stable |
-| **Tool Server** | 600+ tools covering vector operations, ML, RAG, PostgreSQL administration, dataset loading, debugging, composition, workflow, plugins, and more | ✅ Stable |
+| **Tool Server** | 650+ tools covering vector operations, ML, RAG, PostgreSQL administration, dataset loading, debugging, composition, workflow, plugins, and more | ✅ Stable |
 | **Resource Provider** | Schema, models, indexes, config, workers, and stats with real-time subscriptions | ✅ Stable |
 | **Enterprise Platform** | Middleware system, authentication, caching, metrics, webhooks, and resilience features | ✅ Stable |
 
@@ -44,7 +44,7 @@ Comprehensive vector operations: distance metrics (L2, cosine, inner product, et
 
 ### ML Tools & Pipeline
 
-Complete machine learning pipeline with 52+ algorithms: training, prediction, evaluation, AutoML, ONNX support, time series, analytics.
+Complete machine learning pipeline with 25+ algorithm families: training, prediction, evaluation, AutoML, ONNX support, time series, analytics.
 
 ### RAG Operations
 
@@ -73,18 +73,28 @@ Validation, logging, timeout handling, error handling, authentication (JWT, API 
 
 ## Docker
 
-- Compose service: `neuronmcp` (plus GPU-profile variants)
-- From repo root: `docker compose up -d neuronmcp`
-- See: neuron-mcp repo `docker/` or deployment docs
+This repo provides a Dockerfile only (no `docker-compose.yml`). Build and run the image from the repository root:
+
+```bash
+docker build -f docker/Dockerfile -t neurondb-mcp:latest .
+docker run -i --rm -e NEURONDB_HOST=... -e NEURONDB_PORT=5432 ... neurondb-mcp:latest
+```
+
+See [README](../README.md) “Using Docker” for full env vars. For full-stack Docker (NeuronDB + NeuronMCP), use the neurondb repository or deploy each component from its repo.
 
 ## Quick Start
 
-### Minimal Verification
+### Minimal verification
 
 ```bash
-# Test MCP server (requires MCP client)
-echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' | ./neurondb-mcp
+# Build first
+make build
+
+# Test MCP server (stdio)
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' | ./bin/neuron-mcp
 ```
+
+Or use the included client to list tools: `./bin/neuron-mcp-client ./bin/neuron-mcp tools/list`
 
 ### Using with Claude Desktop
 

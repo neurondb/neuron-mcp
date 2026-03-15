@@ -10,7 +10,7 @@ Enables MCP-compatible clients to access NeuronDB vector search, ML algorithms, 
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16+-blue.svg)](https://www.postgresql.org/)
 [![MCP](https://img.shields.io/badge/MCP-Protocol-blue.svg)](https://modelcontextprotocol.io/)
 [![Version](https://img.shields.io/badge/version-3.0.0--devel-blue.svg)](https://github.com/neurondb/neurondb)
-[![License](https://img.shields.io/badge/License-Proprietary-red.svg)](../LICENSE)
+[![License](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-neurondb.ai-brightgreen.svg)](https://www.neurondb.ai/docs/neuronmcp)
 
 </div>
@@ -21,14 +21,14 @@ NeuronMCP implements the Model Context Protocol using JSON-RPC 2.0 over stdio. I
 
 ### Key Capabilities
 
-- 🔌 **MCP Protocol** - Full JSON-RPC 2.0 implementation with stdio, HTTP, and SSE transport
-- 🛠️ **600+ Tools** - Comprehensive tool catalog covering vector ops, ML, RAG, PostgreSQL administration, debugging, composition, workflow, and plugins
-- 📊 **Resources** - Real-time access to schema, models, indexes, and system stats
-- 🔐 **Enterprise Security** - JWT, API keys, OAuth2, rate limiting, and audit logging
-- ⚡ **High Performance** - TTL caching, connection pooling, and optimized query execution
-- 📈 **Observability** - Prometheus metrics, structured logging, and health checks
+- **MCP Protocol** — Full JSON-RPC 2.0 implementation with stdio, HTTP, and SSE transport
+- **650+ Tools** — Vector ops, ML, RAG, PostgreSQL administration, debugging, composition, workflow, plugins. See [FEATURES.md](FEATURES.md).
+- **Resources** — Real-time access to schema, models, indexes, and system stats
+- **Enterprise Security** — JWT, API keys, OAuth2, rate limiting, and audit logging
+- **High Performance** — TTL caching, connection pooling, and optimized query execution
+- **Observability** — Prometheus metrics, structured logging, and health checks
 
-## 📑 Table of Contents
+## Table of Contents
 
 <details>
 <summary><strong>Expand full table of contents</strong></summary>
@@ -36,7 +36,7 @@ NeuronMCP implements the Model Context Protocol using JSON-RPC 2.0 over stdio. I
 - [Overview](#overview)
   - [Key Capabilities](#key-capabilities)
 - [Documentation](#documentation)
-- [Tool Registration Modes](#tool-registration-modes)
+- [Tools and Claude Desktop](#tools-and-claude-desktop)
 - [Official Documentation](#official-documentation)
 - [Features](#features)
 - [Architecture](#architecture)
@@ -68,65 +68,25 @@ NeuronMCP implements the Model Context Protocol using JSON-RPC 2.0 over stdio. I
 - **[Tool & Resource Catalog](docs/tool-resource-catalog.md)** - Complete catalog of all tools and resources
 - **[Setup Guide](docs/neurondb-mcp-setup.md)** - Setup and configuration guide
 
-## Tool Registration Modes
+## Tools and Claude Desktop
 
-### Claude Desktop Compatibility
+The server registers all available tools at startup (650+ tools: vector, ML, RAG, PostgreSQL administration, and more). There is no environment variable to limit or filter which tools are registered.
 
-**Important**: Claude Desktop has compatibility issues with tools that have `neurondb_` prefixes in their names. By default, only PostgreSQL tools are registered for maximum compatibility.
+**Claude Desktop:** Some MCP clients, including Claude Desktop, may impose a limit on how many tools they display or use. If you hit that limit, use a different MCP client (e.g. the included `neuron-mcp-client`) or run the server in a context where the full tool set is needed. See [Setup Guide](docs/setup-guide.md) for Claude Desktop configuration.
 
-#### Default Mode (PostgreSQL-only)
-```json
-{
-  "mcpServers": {
-    "neurondb_postgresql_mcp": {
-      "command": "/path/to/neuronmcp",
-      "env": {
-        "NEURONDB_HOST": "localhost",
-        "NEURONDB_PORT": "5432",
-        "NEURONDB_DATABASE": "neurondb",
-        "NEURONDB_USER": "pgedge"
-      }
-    }
-  }
-}
-```
-**Tools available**: 5 essential PostgreSQL tools (version, execute_query, tables, query_plan, cancel_query). Note: Claude Desktop has a hard limit of 5 tools per MCP server in default mode.
-
-**Note**: Claude Desktop has a hard limit of 5 tools per MCP server. Additional tools can be enabled using category-based selection.
-
-#### Enable NeuronDB Tools (Advanced Mode)
-⚠️ **Warning**: `neurondb_` prefixed tools will NOT display in Claude Desktop, but work with other MCP clients.
+Example configuration (use the path to your built binary, e.g. `./bin/neuron-mcp`):
 
 ```json
 {
   "mcpServers": {
-    "neurondb_postgresql_mcp": {
-      "command": "/path/to/neuronmcp",
+    "neurondb": {
+      "command": "/path/to/neuron-mcp",
       "env": {
         "NEURONDB_HOST": "localhost",
         "NEURONDB_PORT": "5432",
         "NEURONDB_DATABASE": "neurondb",
-        "NEURONDB_USER": "pgedge",
-        "NEURONMCP_ALLOW_NEURONDB_TOOLS": "true"
-      }
-    }
-  }
-}
-```
-**Tools available**: 6 tools including vector and RAG tools. Note: `neurondb_` prefixed tools may not display in Claude Desktop but work with other MCP clients.
-
-#### Category-Based Selection
-```json
-{
-  "mcpServers": {
-    "neurondb_postgresql_mcp": {
-      "command": "/path/to/neuronmcp",
-      "env": {
-        "NEURONDB_HOST": "localhost",
-        "NEURONDB_PORT": "5432",
-        "NEURONDB_DATABASE": "neurondb",
-        "NEURONDB_USER": "pgedge",
-        "NEURONMCP_TOOL_CATEGORIES": "postgresql,vector"
+        "NEURONDB_USER": "neurondb",
+        "NEURONDB_PASSWORD": "your_password"
       }
     }
   }
@@ -135,50 +95,40 @@ NeuronMCP implements the Model Context Protocol using JSON-RPC 2.0 over stdio. I
 
 ## Official Documentation
 
-**For comprehensive documentation, detailed tutorials, complete tool references, and integration guides, visit:**
-
-🌐 **[https://www.neurondb.ai/docs/neuronmcp](https://www.neurondb.ai/docs/neuronmcp)**
-
-The official documentation provides:
-- Complete MCP protocol implementation details
-- All available tools and resources reference
-- Claude Desktop integration guide
-- Custom tool development
-- Configuration and deployment guides
-- Troubleshooting and best practices
+**[https://www.neurondb.ai/docs/neuronmcp](https://www.neurondb.ai/docs/neuronmcp)** — Tool reference, Claude Desktop setup, and configuration.
 
 ## Features
 
 <details>
-<summary><strong>📊 Complete Feature List</strong></summary>
+<summary><strong>Complete Feature List</strong></summary>
 
 | Feature | Description | Count |
 |:--------|:------------|:-----|
-| **MCP Protocol** | Full JSON-RPC 2.0 implementation with stdio, HTTP, and SSE transport | ✅ |
+| **MCP Protocol** | Full JSON-RPC 2.0 implementation with stdio, HTTP, and SSE transport | Yes |
 | **Vector Operations** | Vector search (L2, cosine, inner product), embedding generation, indexing (HNSW, IVF), quantization | 100+ tools |
-| **ML Tools** | Complete ML pipeline: training, prediction, evaluation, AutoML, ONNX, time series | 52+ algorithms |
-| **RAG Operations** | Document processing, context retrieval, response generation with multiple reranking methods | ✅ |
+| **ML Tools** | ML pipeline: training, prediction, evaluation, AutoML, ONNX, time series (backed by NeuronDB; 25+ algorithm families) | Yes |
+| **RAG Operations** | Document processing, context retrieval, response generation with multiple reranking methods | Yes |
 | **PostgreSQL Tools** | Complete database control: DDL, DML, DCL, user/role management, backup/restore | 100+ tools |
 | **Debugging Tools** | Debug tool calls, query plans, monitor connections and performance, trace requests | 5+ tools |
 | **Composition Tools** | Tool chaining, parallel execution, conditional execution, retry logic | 4+ tools |
 | **Workflow Tools** | Create, execute, monitor workflows | 4+ tools |
 | **Plugin Tools** | Marketplace, hot reload, versioning, sandbox, testing, builder | 6+ tools |
-| **Dataset Loading** | Load from HuggingFace, URLs, GitHub, S3, local files with auto-embedding | ✅ |
+| **Dataset Loading** | Load from HuggingFace, URLs, GitHub, S3, local files with auto-embedding | Yes |
 | **Resources** | Schema, models, indexes, config, workers, stats with real-time subscriptions | 6+ resources |
-| **Prompts Protocol** | Full prompts/list and prompts/get with template engine | ✅ |
-| **Sampling/Completions** | sampling/createMessage with streaming support | ✅ |
-| **Progress Tracking** | Long-running operation progress with progress/get | ✅ |
-| **Batch Operations** | Transactional batch tool calls (tools/call_batch) | ✅ |
-| **Tool Discovery** | Search and filter tools with categorization | ✅ |
-| **Middleware System** | Request validation, logging, timeouts, error handling, auth, rate limiting | ✅ |
-| **Security** | JWT, API keys, OAuth2, rate limiting, request validation, secure storage | ✅ |
-| **Performance** | TTL caching, connection pooling, optimized query execution | ✅ |
-| **Enterprise Features** | Prometheus metrics, webhooks, circuit breaker, retry, health checks | ✅ |
-| **Modular Architecture** | 19 independent packages with clean separation of concerns | ✅ |
+| **Prompts Protocol** | Full prompts/list and prompts/get with template engine | Yes |
+| **Sampling/Completions** | sampling/createMessage with streaming support | Yes |
+| **Progress Tracking** | Long-running operation progress with progress/get | Yes |
+| **Batch Operations** | Transactional batch tool calls (tools/call_batch) | Yes |
+| **Tool Discovery** | Search and filter tools with categorization | Yes |
+| **Middleware System** | Request validation, logging, timeouts, error handling, auth, rate limiting | Yes |
+| **Security** | JWT, API keys, OAuth2, rate limiting, request validation, secure storage | Yes |
+| **Performance** | TTL caching, connection pooling, optimized query execution | Yes |
+| **Enterprise Features** | Prometheus metrics, webhooks, circuit breaker, retry, health checks | Yes |
+| **Modular Architecture** | 19 independent packages with clean separation of concerns | Yes |
 
 </details>
 
-> 📊 For a detailed comparison with other MCP servers, see [docs/tool-resource-catalog.md](docs/tool-resource-catalog.md) and the [MCP protocol spec](https://modelcontextprotocol.io/).
+For a detailed comparison with other MCP servers, see [docs/tool-resource-catalog.md](docs/tool-resource-catalog.md) and the [MCP protocol spec](https://modelcontextprotocol.io/).
 
 ## Architecture
 
@@ -194,7 +144,7 @@ graph TB
     
     subgraph MCP["NeuronMCP Server"]
         PROTOCOL[MCP Protocol Handler<br/>JSON-RPC 2.0]
-        TOOLS[Tool Registry<br/>600+ Tools]
+        TOOLS[Tool Registry<br/>650+ Tools]
         RESOURCES[Resource Manager<br/>Schema, Models, Indexes]
         MIDDLEWARE[Middleware Pipeline<br/>Auth, Logging, Rate Limit]
         CACHE[TTL Cache<br/>Idempotency]
@@ -202,16 +152,16 @@ graph TB
     
     subgraph CATEGORIES["Tool Categories"]
         VEC[Vector Operations<br/>50+ tools]
-        ML[ML Pipeline<br/>52+ algorithms]
+        ML[ML Pipeline<br/>25+ algorithm families]
         RAG[RAG Operations<br/>Document processing]
-        PG[PostgreSQL Tools<br/>100+ DDL/DML/DCL<br/>600+ Total Tools]
+        PG[PostgreSQL Tools<br/>100+ DDL/DML/DCL<br/>650+ total tools]
         DATASET[Dataset Loading<br/>HuggingFace, S3, GitHub]
     end
     
     subgraph DB["NeuronDB PostgreSQL"]
         VECTOR[Vector Search<br/>HNSW/IVF]
         EMBED[Embeddings<br/>Text/Image/Multimodal]
-        ML_FUNC[ML Functions<br/>52+ Algorithms]
+        ML_FUNC[ML Functions<br/>25+ algorithm families]
         ADMIN[PostgreSQL Admin<br/>Full DDL/DML/DCL]
     end
     
@@ -257,7 +207,7 @@ sequenceDiagram
     Client->>Server: tools/list
     Server->>Tools: Get available tools
     Tools-->>Server: Tool catalog
-    Server-->>Client: Tool list (600+ tools)
+    Server-->>Client: Tool list (650+ tools)
     
     Client->>Server: tools/call {"name": "vector_search", ...}
     Server->>Server: Validate & authenticate
@@ -274,9 +224,9 @@ sequenceDiagram
 
 ```mermaid
 graph LR
-    subgraph TOOLS["600+ Tools"]
-        VEC_TOOLS[Vector Operations<br/>50+ tools<br/>Search, Embeddings, Indexing]
-        ML_TOOLS[ML Pipeline<br/>52+ algorithms<br/>Training, Prediction, Evaluation]
+    subgraph TOOLS["650+ Tools"]
+        VEC_TOOLS[Vector Operations<br/>Search, Embeddings, Indexing]
+        ML_TOOLS[ML Pipeline<br/>25+ algorithm families<br/>Training, Prediction, Evaluation]
         RAG_TOOLS[RAG Operations<br/>Document Processing<br/>Context Retrieval]
         PG_TOOLS[PostgreSQL Tools<br/>100+ tools<br/>DDL, DML, DCL, Admin]
         DATASET_TOOLS[Dataset Loading<br/>HuggingFace, S3, GitHub<br/>Auto-embedding]
@@ -289,15 +239,14 @@ graph LR
     style DATASET_TOOLS fill:#f3e5f5
 ```
 
-> [!TIP]
-> Use category-based tool selection to control which tools are available. This is especially useful for Claude Desktop which has a 5-tool limit per server.
+> Use the [Setup Guide](docs/setup-guide.md) for Claude Desktop. If your client limits the number of tools, use another MCP client such as the included `neuron-mcp-client`.
 
 ## Quick Start
 
 ### Prerequisites
 
 <details>
-<summary><strong>📋 Prerequisites Checklist</strong></summary>
+<summary><strong>Prerequisites Checklist</strong></summary>
 
 - [ ] PostgreSQL 16 or later installed
 - [ ] NeuronDB extension installed and enabled
@@ -309,17 +258,12 @@ graph LR
 
 ### Database Setup
 
-**Option 1: Using Docker Compose (Recommended for Quick Start)**
+**Option 1: Using Docker Compose (recommended for quick start)**
 
-If using the root `docker-compose.yml`:
+If you have PostgreSQL with NeuronDB (e.g. from the [neurondb](https://github.com/neurondb/neurondb) repo Docker setup):
+
 ```bash
-# From repository root
-docker compose up -d neurondb
-
-# Wait for service to be healthy
-docker compose ps neurondb
-
-# Create extension (if not already created)
+# Create extension if not already created
 psql "postgresql://neurondb:neurondb@localhost:5433/neurondb" -c "CREATE EXTENSION IF NOT EXISTS neurondb;"
 ```
 
@@ -330,35 +274,7 @@ createdb neurondb
 psql -d neurondb -c "CREATE EXTENSION neurondb;"
 ```
 
-### NeuronMCP Configuration Schema Setup
-
-NeuronMCP requires a comprehensive database schema for managing LLM models, API keys, index configurations, worker settings, ML defaults, and tool configurations. This schema provides:
-
-- **50+ pre-populated LLM models** (OpenAI, Anthropic, HuggingFace, local) with encrypted API key storage
-- **Index templates** for HNSW and IVF vector indexes
-- **Worker configurations** for background workers
-- **ML algorithm defaults** for all supported algorithms
-- **Tool-specific defaults** for all NeuronMCP tools
-- **System-wide settings** and feature flags
-
-**Quick Setup:**
-
-```bash
-cd neuron-mcp
-./scripts/neuronmcp-setup.sh
-```
-
-**Set API Keys:**
-
-```sql
--- Set API key for a model
-SELECT neurondb_set_model_key('text-embedding-3-small', 'sk-your-api-key');
-
--- View configured models
-SELECT * FROM neurondb.v_llm_models_ready;
-```
-
-**For complete documentation**, see [neurondb-mcp-setup.md](docs/neurondb-mcp-setup.md)
+NeuronMCP can use an optional database schema for LLM model config, API keys, index templates, worker settings, and tool defaults. Run `./scripts/neuronmcp-setup.sh` from the repository root to set it up. See [neurondb-mcp-setup.md](docs/neurondb-mcp-setup.md) for details.
 
 ### Configuration
 
@@ -401,41 +317,73 @@ export NEURONDB_PASSWORD=neurondb
 
 ### Build and Run
 
-#### Automated Installation (Recommended)
+#### Run the server
 
-Use the installation script for easy setup:
+From the repository root:
+
+```bash
+make build
+export NEURONDB_HOST=localhost NEURONDB_PORT=5432 NEURONDB_DATABASE=neurondb NEURONDB_USER=neurondb NEURONDB_PASSWORD=neurondb
+./bin/neuron-mcp
+```
+
+Optional: pass a config file with `-c` or set `NEURONDB_MCP_CONFIG` to the path of your `mcp-config.json`.
+
+Test: run the included client to list tools:
+
+```bash
+./bin/neuron-mcp-client ./bin/neuron-mcp tools/list
+```
+
+Or send a raw JSON-RPC initialize to confirm the server responds:
+
+```bash
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' | ./bin/neuron-mcp
+```
+
+#### Automated Setup (recommended)
+
+Use the setup script for database schema (optional LLM/config tables):
 
 ```bash
 # From repository root
-sudo ./scripts/install-neuronmcp.sh
+./scripts/neuronmcp-setup.sh
 
-# With system service enabled
-sudo ./scripts/install-neuronmcp.sh --enable-service
+# With system service enabled (if supported)
+./scripts/neuronmcp-setup.sh --enable-service
 ```
 
-#### Manual Build
+Use `scripts/neuronmcp-run.sh` or `scripts/neuronmcp-run-server.sh` to run the server.
 
-From source:
+#### Manual build (without Makefile)
 
 ```bash
-go build ./cmd/neurondb-mcp
-./neurondb-mcp
+go build -o bin/neuron-mcp ./cmd/neurondb-mcp
+./bin/neuron-mcp
 ```
 
 #### Using Docker
 
+This repo does not include a `docker-compose.yml`. Build and run the image manually:
+
 ```bash
-cd docker
-# Optionally create .env file with your configuration
-# Or use environment variables directly (docker-compose.yml has defaults)
-docker compose up -d
+# From repository root
+docker build -f docker/Dockerfile -t neurondb-mcp:latest .
+
+docker run -i --rm \
+  -e NEURONDB_HOST=localhost \
+  -e NEURONDB_PORT=5432 \
+  -e NEURONDB_DATABASE=neurondb \
+  -e NEURONDB_USER=neurondb \
+  -e NEURONDB_PASSWORD=neurondb \
+  neurondb-mcp:latest
 ```
 
-See [Docker Guide](docker/README.md) for Docker deployment details.
+For full-stack Docker (NeuronDB + NeuronMCP), use the neurondb repository or deploy each component from its repo.
 
 #### Running as a Service
 
-For systemd (Linux) or launchd (macOS), see [Service Management Guide](../../Docs/getting-started/installation-services.md).
+For systemd (Linux) or launchd (macOS), see your system documentation or the [neurondb installation services guide](https://github.com/neurondb/neurondb/blob/main/docs/getting-started/installation-services.md) for patterns.
 
 ## MCP Protocol
 
@@ -510,11 +458,7 @@ NeuronMCP provides comprehensive tools covering all NeuronDB capabilities:
 | **Dataset Loading** | `load_dataset` (HuggingFace, URLs, GitHub, S3, local files with auto-embedding) |
 | **PostgreSQL (100+ tools)** | Complete PostgreSQL control: **DDL** (CREATE/ALTER/DROP for databases, schemas, tables, indexes, views, functions, triggers, sequences, types, domains, materialized views, partitions, foreign tables), **DML** (INSERT, UPDATE, DELETE, TRUNCATE, COPY), **DCL** (GRANT/REVOKE), **User/Role Management** (CREATE/ALTER/DROP USER/ROLE), **Backup/Recovery** (pg_dump/pg_restore), **Security** (SQL validation, permission checking, audit), plus all administration, monitoring, and statistics tools |
 
-**Comprehensive Documentation:**
-- **[Tool & Resource Catalog](docs/tool-resource-catalog.md)** - Complete reference for tools and resources
-- **[POSTGRESQL_TOOLS.md](POSTGRESQL_TOOLS.md)** - Detailed documentation for all PostgreSQL tools (100+ tools covering DDL, DML, DCL, administration, backup, security)
-
-For a comprehensive catalog of all tools and resources, see [docs/tool-resource-catalog.md](docs/tool-resource-catalog.md).
+**Tool reference:** [Tool & Resource Catalog](docs/tool-resource-catalog.md). **PostgreSQL tools:** [docs/postgresql-tools.md](docs/postgresql-tools.md).
 
 For example client usage and interaction transcripts, see [docs/examples/](docs/examples/).
 
@@ -658,7 +602,7 @@ Or use local binary:
 {
   "mcpServers": {
     "neurondb": {
-      "command": "/path/to/neurondb-mcp",
+      "command": "/path/to/neuron-mcp",
       "env": {
         "NEURONDB_HOST": "localhost",
         "NEURONDB_PORT": "5432",
@@ -671,6 +615,8 @@ Or use local binary:
 }
 ```
 
+Use the full path to your built binary (e.g. `/home/user/neuron-mcp/bin/neuron-mcp`).
+
 Restart Claude Desktop after configuration changes.
 
 ## Using with Other MCP Clients
@@ -678,32 +624,32 @@ Restart Claude Desktop after configuration changes.
 Run NeuronMCP interactively for testing:
 
 ```bash
-./neurondb-mcp
+./bin/neuron-mcp
 ```
 
 Send JSON-RPC messages via stdin, receive responses via stdout.
 
-### Using neurondb-mcp-client
+### Using neuron-mcp-client
 
-A simple MCP client that works exactly like Claude Desktop. It handles the full MCP protocol including initialize handshake.
+A simple MCP client that works like Claude Desktop. It handles the full MCP protocol including the initialize handshake.
 
-Build the client:
+Build the client (included in `make build`):
 
 ```bash
-make build-client
+make build
 ```
 
 Usage:
 
 ```bash
 # Initialize and list tools
-./bin/neurondb-mcp-client ./bin/neurondb-mcp tools/list
+./bin/neuron-mcp-client ./bin/neuron-mcp tools/list
 
 # Call a tool
-./bin/neurondb-mcp-client ./bin/neurondb-mcp tools/call '{"name":"vector_search","arguments":{}}'
+./bin/neuron-mcp-client ./bin/neuron-mcp tools/call '{"name":"vector_search","arguments":{}}'
 
 # List resources
-./bin/neurondb-mcp-client ./bin/neurondb-mcp resources/list
+./bin/neuron-mcp-client ./bin/neuron-mcp resources/list
 ```
 
 The client automatically:
@@ -715,15 +661,15 @@ The client automatically:
 Test script:
 
 ```bash
-cd client
+cd src/client
 ./example_usage.sh
 ```
 
 Or use the Python client:
 
 ```bash
-cd client
-python neurondb_mcp_client.py -c ../../neuronmcp_server.json -e "list_tools"
+cd src/client
+python neurondb_mcp_client.py -c ../tests/neuronmcp_server.json -e "list_tools"
 ```
 
 For Docker:
@@ -738,11 +684,13 @@ docker run -i --rm \
   neurondb-mcp:latest
 ```
 
+Build the image first: `docker build -f docker/Dockerfile -t neurondb-mcp:latest .` from the repository root.
+
 ## Documentation
 
 | Document | Description |
 |----------|-------------|
-| [Docker Guide](docker/README.md) | Container deployment guide |
+| [docker/](docker/) | Dockerfile and entrypoint for container deployment |
 | [MCP Specification](https://modelcontextprotocol.io/) | Model Context Protocol documentation |
 | [Claude Desktop Config Examples](claude_desktop_config.json) | Example configurations for macOS, Linux, and Windows |
 
@@ -751,19 +699,15 @@ docker run -i --rm \
 | Component | Requirement |
 |-----------|-------------|
 | PostgreSQL | 16 or later |
-| NeuronDB Extension | Installed and enabled |
+| NeuronDB Extension | Installed and enabled ([install](https://github.com/neurondb/neurondb)) |
 | Go | 1.23 or later (for building) |
-| MCP Client | Compatible MCP client for connection |
+| MCP Client | MCP-compatible client |
+
+Related: [NeuronDB](https://github.com/neurondb/neurondb) (extension), [NeuronAgent](https://github.com/neurondb/neuron-agent) (agent runtime).
 
 ## Integration with NeuronDB
 
-NeuronMCP requires:
-
-- PostgreSQL database with NeuronDB extension installed
-- Database user with appropriate permissions
-- Access to NeuronDB vector search, ML, and embedding functions
-
-See [NeuronDB documentation](../neurondb/README.md) for installation instructions. For full-stack deployment with NeuronDB, NeuronAgent, and NeuronHub, see the [NeuronDB integration docs](../neurondb/docs/integration/) (architecture, deploy script, runbook, compatibility).
+NeuronMCP requires PostgreSQL 16+ with the NeuronDB extension. Install NeuronDB first: [neurondb repository](https://github.com/neurondb/neurondb) ([Simple Start](https://github.com/neurondb/neurondb/blob/main/docs/getting-started/simple-start.md)). Full-stack deployment (NeuronDB + NeuronMCP + other components) is documented in each component’s repository.
 
 ## Troubleshooting
 
@@ -772,8 +716,8 @@ See [NeuronDB documentation](../neurondb/README.md) for installation instruction
 Ensure stdin and stdout are not redirected:
 
 ```bash
-./neurondb-mcp  # Correct
-./neurondb-mcp > output.log  # Incorrect - breaks MCP protocol
+./bin/neuron-mcp  # Correct
+./bin/neuron-mcp > output.log  # Incorrect - breaks MCP protocol
 ```
 
 For Docker, use interactive mode:
@@ -798,16 +742,16 @@ env | grep NEURONDB
 
 ### MCP Client Connection Issues
 
-Verify container is running:
+Verify container is running (if using Docker from another repo):
 
 ```bash
-docker compose ps neurondb-mcp
+docker ps | grep neurondb-mcp
 ```
 
 Test stdio manually:
 
 ```bash
-echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' | ./neurondb-mcp
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' | ./bin/neuron-mcp
 ```
 
 Check client configuration file path and format.
@@ -835,18 +779,14 @@ env | grep -E "^NEURONDB_"
 
 ## Support
 
-- **Documentation**: [Component Documentation](../README.md)
-- **GitHub Issues**: [Report Issues](https://github.com/neurondb/NeurondB/issues)
+- **Documentation**: This README and the [docs](docs/) directory
+- **GitHub Issues**: [Report issues](https://github.com/neurondb/neurondb/issues)
 - **Email**: support@neurondb.ai
 
 ## License
 
-See [LICENSE](../LICENSE) file for license information.
+See [LICENSE](LICENSE) for license information.
 
 ---
 
-<div align="center">
-
-[⬆ Back to Top](#neuronmcp)
-
-</div>
+[Back to top](#neuronmcp)

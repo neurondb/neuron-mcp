@@ -4,17 +4,17 @@ A professional, modular Python CLI client for interacting with NeuronMCP servers
 
 ## Features
 
-- ✅ **100% Claude Desktop Compatible**: Uses the exact same configuration file format
-- ✅ **Modular Architecture**: Clean separation of concerns with professional code structure
-- ✅ **Batch Execution**: Execute commands from a file
-- ✅ **Result Export**: Automatically saves results to JSON files
-- ✅ **Comprehensive Tool Support**: Supports all NeuronMCP server capabilities
-- ✅ **Verbose Mode**: Detailed output for debugging
+- **100% Claude Desktop Compatible**: Uses the exact same configuration file format
+- **Modular Architecture**: Clean separation of concerns with professional code structure
+- **Batch Execution**: Execute commands from a file
+- **Result Export**: Automatically saves results to JSON files
+- **Comprehensive Tool Support**: Supports all NeuronMCP server capabilities
+- **Verbose Mode**: Detailed output for debugging
 
 ## Installation
 
 ```bash
-cd NeuronMCP/client
+cd src/client
 pip install -r requirements.txt
 chmod +x neurondb_mcp_client.py
 ```
@@ -29,17 +29,17 @@ chmod +x neurondb_mcp_client.py
 ### Basic Usage
 
 ```bash
-# Execute a single command
-./neurondb_mcp_client.py -c ../neuronmcp_server.json -e "list_tools"
+# Use config in repo (from src/client)
+./neurondb_mcp_client.py -c ../tests/neuronmcp_server.json -e "list_tools"
 
 # Execute commands from file
-./neurondb_mcp_client.py -c ../neuronmcp_server.json -f commands.txt
+./neurondb_mcp_client.py -c ../tests/neuronmcp_server.json -f commands.txt
 
 # Save results to specific file
-./neurondb_mcp_client.py -c ../neuronmcp_server.json -f commands.txt -o my_results.json
+./neurondb_mcp_client.py -c ../tests/neuronmcp_server.json -f commands.txt -o my_results.json
 
 # Verbose mode
-./neurondb_mcp_client.py -c ../neuronmcp_server.json -e "list_tools" -v
+./neurondb_mcp_client.py -c ../tests/neuronmcp_server.json -e "list_tools" -v
 ```
 
 ### Command Format

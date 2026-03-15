@@ -13,16 +13,21 @@ Complete setup guide for NeuronMCP on macOS, Windows, and Linux.
 
 ### Build from Source
 
+From the repository root:
+
 ```bash
-cd NeuronMCP
-go build ./cmd/neurondb-mcp
+make build
 ```
 
-The binary will be created at `./neurondb-mcp` (or `./neurondb-mcp.exe` on Windows).
+This produces:
+- `bin/neuron-mcp` — the MCP server
+- `bin/neuron-mcp-client` — test client for listing and calling tools
+
+To build only the client: `make build-client`.
 
 ### Using Pre-built Binary
 
-Download the appropriate binary for your platform from releases.
+Download the appropriate binary for your platform from releases. Rename or place it so your MCP client can run it (e.g. as `neuron-mcp`).
 
 ## Configuration
 
@@ -104,12 +109,12 @@ python3 -c "from datasets import load_dataset; print('OK')"
    cp claude_desktop_config.macos.json ~/Library/Application\ Support/Claude/claude_desktop_config.json
    ```
 
-3. Edit the configuration file and update the path to `neurondb-mcp`:
+3. Edit the configuration file and set the path to your NeuronMCP binary (e.g. `/path/to/neuron-mcp/bin/neuron-mcp`):
    ```json
    {
-     "mcpServers": {
-       "neurondb": {
-         "command": "/path/to/neurondb-mcp",
+   "mcpServers": {
+     "neurondb": {
+       "command": "/path/to/neuron-mcp",
          "env": {
            "NEURONDB_HOST": "localhost",
            "NEURONDB_PORT": "5432",
@@ -147,22 +152,22 @@ python3 -c "from datasets import load_dataset; print('OK')"
    cp claude_desktop_config.linux.json ~/.config/Claude/claude_desktop_config.json
    ```
 
-3. Edit the configuration file and update the path to `neurondb-mcp`
+3. Edit the configuration file and set the path to your NeuronMCP binary (e.g. `./bin/neuron-mcp` or full path).
 
 4. Restart Claude Desktop
 
 ## Testing
 
-### Test Connection
+### Test connection
 
 ```bash
-./neurondb-mcp-client ./neurondb-mcp tools/list
+./bin/neuron-mcp-client ./bin/neuron-mcp tools/list
 ```
 
-### Test Tool Execution
+### Test tool execution
 
 ```bash
-./neurondb-mcp-client ./neurondb-mcp tools/call '{"name":"postgresql_version","arguments":{}}'
+./bin/neuron-mcp-client ./bin/neuron-mcp tools/call '{"name":"postgresql_version","arguments":{}}'
 ```
 
 ## Troubleshooting
@@ -189,9 +194,9 @@ python3 -c "from datasets import load_dataset; print('OK')"
 1. Check configuration file path and format
 2. Verify binary path is correct and executable
 3. Check Claude Desktop logs
-4. Test binary manually:
+4. Test the binary manually:
    ```bash
-   echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' | ./neurondb-mcp
+   echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' | ./bin/neuron-mcp
    ```
 
 ### Python Dependencies Not Found
@@ -254,7 +259,7 @@ If embeddings are all zeros when loading datasets:
 
 - Ensure stdin/stdout are not redirected
 - Use `-i` flag with Docker: `docker run -i --rm neurondb-mcp:latest`
-- Do not pipe output: `./neurondb-mcp > output.log` (incorrect)
+- Do not pipe output: `./bin/neuron-mcp > output.log` (incorrect)
 
 ## Security
 
